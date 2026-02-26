@@ -136,6 +136,33 @@ function getDayProgress(tracking, dayNum) {
   return { done, total };
 }
 
+function parseNumericWeight(weightStr) {
+  if (!weightStr) return 0;
+  const match = String(weightStr).match(/([\d.]+)/);
+  return match ? parseFloat(match[1]) : 0;
+}
+
+function parseNumericReps(repsStr) {
+  if (!repsStr) return 0;
+  const match = String(repsStr).match(/([\d.]+)/);
+  return match ? parseFloat(match[1]) : 0;
+}
+
+function getDayVolume(dayData, tracking, weights) {
+  let totalVolume = 0;
+  let perExercise = [];
+  dayData.exercises.forEach((ex, ei) => {
+    const setsCompleted = tracking.sets[dayData.day]?.[ei] || [];
+    const completedCount = setsCompleted.filter(Boolean).length;
+    const weightVal = parseNumericWeight(getWeight(weights, dayData.day, ei, ex.startWeight));
+    const repsVal = parseNumericReps(ex.reps);
+    const volume = weightVal * repsVal * completedCount;
+    perExercise.push({ name: ex.name, volume, completedCount, totalSets: ex.sets, weight: weightVal, reps: repsVal });
+    totalVolume += volume;
+  });
+  return { totalVolume, perExercise };
+}
+
 function SetCircles({ count, completed, color, onToggle }) {
   return (
     <div style={{ display: "flex", gap: 6, alignItems: "center" }}>
@@ -276,6 +303,7 @@ export default function WorkoutPlan() {
 
   const dayProgress = getDayProgress(tracking, day.day);
   const allComplete = dayProgress.total > 0 && dayProgress.done === dayProgress.total;
+  const volume = getDayVolume(day, tracking, weights);
 
   return (
     <div style={{ minHeight: "100vh", background: "#0a0a0a", color: "#f0ede6", padding: 0 }}>
@@ -357,6 +385,30 @@ export default function WorkoutPlan() {
           </div>
           <ProgressBar done={dayProgress.done} total={dayProgress.total} color={day.color} />
         </div>
+
+        {dayProgress.done > 0 && (
+          <div style={{ marginBottom: 20, padding: "16px 18px", background: `linear-gradient(135deg, rgba(${hexToRgb(day.color)},0.06) 0%, rgba(255,255,255,0.02) 100%)`, border: `1px solid rgba(${hexToRgb(day.color)},0.15)`, borderRadius: 10 }}>
+            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 12 }}>
+              <span style={{ fontFamily: "'Lato', sans-serif", fontSize: 10, fontWeight: 700, letterSpacing: "0.15em", textTransform: "uppercase", color: "#555" }}>TOTAL VOLUME LIFTED</span>
+              <span style={{ fontFamily: "'Bebas Neue', cursive", fontSize: 32, color: day.color, lineHeight: 1 }}>{volume.totalVolume.toLocaleString()} lbs</span>
+            </div>
+            <div style={{ display: "flex", flexDirection: "column", gap: 6 }}>
+              {volume.perExercise.map((ve, vi) => (
+                ve.completedCount > 0 && (
+                  <div key={vi} style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+                    <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+                      <span style={{ fontFamily: "'Lato', sans-serif", fontSize: 12, color: "#888" }}>{ve.name}</span>
+                      <span style={{ fontFamily: "'Lato', sans-serif", fontSize: 10, color: "#444" }}>
+                        {ve.weight} lbs × {ve.reps} reps × {ve.completedCount} {ve.completedCount === 1 ? "set" : "sets"}
+                      </span>
+                    </div>
+                    <span style={{ fontFamily: "'Lato', sans-serif", fontSize: 13, fontWeight: 700, color: ve.completedCount === ve.totalSets ? day.color : "#666" }}>{ve.volume.toLocaleString()} lbs</span>
+                  </div>
+                )
+              ))}
+            </div>
+          </div>
+        )}
 
         <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
           {day.exercises.map((ex, i) => {
