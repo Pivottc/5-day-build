@@ -1,9 +1,5 @@
-import './App.css'
+import WorkoutPlan from './WorkoutPlan';
 
 export default function App() {
-  return (
-    <main>
-      React ⚛️ + Vite ⚡ + Replit
-    </main>
-  )
+  return <WorkoutPlan />;
 }
