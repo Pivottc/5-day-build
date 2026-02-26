@@ -5,14 +5,15 @@ A React-based interactive workout plan application showing a personalized 5-day 
 
 ## Structure
 - `src/App.jsx` - Root app component
-- `src/WorkoutPlan.jsx` - Main workout plan component with all workout data, exercise cards, and video modal
+- `src/WorkoutPlan.jsx` - Main workout plan component with all workout data, exercise cards, and form guide modal
+- `public/exercises/` - 25 AI-generated exercise form guide illustrations
 - `src/index.jsx` - Entry point
 - `vite.config.js` - Vite config (port 5000)
 
 ## Features
 - 5-day tabbed workout navigation (Push, Pull, Lower, Press, Fat Loss)
 - Expandable exercise cards with starting weight, coaching tips
-- Video modal for form guides (YouTube embeds)
+- Form guide modal with AI-generated exercise illustrations (replaced YouTube embeds)
 - Set tracking: clickable circles per exercise to mark sets complete
 - Per-day progress bar with percentage and set count
 - Completed exercises get dimmed with strikethrough and checkmark

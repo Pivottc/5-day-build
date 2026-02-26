@@ -6,11 +6,11 @@ const workoutData = [
     equipment: "Rogue Cage + Functional Trainer + Dumbbells", color: "#E84A2E",
     warmup: "5 min Peloton Tread easy walk/light jog",
     exercises: [
-      { name: "Barbell Bench Press", equipment: "Rogue Cage", sets: 3, reps: "10", startWeight: "65 lbs (bar + 10s each side)", tip: "Control the descent — 2 seconds down, press up. Key for chest development.", muscles: "Chest, Front Delt, Triceps", videoId: "rT7DgCr-3pg" },
-      { name: "Incline DB Press", equipment: "Dumbbells + Centr 2 Bench", sets: 3, reps: "12", startWeight: "20 lbs each hand", tip: "Upper chest targets the 'shelf' look and helps reduce chest fat appearance.", muscles: "Upper Chest, Shoulders", videoId: "8iPEnn-ltC8" },
-      { name: "Cable Chest Fly (Low to High)", equipment: "Centr 2 Functional Trainer", sets: 3, reps: "12", startWeight: "15 lbs per side", tip: "Squeeze at the top. This targets inner and lower chest — great for your goal.", muscles: "Inner Chest, Lower Chest", videoId: "pYcpY20QaE8" },
-      { name: "Tricep Rope Pushdown", equipment: "Centr 2 Functional Trainer", sets: 3, reps: "12", startWeight: "20 lbs per side", tip: "Keep elbows glued to sides. Spread the rope at the bottom.", muscles: "Triceps", videoId: "vB5OHsJ3EME" },
-      { name: "DB Skull Crushers", equipment: "Dumbbells + Bench", sets: 3, reps: "10", startWeight: "15 lbs each hand", tip: "Lower slowly to forehead, press straight up.", muscles: "Triceps Long Head", videoId: "d_KZxkY_5cM" }
+      { name: "Barbell Bench Press", equipment: "Rogue Cage", sets: 3, reps: "10", startWeight: "65 lbs (bar + 10s each side)", tip: "Control the descent — 2 seconds down, press up. Key for chest development.", muscles: "Chest, Front Delt, Triceps", image: "/exercises/barbell-bench-press.png" },
+      { name: "Incline DB Press", equipment: "Dumbbells + Centr 2 Bench", sets: 3, reps: "12", startWeight: "20 lbs each hand", tip: "Upper chest targets the 'shelf' look and helps reduce chest fat appearance.", muscles: "Upper Chest, Shoulders", image: "/exercises/incline-db-press.png" },
+      { name: "Cable Chest Fly (Low to High)", equipment: "Centr 2 Functional Trainer", sets: 3, reps: "12", startWeight: "15 lbs per side", tip: "Squeeze at the top. This targets inner and lower chest — great for your goal.", muscles: "Inner Chest, Lower Chest", image: "/exercises/cable-chest-fly.png" },
+      { name: "Tricep Rope Pushdown", equipment: "Centr 2 Functional Trainer", sets: 3, reps: "12", startWeight: "20 lbs per side", tip: "Keep elbows glued to sides. Spread the rope at the bottom.", muscles: "Triceps", image: "/exercises/tricep-pushdown.png" },
+      { name: "DB Skull Crushers", equipment: "Dumbbells + Bench", sets: 3, reps: "10", startWeight: "15 lbs each hand", tip: "Lower slowly to forehead, press straight up.", muscles: "Triceps Long Head", image: "/exercises/db-skull-crushers.png" }
     ],
     notes: "Rest 60–90 sec between sets. Total time ~38 min."
   },
@@ -19,11 +19,11 @@ const workoutData = [
     equipment: "Rogue Cage + Functional Trainer + Dumbbells", color: "#2E7BE8",
     warmup: "5 min Peloton Tread moderate walk",
     exercises: [
-      { name: "Barbell Bent-Over Row", equipment: "Rogue Cage", sets: 3, reps: "10", startWeight: "65 lbs", tip: "Hinge at hips, chest up, pull bar to belly button. Back is your biggest fat-burning muscle.", muscles: "Lats, Rhomboids, Rear Delts", videoId: "FWJR5Ve8bnQ" },
-      { name: "Single-Arm DB Row", equipment: "Dumbbells + Bench", sets: 3, reps: "10 each side", startWeight: "25 lbs", tip: "Drive your elbow back and up. Full stretch at the bottom.", muscles: "Lats, Mid Back", videoId: "roCP6wCXPqo" },
-      { name: "Cable Straight-Arm Pulldown", equipment: "Centr 2 Functional Trainer", sets: 3, reps: "12", startWeight: "20 lbs per side", tip: "Arms straight, pull bar to thighs. Incredible lat isolation.", muscles: "Lats, Serratus", videoId: "pYcpY20QaE8" },
-      { name: "Cable Seated Row", equipment: "Centr 2 Functional Trainer", sets: 3, reps: "12", startWeight: "20 lbs per side", tip: "Tall posture, pull to navel, squeeze shoulder blades for 1 second.", muscles: "Mid Back, Biceps", videoId: "GZbfZ033f74" },
-      { name: "DB Alternating Curl", equipment: "Dumbbells", sets: 3, reps: "10 each arm", startWeight: "20 lbs each hand", tip: "Supinate (twist) at the top. Slow negative.", muscles: "Biceps", videoId: "sAq_ocpRh_I" }
+      { name: "Barbell Bent-Over Row", equipment: "Rogue Cage", sets: 3, reps: "10", startWeight: "65 lbs", tip: "Hinge at hips, chest up, pull bar to belly button. Back is your biggest fat-burning muscle.", muscles: "Lats, Rhomboids, Rear Delts", image: "/exercises/barbell-bent-row.png" },
+      { name: "Single-Arm DB Row", equipment: "Dumbbells + Bench", sets: 3, reps: "10 each side", startWeight: "25 lbs", tip: "Drive your elbow back and up. Full stretch at the bottom.", muscles: "Lats, Mid Back", image: "/exercises/single-arm-db-row.png" },
+      { name: "Cable Straight-Arm Pulldown", equipment: "Centr 2 Functional Trainer", sets: 3, reps: "12", startWeight: "20 lbs per side", tip: "Arms straight, pull bar to thighs. Incredible lat isolation.", muscles: "Lats, Serratus", image: "/exercises/cable-pulldown.png" },
+      { name: "Cable Seated Row", equipment: "Centr 2 Functional Trainer", sets: 3, reps: "12", startWeight: "20 lbs per side", tip: "Tall posture, pull to navel, squeeze shoulder blades for 1 second.", muscles: "Mid Back, Biceps", image: "/exercises/cable-seated-row.png" },
+      { name: "DB Alternating Curl", equipment: "Dumbbells", sets: 3, reps: "10 each arm", startWeight: "20 lbs each hand", tip: "Supinate (twist) at the top. Slow negative.", muscles: "Biceps", image: "/exercises/db-curl.png" }
     ],
     notes: "Rest 60–90 sec between sets. Total time ~40 min."
   },
@@ -32,11 +32,11 @@ const workoutData = [
     equipment: "Rogue Cage + Functional Trainer + Kettlebell", color: "#2ECC71",
     warmup: "5 min Peloton Tread incline walk",
     exercises: [
-      { name: "Barbell Back Squat", equipment: "Rogue Cage", sets: 3, reps: "10", startWeight: "75 lbs (bar + 15s each side)", tip: "Depth to parallel. Biggest compound move — burns the most calories.", muscles: "Quads, Glutes, Hamstrings, Core", videoId: "ultWZbUMPL8" },
-      { name: "Romanian Deadlift (RDL)", equipment: "Barbell", sets: 3, reps: "10", startWeight: "65 lbs", tip: "Hinge, not squat. Feel the hamstring stretch, drive hips forward to stand.", muscles: "Hamstrings, Glutes, Lower Back", videoId: "jEy_czb3RKA" },
-      { name: "Walking DB Lunges", equipment: "Dumbbells", sets: 3, reps: "10 each leg", startWeight: "20 lbs each hand", tip: "Keep front knee over ankle. Great for quad definition.", muscles: "Quads, Glutes", videoId: "L8fvypPrzzs" },
-      { name: "Kettlebell Swing", equipment: "Kettlebell", sets: 3, reps: "15", startWeight: "Start with lightest KB available", tip: "Hip hinge power, not arm lift. One of the best full-body fat-burners.", muscles: "Glutes, Hamstrings, Core, Shoulders", videoId: "sSESeQAir2M" },
-      { name: "Cable Pull-Through", equipment: "Centr 2 Functional Trainer", sets: 3, reps: "12", startWeight: "20 lbs per side", tip: "Face away from cable, hinge and drive hips forward. Glute burnout.", muscles: "Glutes, Hamstrings", videoId: "mr5gaRn8coo" }
+      { name: "Barbell Back Squat", equipment: "Rogue Cage", sets: 3, reps: "10", startWeight: "75 lbs (bar + 15s each side)", tip: "Depth to parallel. Biggest compound move — burns the most calories.", muscles: "Quads, Glutes, Hamstrings, Core", image: "/exercises/barbell-squat.png" },
+      { name: "Romanian Deadlift (RDL)", equipment: "Barbell", sets: 3, reps: "10", startWeight: "65 lbs", tip: "Hinge, not squat. Feel the hamstring stretch, drive hips forward to stand.", muscles: "Hamstrings, Glutes, Lower Back", image: "/exercises/romanian-deadlift.png" },
+      { name: "Walking DB Lunges", equipment: "Dumbbells", sets: 3, reps: "10 each leg", startWeight: "20 lbs each hand", tip: "Keep front knee over ankle. Great for quad definition.", muscles: "Quads, Glutes", image: "/exercises/walking-lunges.png" },
+      { name: "Kettlebell Swing", equipment: "Kettlebell", sets: 3, reps: "15", startWeight: "Start with lightest KB available", tip: "Hip hinge power, not arm lift. One of the best full-body fat-burners.", muscles: "Glutes, Hamstrings, Core, Shoulders", image: "/exercises/kettlebell-swing.png" },
+      { name: "Cable Pull-Through", equipment: "Centr 2 Functional Trainer", sets: 3, reps: "12", startWeight: "20 lbs per side", tip: "Face away from cable, hinge and drive hips forward. Glute burnout.", muscles: "Glutes, Hamstrings", image: "/exercises/cable-pull-through.png" }
     ],
     notes: "Rest 90 sec between sets. Legs need it. Total time ~42 min."
   },
@@ -45,11 +45,11 @@ const workoutData = [
     equipment: "Rogue Cage + Functional Trainer + Dumbbells", color: "#9B59B6",
     warmup: "5 min Peloton easy ride or walk",
     exercises: [
-      { name: "Barbell Overhead Press", equipment: "Rogue Cage", sets: 3, reps: "10", startWeight: "45 lbs (just the bar to start)", tip: "Core tight, press straight up. Builds the boulder shoulder look.", muscles: "Front & Side Delts, Triceps, Core", videoId: "2yjwXTZQDDI" },
-      { name: "DB Lateral Raise", equipment: "Dumbbells", sets: 3, reps: "12", startWeight: "10 lbs each hand", tip: "Slight bend in elbow, raise to shoulder height. Slow and controlled.", muscles: "Side Delts — creates width", videoId: "3VcKaXpzqRo" },
-      { name: "Cable Face Pull", equipment: "Centr 2 Functional Trainer", sets: 3, reps: "15", startWeight: "15 lbs per side", tip: "Pull rope to face, elbows high. Protects shoulders and builds rear delts.", muscles: "Rear Delts, Rotator Cuff", videoId: "rep-qVOkqgk" },
-      { name: "Plank", equipment: "Bodyweight", sets: 3, reps: "30–45 sec hold", startWeight: "Bodyweight", tip: "Squeeze glutes and abs together. Don't let hips sag.", muscles: "Core, Obliques", videoId: "ASdvN_XEl_c" },
-      { name: "Cable Woodchop (High to Low)", equipment: "Centr 2 Functional Trainer", sets: 3, reps: "12 each side", startWeight: "15 lbs per side", tip: "Rotational movement targets the obliques — directly attacks belly fat zones.", muscles: "Obliques, Transverse Abs, Core", videoId: "vqSvAzvnHMc" }
+      { name: "Barbell Overhead Press", equipment: "Rogue Cage", sets: 3, reps: "10", startWeight: "45 lbs (just the bar to start)", tip: "Core tight, press straight up. Builds the boulder shoulder look.", muscles: "Front & Side Delts, Triceps, Core", image: "/exercises/overhead-press.png" },
+      { name: "DB Lateral Raise", equipment: "Dumbbells", sets: 3, reps: "12", startWeight: "10 lbs each hand", tip: "Slight bend in elbow, raise to shoulder height. Slow and controlled.", muscles: "Side Delts — creates width", image: "/exercises/lateral-raise.png" },
+      { name: "Cable Face Pull", equipment: "Centr 2 Functional Trainer", sets: 3, reps: "15", startWeight: "15 lbs per side", tip: "Pull rope to face, elbows high. Protects shoulders and builds rear delts.", muscles: "Rear Delts, Rotator Cuff", image: "/exercises/face-pull.png" },
+      { name: "Plank", equipment: "Bodyweight", sets: 3, reps: "30–45 sec hold", startWeight: "Bodyweight", tip: "Squeeze glutes and abs together. Don't let hips sag.", muscles: "Core, Obliques", image: "/exercises/plank.png" },
+      { name: "Cable Woodchop (High to Low)", equipment: "Centr 2 Functional Trainer", sets: 3, reps: "12 each side", startWeight: "15 lbs per side", tip: "Rotational movement targets the obliques — directly attacks belly fat zones.", muscles: "Obliques, Transverse Abs, Core", image: "/exercises/cable-woodchop.png" }
     ],
     notes: "Rest 60 sec between sets. Total time ~35 min."
   },
@@ -58,11 +58,11 @@ const workoutData = [
     equipment: "Peloton Tread + Functional Trainer + Dumbbells + Kettlebell", color: "#E8A02E",
     warmup: "None — first exercise is the warm-up",
     exercises: [
-      { name: "Peloton Tread Intervals", equipment: "Peloton Tread", sets: 1, reps: "10 min", startWeight: "Walk 3 min → Jog 2 min → Walk 2 min → Jog 3 min", tip: "This is your metabolic primer. Gets heart rate up before lifting.", muscles: "Cardio, Legs, Core", videoId: "lzJNsD2yjKw" },
-      { name: "DB Goblet Squat", equipment: "Dumbbell", sets: 3, reps: "12", startWeight: "25 lbs", tip: "Hold DB at chest, squat deep. Full body + posture reset.", muscles: "Quads, Glutes, Core", videoId: "MeIiIdhvXT4" },
-      { name: "Cable Anti-Rotation Press", equipment: "Centr 2 Functional Trainer", sets: 3, reps: "10 each side", startWeight: "10 lbs per side", tip: "Fight rotation. This destroys your obliques and deep core — belly flattener.", muscles: "Core, Obliques, Shoulder Stability", videoId: "rHGFuFBzH5Y" },
-      { name: "Kettlebell Deadlift", equipment: "Kettlebell", sets: 3, reps: "12", startWeight: "Moderate KB", tip: "Hip hinge, flat back. Sets up your technique for heavier barbell work.", muscles: "Glutes, Hamstrings, Back", videoId: "tPNBHmFPuGU" },
-      { name: "DB Renegade Row", equipment: "Dumbbells", sets: 3, reps: "8 each arm", startWeight: "15 lbs each hand", tip: "Plank position, row one DB. Best full-body integration move.", muscles: "Back, Core, Chest, Triceps", videoId: "hzFuGGM3mHM" }
+      { name: "Peloton Tread Intervals", equipment: "Peloton Tread", sets: 1, reps: "10 min", startWeight: "Walk 3 min → Jog 2 min → Walk 2 min → Jog 3 min", tip: "This is your metabolic primer. Gets heart rate up before lifting.", muscles: "Cardio, Legs, Core", image: "/exercises/tread-intervals.png" },
+      { name: "DB Goblet Squat", equipment: "Dumbbell", sets: 3, reps: "12", startWeight: "25 lbs", tip: "Hold DB at chest, squat deep. Full body + posture reset.", muscles: "Quads, Glutes, Core", image: "/exercises/goblet-squat.png" },
+      { name: "Cable Anti-Rotation Press", equipment: "Centr 2 Functional Trainer", sets: 3, reps: "10 each side", startWeight: "10 lbs per side", tip: "Fight rotation. This destroys your obliques and deep core — belly flattener.", muscles: "Core, Obliques, Shoulder Stability", image: "/exercises/anti-rotation-press.png" },
+      { name: "Kettlebell Deadlift", equipment: "Kettlebell", sets: 3, reps: "12", startWeight: "Moderate KB", tip: "Hip hinge, flat back. Sets up your technique for heavier barbell work.", muscles: "Glutes, Hamstrings, Back", image: "/exercises/kettlebell-deadlift.png" },
+      { name: "DB Renegade Row", equipment: "Dumbbells", sets: 3, reps: "8 each arm", startWeight: "15 lbs each hand", tip: "Plank position, row one DB. Best full-body integration move.", muscles: "Back, Core, Chest, Triceps", image: "/exercises/renegade-row.png" }
     ],
     notes: "Minimal rest (45 sec). Circuit-style. Total time ~40 min."
   }
@@ -206,7 +206,7 @@ function ProgressBar({ done, total, color }) {
   );
 }
 
-function VideoModal({ exercise, color, onClose }) {
+function FormGuideModal({ exercise, color, onClose }) {
   useEffect(() => {
     const handler = (e) => { if (e.key === "Escape") onClose(); };
     window.addEventListener("keydown", handler);
@@ -235,16 +235,14 @@ function VideoModal({ exercise, color, onClose }) {
           }}>×</button>
         </div>
         <div style={{
-          position: "relative", paddingBottom: "56.25%", borderRadius: 10, overflow: "hidden",
+          borderRadius: 10, overflow: "hidden",
           border: `1px solid rgba(${hexToRgb(color)},0.3)`,
           boxShadow: `0 0 60px rgba(${hexToRgb(color)},0.15)`
         }}>
-          <iframe
-            src={`https://www.youtube.com/embed/${exercise.videoId}?autoplay=1&rel=0&modestbranding=1`}
-            title={exercise.name}
-            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-            allowFullScreen
-            style={{ position: "absolute", inset: 0, width: "100%", height: "100%", border: "none" }}
+          <img
+            src={exercise.image}
+            alt={`${exercise.name} form guide`}
+            style={{ width: "100%", height: "auto", display: "block" }}
           />
         </div>
         <div style={{
@@ -265,7 +263,7 @@ function VideoModal({ exercise, color, onClose }) {
 export default function WorkoutPlan() {
   const [activeDay, setActiveDay] = useState(0);
   const [expandedEx, setExpandedEx] = useState(null);
-  const [videoEx, setVideoEx] = useState(null);
+  const [formGuideEx, setFormGuideEx] = useState(null);
   const [tracking, setTracking] = useState(() => initTracking());
   const [weights, setWeights] = useState(() => loadWeights());
   const day = workoutData[activeDay];
@@ -458,9 +456,9 @@ export default function WorkoutPlan() {
                     <button
                       className="form-btn"
                       style={{ "--day-color": day.color }}
-                      onClick={(e) => { e.stopPropagation(); setVideoEx(ex); }}
+                      onClick={(e) => { e.stopPropagation(); setFormGuideEx(ex); }}
                     >
-                      <span style={{ fontSize: 12 }}>▶</span> WATCH FORM
+                      <span style={{ fontSize: 14 }}>🏋️</span> VIEW FORM
                     </button>
                   </div>
                 </div>
@@ -489,11 +487,11 @@ export default function WorkoutPlan() {
         </div>
 
         <div style={{ marginTop: 16, fontFamily: "'Lato', sans-serif", fontSize: 11, color: "#333", textAlign: "center", paddingBottom: 20 }}>
-          Tap set circles to track progress · Tap any exercise to reveal details · Hit <span style={{ color: "#555" }}>▶ WATCH FORM</span> to see technique video
+          Tap set circles to track progress · Tap any exercise to reveal details · Hit <span style={{ color: "#555" }}>🏋️ VIEW FORM</span> to see form guide
         </div>
       </div>
 
-      {videoEx && <VideoModal exercise={videoEx} color={day.color} onClose={() => setVideoEx(null)} />}
+      {formGuideEx && <FormGuideModal exercise={formGuideEx} color={day.color} onClose={() => setFormGuideEx(null)} />}
     </div>
   );
 }
