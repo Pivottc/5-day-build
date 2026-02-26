@@ -18,7 +18,8 @@ A React-based interactive workout plan application showing a personalized 5-day 
 - Completed exercises get dimmed with strikethrough and checkmark
 - Day tabs show checkmark when all sets done, dot when partially done
 - Reset button to clear a day's progress
-- Data persists in localStorage, resets daily
+- Editable weight field per exercise (persists permanently, does not reset daily)
+- Set tracking data persists in localStorage, resets daily
 - Dark theme with per-day color coding
 - Fully inline styles with Bebas Neue + Lato fonts
 

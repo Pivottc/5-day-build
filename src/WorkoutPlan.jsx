@@ -109,6 +109,23 @@ function initTracking() {
   return fresh;
 }
 
+function loadWeights() {
+  try {
+    const raw = localStorage.getItem("workout_weights");
+    if (!raw) return {};
+    return JSON.parse(raw);
+  } catch { return {}; }
+}
+
+function saveWeights(data) {
+  localStorage.setItem("workout_weights", JSON.stringify(data));
+}
+
+function getWeight(weights, dayNum, exIndex, fallback) {
+  const key = `${dayNum}-${exIndex}`;
+  return weights[key] !== undefined ? weights[key] : fallback;
+}
+
 function getDayProgress(tracking, dayNum) {
   const daySets = tracking.sets[dayNum];
   if (!daySets) return { done: 0, total: 0 };
@@ -223,7 +240,17 @@ export default function WorkoutPlan() {
   const [expandedEx, setExpandedEx] = useState(null);
   const [videoEx, setVideoEx] = useState(null);
   const [tracking, setTracking] = useState(() => initTracking());
+  const [weights, setWeights] = useState(() => loadWeights());
   const day = workoutData[activeDay];
+
+  const updateWeight = useCallback((exerciseIndex, value) => {
+    const key = `${day.day}-${exerciseIndex}`;
+    setWeights(prev => {
+      const next = { ...prev, [key]: value };
+      saveWeights(next);
+      return next;
+    });
+  }, [day.day]);
 
   const toggleSet = useCallback((exerciseIndex, setIndex) => {
     setTracking(prev => {
@@ -270,6 +297,9 @@ export default function WorkoutPlan() {
         .form-btn:hover { border-color: var(--day-color) !important; color: var(--day-color) !important; background: rgba(255,255,255,0.04); }
         .reset-btn { background: transparent; border: 1px solid #2a2a2a; color: #555; font-family: 'Lato', sans-serif; font-size: 10px; font-weight: 700; letter-spacing: 0.15em; text-transform: uppercase; padding: 6px 12px; border-radius: 4px; cursor: pointer; transition: all 0.2s; }
         .reset-btn:hover { border-color: #E84A2E; color: #E84A2E; }
+        .weight-input { background: rgba(255,255,255,0.04); border: 1px solid #2a2a2a; border-radius: 6px; padding: 6px 10px; font-family: 'Lato', sans-serif; font-size: 14px; font-weight: 700; color: var(--day-color); width: 100%; outline: none; transition: border-color 0.2s; }
+        .weight-input:focus { border-color: var(--day-color); background: rgba(255,255,255,0.06); }
+        .weight-input::placeholder { color: #444; font-weight: 400; font-style: italic; }
       `}</style>
 
       <div style={{ background: "linear-gradient(135deg, #111 0%, #1a1a1a 100%)", borderBottom: "1px solid #222", padding: "28px 24px 0" }}>
@@ -356,11 +386,18 @@ export default function WorkoutPlan() {
                   <div style={{ color: "#444", fontSize: 18, transform: isOpen ? "rotate(90deg)" : "rotate(0deg)", transition: "transform 0.25s", marginLeft: 4 }}>›</div>
                 </div>
 
-                <div className="expand-detail" style={{ maxHeight: isOpen ? 200 : 0 }}>
+                <div className="expand-detail" style={{ maxHeight: isOpen ? 220 : 0 }}>
                   <div style={{ borderTop: "1px solid #1e1e1e", padding: "14px 18px 16px", display: "grid", gridTemplateColumns: "1fr 1fr auto", gap: 16, alignItems: "center" }}>
-                    <div>
-                      <div style={{ fontFamily: "'Lato', sans-serif", fontSize: 10, color: "#555", letterSpacing: "0.15em", textTransform: "uppercase", marginBottom: 4 }}>Starting Weight</div>
-                      <div style={{ fontFamily: "'Lato', sans-serif", fontSize: 14, fontWeight: 700, color: day.color }}>{ex.startWeight}</div>
+                    <div style={{ "--day-color": day.color }}>
+                      <div style={{ fontFamily: "'Lato', sans-serif", fontSize: 10, color: "#555", letterSpacing: "0.15em", textTransform: "uppercase", marginBottom: 4 }}>Current Weight</div>
+                      <input
+                        className="weight-input"
+                        type="text"
+                        value={getWeight(weights, day.day, i, ex.startWeight)}
+                        placeholder={ex.startWeight}
+                        onClick={(e) => e.stopPropagation()}
+                        onChange={(e) => updateWeight(i, e.target.value)}
+                      />
                     </div>
                     <div>
                       <div style={{ fontFamily: "'Lato', sans-serif", fontSize: 10, color: "#555", letterSpacing: "0.15em", textTransform: "uppercase", marginBottom: 4 }}>Coaching Tip</div>
