@@ -13,6 +13,12 @@ A React-based interactive workout plan application showing a personalized 5-day 
 - 5-day tabbed workout navigation (Push, Pull, Lower, Press, Fat Loss)
 - Expandable exercise cards with starting weight, coaching tips
 - Video modal for form guides (YouTube embeds)
+- Set tracking: clickable circles per exercise to mark sets complete
+- Per-day progress bar with percentage and set count
+- Completed exercises get dimmed with strikethrough and checkmark
+- Day tabs show checkmark when all sets done, dot when partially done
+- Reset button to clear a day's progress
+- Data persists in localStorage, resets daily
 - Dark theme with per-day color coding
 - Fully inline styles with Bebas Neue + Lato fonts
 
