@@ -1,0 +1,434 @@
+uploads = []
+outputs = []
+
+[[generated]]
+id = "gdgC_n-GEMgjKzvJwkOsA"
+uri = "file://public/exercises/single-arm-db-row-3.png"
+type = "image"
+title = "single-arm-db-row phase 3"
+
+[[generated]]
+id = "Uxtx0MgkyZ01_dEblSyNu"
+uri = "file://public/exercises/cable-pulldown-1.png"
+type = "image"
+title = "cable-pulldown phase 1"
+
+[[generated]]
+id = "_R9KivEcCr4rDWBVqf21q"
+uri = "file://public/exercises/cable-pulldown-2.png"
+type = "image"
+title = "cable-pulldown phase 2"
+
+[[generated]]
+id = "BYuFhTZwfj9nefDHFWMV-"
+uri = "file://public/exercises/cable-pulldown-3.png"
+type = "image"
+title = "cable-pulldown phase 3"
+
+[[generated]]
+id = "IrpWfR-h1NjJYP9iYdhN8"
+uri = "file://public/exercises/cable-seated-row-1.png"
+type = "image"
+title = "cable-seated-row phase 1"
+
+[[generated]]
+id = "h52ZZu5KYE4TFdMoGeN8P"
+uri = "file://public/exercises/cable-seated-row-2.png"
+type = "image"
+title = "cable-seated-row phase 2"
+
+[[generated]]
+id = "eM5iLZlij87ttVvDqIUaF"
+uri = "file://public/exercises/cable-seated-row-3.png"
+type = "image"
+title = "cable-seated-row phase 3"
+
+[[generated]]
+id = "88RksSJ_KkaHPm_rRyCHh"
+uri = "file://public/exercises/db-curl-1.png"
+type = "image"
+title = "db-curl phase 1"
+
+[[generated]]
+id = "D4OtPwcZcXBCmA82V_PCG"
+uri = "file://public/exercises/db-curl-2.png"
+type = "image"
+title = "db-curl phase 2"
+
+[[generated]]
+id = "yl-Y9uyuq3cGHmLOQ7fi_"
+uri = "file://public/exercises/db-curl-3.png"
+type = "image"
+title = "db-curl phase 3"
+
+[[generated]]
+id = "MvSreJo6-ADAuCLOAwhjE"
+uri = "file://public/exercises/barbell-bench-press-1.png"
+type = "image"
+title = "barbell-bench-press phase 1"
+
+[[generated]]
+id = "E2i6QTDYWsL5jSPxR3-nt"
+uri = "file://public/exercises/barbell-bench-press-2.png"
+type = "image"
+title = "barbell-bench-press phase 2"
+
+[[generated]]
+id = "1nuMOTNn7xDz4itCviOGu"
+uri = "file://public/exercises/barbell-bench-press-3.png"
+type = "image"
+title = "barbell-bench-press phase 3"
+
+[[generated]]
+id = "uRB_sbPdKRPdfjHK523c0"
+uri = "file://public/exercises/incline-db-press-1.png"
+type = "image"
+title = "incline-db-press phase 1"
+
+[[generated]]
+id = "IHT0_pl7QNuOL5hzKNCHO"
+uri = "file://public/exercises/incline-db-press-2.png"
+type = "image"
+title = "incline-db-press phase 2"
+
+[[generated]]
+id = "l0vfEWWGiqRDpK1yCfk0h"
+uri = "file://public/exercises/incline-db-press-3.png"
+type = "image"
+title = "incline-db-press phase 3"
+
+[[generated]]
+id = "MYPYIjOYcxWwC-A3ADwAg"
+uri = "file://public/exercises/cable-chest-fly-1.png"
+type = "image"
+title = "cable-chest-fly phase 1"
+
+[[generated]]
+id = "Ckr-CjBym1fQvNsxekX9O"
+uri = "file://public/exercises/cable-chest-fly-2.png"
+type = "image"
+title = "cable-chest-fly phase 2"
+
+[[generated]]
+id = "7w2-5hu25lajbOiDlRIkY"
+uri = "file://public/exercises/cable-chest-fly-3.png"
+type = "image"
+title = "cable-chest-fly phase 3"
+
+[[generated]]
+id = "Q_FshGUl0vjbV88wD-jHJ"
+uri = "file://public/exercises/tricep-pushdown-1.png"
+type = "image"
+title = "tricep-pushdown phase 1"
+
+[[generated]]
+id = "NJCsGI-OQHEZdiqitxm9N"
+uri = "file://public/exercises/tricep-pushdown-2.png"
+type = "image"
+title = "tricep-pushdown phase 2"
+
+[[generated]]
+id = "x89Fl0apumdxOuuJPC43I"
+uri = "file://public/exercises/tricep-pushdown-3.png"
+type = "image"
+title = "tricep-pushdown phase 3"
+
+[[generated]]
+id = "MFLK3FZh5JTVSzPNpXvJL"
+uri = "file://public/exercises/db-skull-crushers-1.png"
+type = "image"
+title = "db-skull-crushers phase 1"
+
+[[generated]]
+id = "kEPklca-v0TbiC9e8k8xu"
+uri = "file://public/exercises/db-skull-crushers-2.png"
+type = "image"
+title = "db-skull-crushers phase 2"
+
+[[generated]]
+id = "66zgY2GArEdb8PxGUVxrL"
+uri = "file://public/exercises/db-skull-crushers-3.png"
+type = "image"
+title = "db-skull-crushers phase 3"
+
+[[generated]]
+id = "ILHlr2mP49Sp67mr552Mo"
+uri = "file://public/exercises/barbell-bent-row-1.png"
+type = "image"
+title = "barbell-bent-row phase 1"
+
+[[generated]]
+id = "97efItfQ8pARJw_mz1rgc"
+uri = "file://public/exercises/barbell-bent-row-2.png"
+type = "image"
+title = "barbell-bent-row phase 2"
+
+[[generated]]
+id = "ZWGOFWolG2yB1oQWIjma6"
+uri = "file://public/exercises/barbell-bent-row-3.png"
+type = "image"
+title = "barbell-bent-row phase 3"
+
+[[generated]]
+id = "y8SA_nlKeigw89eMqOrKd"
+uri = "file://public/exercises/single-arm-db-row-1.png"
+type = "image"
+title = "single-arm-db-row phase 1"
+
+[[generated]]
+id = "LN7ZvxX6yexoEjGqD8bmO"
+uri = "file://public/exercises/single-arm-db-row-2.png"
+type = "image"
+title = "single-arm-db-row phase 2"
+
+[[generated]]
+id = "VKbD0jkuRmIBJMh7KgJ-1"
+uri = "file://public/exercises/barbell-squat-1.png"
+type = "image"
+title = "barbell-squat phase 1"
+
+[[generated]]
+id = "iH1d5DVZ6HHC8QrEFFkvM"
+uri = "file://public/exercises/barbell-squat-2.png"
+type = "image"
+title = "barbell-squat phase 2"
+
+[[generated]]
+id = "spu0jcyqgfeypkV3-BN4g"
+uri = "file://public/exercises/barbell-squat-3.png"
+type = "image"
+title = "barbell-squat phase 3"
+
+[[generated]]
+id = "SReBAzN0wSDDnIyy0K0wx"
+uri = "file://public/exercises/romanian-deadlift-1.png"
+type = "image"
+title = "romanian-deadlift phase 1"
+
+[[generated]]
+id = "K58Y6x7KN2pg1KxZgk_UA"
+uri = "file://public/exercises/romanian-deadlift-2.png"
+type = "image"
+title = "romanian-deadlift phase 2"
+
+[[generated]]
+id = "mGbIEIe8f-D1iNXfKF9Y_"
+uri = "file://public/exercises/romanian-deadlift-3.png"
+type = "image"
+title = "romanian-deadlift phase 3"
+
+[[generated]]
+id = "VnzZLEixwNOHrkx82nq8g"
+uri = "file://public/exercises/walking-lunges-1.png"
+type = "image"
+title = "walking-lunges phase 1"
+
+[[generated]]
+id = "leL4BccEk0aV-XKYeEzdI"
+uri = "file://public/exercises/walking-lunges-2.png"
+type = "image"
+title = "walking-lunges phase 2"
+
+[[generated]]
+id = "rXCH1T5zopOyYv_1l-nfS"
+uri = "file://public/exercises/walking-lunges-3.png"
+type = "image"
+title = "walking-lunges phase 3"
+
+[[generated]]
+id = "dA5NRpq71QfYs6EiaPBUC"
+uri = "file://public/exercises/kettlebell-swing-1.png"
+type = "image"
+title = "kettlebell-swing phase 1"
+
+[[generated]]
+id = "4J62ZnVMqGhCANeiNKFry"
+uri = "file://public/exercises/face-pull-3.png"
+type = "image"
+title = "face-pull phase 3"
+
+[[generated]]
+id = "2M0tjwtssr4yu33Nhu6sy"
+uri = "file://public/exercises/plank-1.png"
+type = "image"
+title = "plank phase 1"
+
+[[generated]]
+id = "gb9Gqod50OSBG0HW5_azJ"
+uri = "file://public/exercises/plank-2.png"
+type = "image"
+title = "plank phase 2"
+
+[[generated]]
+id = "lICzdI8MiFggFtOmjKbVF"
+uri = "file://public/exercises/plank-3.png"
+type = "image"
+title = "plank phase 3"
+
+[[generated]]
+id = "akaIMt6vnCBHMfvMbbUtW"
+uri = "file://public/exercises/cable-woodchop-1.png"
+type = "image"
+title = "cable-woodchop phase 1"
+
+[[generated]]
+id = "oir5Oq2nPJEOWLUAp5gGN"
+uri = "file://public/exercises/cable-woodchop-2.png"
+type = "image"
+title = "cable-woodchop phase 2"
+
+[[generated]]
+id = "GFnhrU-KjdcqlDkYcnkxY"
+uri = "file://public/exercises/cable-woodchop-3.png"
+type = "image"
+title = "cable-woodchop phase 3"
+
+[[generated]]
+id = "aPZR5Ugp3yEbIKZpwkXo3"
+uri = "file://public/exercises/kettlebell-swing-2.png"
+type = "image"
+title = "kettlebell-swing phase 2"
+
+[[generated]]
+id = "-AR94Akdtb7izobzmG6Az"
+uri = "file://public/exercises/kettlebell-swing-3.png"
+type = "image"
+title = "kettlebell-swing phase 3"
+
+[[generated]]
+id = "7FxEfDLF_Up03s7Tw9AYF"
+uri = "file://public/exercises/cable-pull-through-1.png"
+type = "image"
+title = "cable-pull-through phase 1"
+
+[[generated]]
+id = "SGfmyduSEibuaikGx28iC"
+uri = "file://public/exercises/cable-pull-through-2.png"
+type = "image"
+title = "cable-pull-through phase 2"
+
+[[generated]]
+id = "1rdaW3OMhmtZtLlG__yZ4"
+uri = "file://public/exercises/cable-pull-through-3.png"
+type = "image"
+title = "cable-pull-through phase 3"
+
+[[generated]]
+id = "UB22EUhTc_K5QtootdY9K"
+uri = "file://public/exercises/overhead-press-1.png"
+type = "image"
+title = "overhead-press phase 1"
+
+[[generated]]
+id = "T4JpkepFW_iOMm1MIuD40"
+uri = "file://public/exercises/overhead-press-2.png"
+type = "image"
+title = "overhead-press phase 2"
+
+[[generated]]
+id = "w___DZvdTmVgF6z5heTcz"
+uri = "file://public/exercises/overhead-press-3.png"
+type = "image"
+title = "overhead-press phase 3"
+
+[[generated]]
+id = "WmrP4pK4-_vTClaPPmRWZ"
+uri = "file://public/exercises/lateral-raise-1.png"
+type = "image"
+title = "lateral-raise phase 1"
+
+[[generated]]
+id = "a1fJ77N5wv8Dmh87T-b3y"
+uri = "file://public/exercises/lateral-raise-2.png"
+type = "image"
+title = "lateral-raise phase 2"
+
+[[generated]]
+id = "ql5zt0OAuThpQraAKqI2M"
+uri = "file://public/exercises/kettlebell-deadlift-2.png"
+type = "image"
+title = "kettlebell-deadlift phase 2"
+
+[[generated]]
+id = "ogTDscWSzXk6OWsDAQfFi"
+uri = "file://public/exercises/kettlebell-deadlift-3.png"
+type = "image"
+title = "kettlebell-deadlift phase 3"
+
+[[generated]]
+id = "OetBoXXtjQ0Dm2dgynejT"
+uri = "file://public/exercises/renegade-row-1.png"
+type = "image"
+title = "renegade-row phase 1"
+
+[[generated]]
+id = "CY2Ge9yMYVADil0LKxn4M"
+uri = "file://public/exercises/renegade-row-2.png"
+type = "image"
+title = "renegade-row phase 2"
+
+[[generated]]
+id = "57NQ7dy9ibNheC-Vkm7fP"
+uri = "file://public/exercises/renegade-row-3.png"
+type = "image"
+title = "renegade-row phase 3"
+
+[[generated]]
+id = "rCkb--E9xamOKdvR4V8yz"
+uri = "file://public/exercises/tread-intervals-1.png"
+type = "image"
+title = "tread-intervals phase 1"
+
+[[generated]]
+id = "j5dgoI0czG-CrToxqsFFq"
+uri = "file://public/exercises/tread-intervals-2.png"
+type = "image"
+title = "tread-intervals phase 2"
+
+[[generated]]
+id = "EKWmaLpApKrS47aG_Nu3f"
+uri = "file://public/exercises/tread-intervals-3.png"
+type = "image"
+title = "tread-intervals phase 3"
+
+[[generated]]
+id = "dLpiJWMWkAYOtan7ERoLt"
+uri = "file://public/exercises/goblet-squat-1.png"
+type = "image"
+title = "goblet-squat phase 1"
+
+[[generated]]
+id = "uPMoh6ZM61smgfCVVtFsb"
+uri = "file://public/exercises/goblet-squat-2.png"
+type = "image"
+title = "goblet-squat phase 2"
+
+[[generated]]
+id = "pUj5peTHpCcuNhFm0RczG"
+uri = "file://public/exercises/goblet-squat-3.png"
+type = "image"
+title = "goblet-squat phase 3"
+
+[[generated]]
+id = "Kga91D6pOVuSm3nYM06Ov"
+uri = "file://public/exercises/anti-rotation-press-1.png"
+type = "image"
+title = "anti-rotation-press phase 1"
+
+[[generated]]
+id = "2hbJswTMp4PB5RrKN5sQK"
+uri = "file://public/exercises/anti-rotation-press-2.png"
+type = "image"
+title = "anti-rotation-press phase 2"
+
+[[generated]]
+id = "aA4CDgKYx3OND9PcEzzDy"
+uri = "file://public/exercises/anti-rotation-press-3.png"
+type = "image"
+title = "anti-rotation-press phase 3"
+
+[[generated]]
+id = "4gJ9AhRf7JwE0C8Q7Tghd"
+uri = "file://public/exercises/kettlebell-deadlift-1.png"
+type = "image"
+title = "kettlebell-deadlift phase 1"
