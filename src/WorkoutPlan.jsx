@@ -126,6 +126,60 @@ function getWeight(weights, dayNum, exIndex, fallback) {
   return weights[key] !== undefined ? weights[key] : fallback;
 }
 
+function loadHistory() {
+  try {
+    const raw = localStorage.getItem("workout_history");
+    if (!raw) return {};
+    return JSON.parse(raw);
+  } catch { return {}; }
+}
+
+function saveHistory(history) {
+  localStorage.setItem("workout_history", JSON.stringify(history));
+}
+
+function saveWorkoutToHistory(tracking, weights) {
+  const history = loadHistory();
+  const dateKey = tracking.date;
+  const sessions = [];
+  workoutData.forEach((dayData) => {
+    const daySets = tracking.sets[dayData.day];
+    if (!daySets) return;
+    const completedCount = Object.values(daySets).reduce((sum, arr) => sum + arr.filter(Boolean).length, 0);
+    if (completedCount === 0) return;
+    const totalSets = Object.values(daySets).reduce((sum, arr) => sum + arr.length, 0);
+    const vol = getDayVolume(dayData, tracking, weights);
+    sessions.push({
+      dayNum: dayData.day,
+      dayTitle: dayData.title,
+      focus: dayData.focus,
+      color: dayData.color,
+      completedSets: completedCount,
+      totalSets,
+      totalVolume: vol.totalVolume,
+      exercises: vol.perExercise.filter(e => e.completedCount > 0)
+    });
+  });
+  if (sessions.length > 0) {
+    history[dateKey] = { date: dateKey, sessions };
+  } else {
+    delete history[dateKey];
+  }
+  saveHistory(history);
+  return history;
+}
+
+function getMonthDays(year, month) {
+  const firstDay = new Date(year, month, 1).getDay();
+  const daysInMonth = new Date(year, month + 1, 0).getDate();
+  const days = [];
+  for (let i = 0; i < firstDay; i++) days.push(null);
+  for (let d = 1; d <= daysInMonth; d++) days.push(d);
+  return days;
+}
+
+const MONTH_NAMES = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+
 function getDayProgress(tracking, dayNum) {
   const daySets = tracking.sets[dayNum];
   if (!daySets) return { done: 0, total: 0 };
@@ -260,12 +314,276 @@ function FormGuideModal({ exercise, color, onClose }) {
   );
 }
 
+function HistoryDetailModal({ entry, onClose }) {
+  useEffect(() => {
+    const handler = (e) => { if (e.key === "Escape") onClose(); };
+    window.addEventListener("keydown", handler);
+    return () => window.removeEventListener("keydown", handler);
+  }, [onClose]);
+
+  const dateObj = new Date(entry.date + "T12:00:00");
+  const dateStr = dateObj.toLocaleDateString("en-US", { weekday: "long", month: "long", day: "numeric", year: "numeric" });
+  const grandTotal = entry.sessions.reduce((s, sess) => s + sess.totalVolume, 0);
+
+  return (
+    <div onClick={onClose} style={{
+      position: "fixed", inset: 0, zIndex: 1000,
+      background: "rgba(0,0,0,0.93)",
+      display: "flex", alignItems: "center", justifyContent: "center",
+      padding: 24, backdropFilter: "blur(10px)",
+      animation: "fadeIn 0.2s ease"
+    }}>
+      <div onClick={e => e.stopPropagation()} style={{ width: "100%", maxWidth: 560, maxHeight: "80vh", overflowY: "auto", animation: "slideUp 0.25s ease" }}>
+        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: 20 }}>
+          <div>
+            <div style={{ fontFamily: "'Lato', sans-serif", fontSize: 10, fontWeight: 700, letterSpacing: "0.25em", textTransform: "uppercase", color: "#888", marginBottom: 4 }}>WORKOUT HISTORY</div>
+            <div style={{ fontFamily: "'Bebas Neue', cursive", fontSize: 32, letterSpacing: "0.04em", color: "#f0ede6", lineHeight: 1 }}>{dateStr}</div>
+          </div>
+          <button onClick={onClose} style={{
+            background: "rgba(255,255,255,0.06)", border: "1px solid #333", color: "#888",
+            borderRadius: 6, width: 36, height: 36, cursor: "pointer", fontSize: 18,
+            display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0
+          }}>×</button>
+        </div>
+
+        <div style={{
+          padding: "14px 18px", background: "rgba(255,255,255,0.03)", border: "1px solid #222",
+          borderRadius: 10, marginBottom: 16, display: "flex", justifyContent: "space-between", alignItems: "center"
+        }}>
+          <span style={{ fontFamily: "'Lato', sans-serif", fontSize: 10, fontWeight: 700, letterSpacing: "0.15em", textTransform: "uppercase", color: "#555" }}>TOTAL VOLUME</span>
+          <span style={{ fontFamily: "'Bebas Neue', cursive", fontSize: 36, color: "#f0ede6", lineHeight: 1 }}>{grandTotal.toLocaleString()} lbs</span>
+        </div>
+
+        {entry.sessions.map((sess, si) => (
+          <div key={si} style={{
+            marginBottom: 12, padding: "16px 18px",
+            background: `linear-gradient(135deg, rgba(${hexToRgb(sess.color)},0.08) 0%, rgba(255,255,255,0.02) 100%)`,
+            border: `1px solid rgba(${hexToRgb(sess.color)},0.2)`,
+            borderRadius: 10
+          }}>
+            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 12 }}>
+              <div>
+                <div style={{ fontFamily: "'Lato', sans-serif", fontSize: 10, fontWeight: 700, letterSpacing: "0.15em", color: sess.color, textTransform: "uppercase" }}>DAY {sess.dayNum} · {sess.focus}</div>
+                <div style={{ fontFamily: "'Bebas Neue', cursive", fontSize: 24, color: "#f0ede6", lineHeight: 1, marginTop: 2 }}>{sess.dayTitle}</div>
+              </div>
+              <div style={{ textAlign: "right" }}>
+                <div style={{ fontFamily: "'Bebas Neue', cursive", fontSize: 22, color: sess.color, lineHeight: 1 }}>{sess.totalVolume.toLocaleString()} lbs</div>
+                <div style={{ fontFamily: "'Lato', sans-serif", fontSize: 10, color: "#555", marginTop: 2 }}>{sess.completedSets}/{sess.totalSets} sets</div>
+              </div>
+            </div>
+            <div style={{ display: "flex", flexDirection: "column", gap: 6 }}>
+              {sess.exercises.map((ex, ei) => (
+                <div key={ei} style={{ display: "flex", justifyContent: "space-between", alignItems: "center", paddingTop: ei === 0 ? 0 : 6, borderTop: ei === 0 ? "none" : "1px solid rgba(255,255,255,0.04)" }}>
+                  <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+                    <span style={{ fontFamily: "'Lato', sans-serif", fontSize: 12, color: "#888" }}>{ex.name}</span>
+                    <span style={{ fontFamily: "'Lato', sans-serif", fontSize: 10, color: "#444" }}>
+                      {ex.weight} × {ex.reps} × {ex.completedCount}
+                    </span>
+                  </div>
+                  <span style={{ fontFamily: "'Lato', sans-serif", fontSize: 12, fontWeight: 700, color: ex.completedCount === ex.totalSets ? sess.color : "#555" }}>
+                    {ex.volume.toLocaleString()} lbs
+                  </span>
+                </div>
+              ))}
+            </div>
+          </div>
+        ))}
+
+        <div style={{ textAlign: "center", marginTop: 10, fontFamily: "'Lato', sans-serif", fontSize: 11, color: "#333" }}>Click outside or press ESC to close</div>
+      </div>
+    </div>
+  );
+}
+
+function CalendarView({ history, onSelectDate }) {
+  const now = new Date();
+  const [viewYear, setViewYear] = useState(now.getFullYear());
+  const [viewMonth, setViewMonth] = useState(now.getMonth());
+
+  const days = getMonthDays(viewYear, viewMonth);
+  const todayKey = getTodayKey();
+
+  const prevMonth = () => {
+    if (viewMonth === 0) { setViewMonth(11); setViewYear(viewYear - 1); }
+    else setViewMonth(viewMonth - 1);
+  };
+  const nextMonth = () => {
+    if (viewMonth === 11) { setViewMonth(0); setViewYear(viewYear + 1); }
+    else setViewMonth(viewMonth + 1);
+  };
+
+  const monthWorkouts = Object.entries(history).filter(([key]) => {
+    return key.startsWith(`${viewYear}-${String(viewMonth + 1).padStart(2, "0")}`);
+  });
+  const monthVolume = monthWorkouts.reduce((sum, [, entry]) =>
+    sum + entry.sessions.reduce((s, sess) => s + sess.totalVolume, 0), 0
+  );
+  const monthSessions = monthWorkouts.length;
+
+  const allVolumes = Object.values(history).map(entry =>
+    entry.sessions.reduce((s, sess) => s + sess.totalVolume, 0)
+  );
+  const streak = (() => {
+    let count = 0;
+    const d = new Date();
+    while (true) {
+      const key = `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,"0")}-${String(d.getDate()).padStart(2,"0")}`;
+      if (history[key]) { count++; d.setDate(d.getDate() - 1); }
+      else break;
+    }
+    return count;
+  })();
+
+  return (
+    <div style={{ maxWidth: 760, margin: "0 auto", padding: "28px 24px" }}>
+      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 24 }}>
+        <div>
+          <div style={{ fontFamily: "'Lato', sans-serif", fontSize: 10, fontWeight: 700, letterSpacing: "0.25em", color: "#888", textTransform: "uppercase", marginBottom: 4 }}>WORKOUT HISTORY</div>
+          <div style={{ fontFamily: "'Bebas Neue', cursive", fontSize: 42, letterSpacing: "0.04em", color: "#f0ede6", lineHeight: 1 }}>CALENDAR</div>
+        </div>
+      </div>
+
+      <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: 12, marginBottom: 24 }}>
+        <div style={{ background: "rgba(255,255,255,0.03)", border: "1px solid #222", borderRadius: 10, padding: "16px" }}>
+          <div style={{ fontFamily: "'Lato', sans-serif", fontSize: 10, fontWeight: 700, letterSpacing: "0.15em", textTransform: "uppercase", color: "#555", marginBottom: 6 }}>THIS MONTH</div>
+          <div style={{ fontFamily: "'Bebas Neue', cursive", fontSize: 36, color: "#2ECC71", lineHeight: 1 }}>{monthSessions}</div>
+          <div style={{ fontFamily: "'Lato', sans-serif", fontSize: 11, color: "#666", marginTop: 2 }}>workouts</div>
+        </div>
+        <div style={{ background: "rgba(255,255,255,0.03)", border: "1px solid #222", borderRadius: 10, padding: "16px" }}>
+          <div style={{ fontFamily: "'Lato', sans-serif", fontSize: 10, fontWeight: 700, letterSpacing: "0.15em", textTransform: "uppercase", color: "#555", marginBottom: 6 }}>MONTH VOLUME</div>
+          <div style={{ fontFamily: "'Bebas Neue', cursive", fontSize: 36, color: "#2E7BE8", lineHeight: 1 }}>{monthVolume.toLocaleString()}</div>
+          <div style={{ fontFamily: "'Lato', sans-serif", fontSize: 11, color: "#666", marginTop: 2 }}>lbs lifted</div>
+        </div>
+        <div style={{ background: "rgba(255,255,255,0.03)", border: "1px solid #222", borderRadius: 10, padding: "16px" }}>
+          <div style={{ fontFamily: "'Lato', sans-serif", fontSize: 10, fontWeight: 700, letterSpacing: "0.15em", textTransform: "uppercase", color: "#555", marginBottom: 6 }}>STREAK</div>
+          <div style={{ fontFamily: "'Bebas Neue', cursive", fontSize: 36, color: "#E8A02E", lineHeight: 1 }}>{streak}</div>
+          <div style={{ fontFamily: "'Lato', sans-serif", fontSize: 11, color: "#666", marginTop: 2 }}>{streak === 1 ? "day" : "days"}</div>
+        </div>
+      </div>
+
+      <div style={{ background: "rgba(255,255,255,0.025)", border: "1px solid #1e1e1e", borderRadius: 12, padding: "20px 24px" }}>
+        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 20 }}>
+          <button className="cal-nav" onClick={prevMonth} style={{ background: "rgba(255,255,255,0.04)", border: "1px solid #2a2a2a", color: "#888", borderRadius: 6, width: 36, height: 36, cursor: "pointer", fontSize: 16, display: "flex", alignItems: "center", justifyContent: "center" }}>‹</button>
+          <div style={{ fontFamily: "'Bebas Neue', cursive", fontSize: 28, letterSpacing: "0.06em", color: "#f0ede6" }}>
+            {MONTH_NAMES[viewMonth]} {viewYear}
+          </div>
+          <button className="cal-nav" onClick={nextMonth} style={{ background: "rgba(255,255,255,0.04)", border: "1px solid #2a2a2a", color: "#888", borderRadius: 6, width: 36, height: 36, cursor: "pointer", fontSize: 16, display: "flex", alignItems: "center", justifyContent: "center" }}>›</button>
+        </div>
+
+        <div style={{ display: "grid", gridTemplateColumns: "repeat(7, 1fr)", gap: 4, marginBottom: 8 }}>
+          {["SUN", "MON", "TUE", "WED", "THU", "FRI", "SAT"].map(d => (
+            <div key={d} style={{ fontFamily: "'Lato', sans-serif", fontSize: 10, fontWeight: 700, letterSpacing: "0.1em", color: "#444", textAlign: "center", padding: "6px 0" }}>{d}</div>
+          ))}
+        </div>
+
+        <div style={{ display: "grid", gridTemplateColumns: "repeat(7, 1fr)", gap: 4 }}>
+          {days.map((d, i) => {
+            if (d === null) return <div key={`empty-${i}`} />;
+            const dateKey = `${viewYear}-${String(viewMonth + 1).padStart(2, "0")}-${String(d).padStart(2, "0")}`;
+            const entry = history[dateKey];
+            const isToday = dateKey === todayKey;
+            const hasWorkout = !!entry;
+            const dayColors = entry ? entry.sessions.map(s => s.color) : [];
+
+            return (
+              <button
+                className="cal-day"
+                key={dateKey}
+                onClick={() => hasWorkout && onSelectDate(entry)}
+                style={{
+                  background: isToday ? "rgba(255,255,255,0.06)" : hasWorkout ? "rgba(255,255,255,0.03)" : "transparent",
+                  border: isToday ? "1px solid #444" : "1px solid transparent",
+                  borderRadius: 8,
+                  padding: "8px 4px",
+                  cursor: hasWorkout ? "pointer" : "default",
+                  textAlign: "center",
+                  transition: "all 0.2s",
+                  minHeight: 56
+                }}
+                title={hasWorkout ? `${entry.sessions.map(s => s.dayTitle).join(", ")} — ${entry.sessions.reduce((s, sess) => s + sess.totalVolume, 0).toLocaleString()} lbs` : ""}
+              >
+                <div style={{
+                  fontFamily: "'Lato', sans-serif", fontSize: 13, fontWeight: isToday ? 700 : 400,
+                  color: isToday ? "#f0ede6" : hasWorkout ? "#ccc" : "#444",
+                  marginBottom: 4
+                }}>
+                  {d}
+                </div>
+                {hasWorkout && (
+                  <div style={{ display: "flex", justifyContent: "center", gap: 3 }}>
+                    {dayColors.map((c, ci) => (
+                      <div key={ci} style={{ width: 6, height: 6, borderRadius: "50%", background: c }} />
+                    ))}
+                  </div>
+                )}
+              </button>
+            );
+          })}
+        </div>
+      </div>
+
+      {Object.keys(history).length > 0 && (() => {
+        const sortedDates = Object.keys(history).sort().reverse().slice(0, 7);
+        return (
+          <div style={{ marginTop: 24 }}>
+            <div style={{ fontFamily: "'Lato', sans-serif", fontSize: 10, fontWeight: 700, letterSpacing: "0.15em", textTransform: "uppercase", color: "#555", marginBottom: 12 }}>RECENT SESSIONS</div>
+            <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
+              {sortedDates.map(dateKey => {
+                const entry = history[dateKey];
+                const dateObj = new Date(dateKey + "T12:00:00");
+                const dateLabel = dateObj.toLocaleDateString("en-US", { weekday: "short", month: "short", day: "numeric" });
+                const totalVol = entry.sessions.reduce((s, sess) => s + sess.totalVolume, 0);
+                return (
+                  <button
+                    className="history-row"
+                    key={dateKey}
+                    onClick={() => onSelectDate(entry)}
+                    style={{
+                      background: "rgba(255,255,255,0.025)", border: "1px solid #1e1e1e", borderRadius: 10,
+                      padding: "14px 18px", cursor: "pointer", textAlign: "left",
+                      display: "flex", justifyContent: "space-between", alignItems: "center",
+                      transition: "all 0.2s"
+                    }}
+                  >
+                    <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
+                      <div style={{ display: "flex", gap: 3 }}>
+                        {entry.sessions.map((s, si) => (
+                          <div key={si} style={{ width: 8, height: 8, borderRadius: "50%", background: s.color }} />
+                        ))}
+                      </div>
+                      <div>
+                        <div style={{ fontFamily: "'Lato', sans-serif", fontSize: 13, fontWeight: 700, color: "#f0ede6" }}>{dateLabel}</div>
+                        <div style={{ fontFamily: "'Lato', sans-serif", fontSize: 11, color: "#555", marginTop: 2 }}>
+                          {entry.sessions.map(s => s.dayTitle).join(" + ")}
+                        </div>
+                      </div>
+                    </div>
+                    <div style={{ textAlign: "right" }}>
+                      <div style={{ fontFamily: "'Bebas Neue', cursive", fontSize: 20, color: entry.sessions[0].color, lineHeight: 1 }}>{totalVol.toLocaleString()} lbs</div>
+                      <div style={{ fontFamily: "'Lato', sans-serif", fontSize: 10, color: "#444", marginTop: 2 }}>
+                        {entry.sessions.reduce((s, sess) => s + sess.completedSets, 0)} sets
+                      </div>
+                    </div>
+                  </button>
+                );
+              })}
+            </div>
+          </div>
+        );
+      })()}
+    </div>
+  );
+}
+
 export default function WorkoutPlan() {
   const [activeDay, setActiveDay] = useState(0);
   const [expandedEx, setExpandedEx] = useState(null);
   const [formGuideEx, setFormGuideEx] = useState(null);
   const [tracking, setTracking] = useState(() => initTracking());
   const [weights, setWeights] = useState(() => loadWeights());
+  const [view, setView] = useState("workout");
+  const [history, setHistory] = useState(() => loadHistory());
+  const [historyDetail, setHistoryDetail] = useState(null);
   const day = workoutData[activeDay];
 
   const updateWeight = useCallback((exerciseIndex, value) => {
@@ -273,6 +591,11 @@ export default function WorkoutPlan() {
     setWeights(prev => {
       const next = { ...prev, [key]: value };
       saveWeights(next);
+      setTracking(currentTracking => {
+        const updatedHistory = saveWorkoutToHistory(currentTracking, next);
+        setHistory(updatedHistory);
+        return currentTracking;
+      });
       return next;
     });
   }, [day.day]);
@@ -283,9 +606,11 @@ export default function WorkoutPlan() {
       const arr = next.sets[day.day][exerciseIndex];
       arr[setIndex] = !arr[setIndex];
       saveTracking(next);
+      const updatedHistory = saveWorkoutToHistory(next, weights);
+      setHistory(updatedHistory);
       return next;
     });
-  }, [day.day]);
+  }, [day.day, weights]);
 
   const resetDay = useCallback(() => {
     setTracking(prev => {
@@ -295,9 +620,11 @@ export default function WorkoutPlan() {
         daySets[ei] = daySets[ei].map(() => false);
       });
       saveTracking(next);
+      const updatedHistory = saveWorkoutToHistory(next, weights);
+      setHistory(updatedHistory);
       return next;
     });
-  }, [day.day]);
+  }, [day.day, weights]);
 
   const dayProgress = getDayProgress(tracking, day.day);
   const allComplete = dayProgress.total > 0 && dayProgress.done === dayProgress.total;
@@ -326,13 +653,36 @@ export default function WorkoutPlan() {
         .weight-input { background: rgba(255,255,255,0.04); border: 1px solid #2a2a2a; border-radius: 6px; padding: 6px 10px; font-family: 'Lato', sans-serif; font-size: 14px; font-weight: 700; color: var(--day-color); width: 100%; outline: none; transition: border-color 0.2s; }
         .weight-input:focus { border-color: var(--day-color); background: rgba(255,255,255,0.06); }
         .weight-input::placeholder { color: #444; font-weight: 400; font-style: italic; }
+        .cal-day:hover { background: rgba(255,255,255,0.06) !important; }
+        .cal-nav:hover { background: rgba(255,255,255,0.08) !important; border-color: #444 !important; }
+        .history-row:hover { background: rgba(255,255,255,0.04) !important; border-color: #333 !important; }
+        .view-toggle:hover { background: rgba(255,255,255,0.08) !important; border-color: #555 !important; color: #ccc !important; }
       `}</style>
 
       <div style={{ background: "linear-gradient(135deg, #111 0%, #1a1a1a 100%)", borderBottom: "1px solid #222", padding: "28px 24px 0" }}>
         <div style={{ maxWidth: 760, margin: "0 auto" }}>
           <div style={{ fontFamily: "'Lato', sans-serif", fontWeight: 700, fontSize: 11, letterSpacing: "0.3em", color: "#888", marginBottom: 4 }}>YOUR PERSONALIZED</div>
           <h1 style={{ fontFamily: "'Bebas Neue', cursive", fontSize: 52, letterSpacing: "0.05em", lineHeight: 1, background: `linear-gradient(90deg, #f0ede6, ${day.color})`, WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent", marginBottom: 8, transition: "all 0.3s" }}>5-DAY BUILD PROGRAM</h1>
-          <p style={{ fontFamily: "'Lato', sans-serif", fontSize: 13, color: "#666", marginBottom: 20, fontWeight: 300 }}>190 lbs · Returning Lifter · Goal: Muscle Mass + Chest & Belly Fat Loss · 30–45 min sessions</p>
+          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-end", marginBottom: 20 }}>
+            <p style={{ fontFamily: "'Lato', sans-serif", fontSize: 13, color: "#666", fontWeight: 300, margin: 0 }}>190 lbs · Returning Lifter · Goal: Muscle Mass + Chest & Belly Fat Loss · 30–45 min sessions</p>
+            <button
+              className="view-toggle"
+              onClick={() => setView(view === "workout" ? "calendar" : "workout")}
+              style={{
+                background: view === "calendar" ? "rgba(46,204,113,0.12)" : "rgba(255,255,255,0.04)",
+                border: view === "calendar" ? "1px solid rgba(46,204,113,0.3)" : "1px solid #2a2a2a",
+                color: view === "calendar" ? "#2ECC71" : "#888",
+                fontFamily: "'Lato', sans-serif", fontSize: 10, fontWeight: 700,
+                letterSpacing: "0.15em", textTransform: "uppercase",
+                padding: "8px 14px", borderRadius: 6, cursor: "pointer",
+                transition: "all 0.2s", whiteSpace: "nowrap",
+                display: "flex", alignItems: "center", gap: 6
+              }}
+            >
+              {view === "calendar" ? "< WORKOUT" : "CALENDAR"}
+            </button>
+          </div>
+          {view === "workout" && (
           <div style={{ display: "flex", gap: 0 }}>
             {workoutData.map((d, i) => {
               const prog = getDayProgress(tracking, d.day);
@@ -350,9 +700,15 @@ export default function WorkoutPlan() {
               );
             })}
           </div>
+          )}
         </div>
       </div>
 
+      {view === "calendar" && (
+        <CalendarView history={history} onSelectDate={(entry) => setHistoryDetail(entry)} />
+      )}
+
+      {view === "workout" && (
       <div style={{ maxWidth: 760, margin: "0 auto", padding: "28px 24px" }} key={activeDay}>
         <div style={{ display: "flex", alignItems: "flex-start", justifyContent: "space-between", marginBottom: 16, flexWrap: "wrap", gap: 12 }}>
           <div>
@@ -490,8 +846,10 @@ export default function WorkoutPlan() {
           Tap set circles to track progress · Tap any exercise to reveal details · Hit <span style={{ color: "#555" }}>🏋️ VIEW FORM</span> to see form guide
         </div>
       </div>
+      )}
 
       {formGuideEx && <FormGuideModal exercise={formGuideEx} color={day.color} onClose={() => setFormGuideEx(null)} />}
+      {historyDetail && <HistoryDetailModal entry={historyDetail} onClose={() => setHistoryDetail(null)} />}
     </div>
   );
 }

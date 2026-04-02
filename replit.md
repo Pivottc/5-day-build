@@ -21,6 +21,13 @@ A React-based interactive workout plan application showing a personalized 5-day 
 - Reset button to clear a day's progress
 - Editable weight field per exercise (persists permanently, does not reset daily)
 - Total volume lifted summary (weight x reps x sets) per exercise and day total, appears as sets are completed
+- Calendar view with workout history tracking
+  - Auto-saves sessions to `workout_history` localStorage whenever sets are toggled
+  - Monthly calendar grid with color-coded dots for workout days
+  - Stats cards: month workout count, month volume, current streak
+  - Recent sessions list (last 7 workouts)
+  - Click any past date to see full workout detail modal (exercises, sets, volume breakdown)
+  - Navigate months with prev/next buttons
 - Set tracking data persists in localStorage, resets daily
 - Dark theme with per-day color coding
 - Fully inline styles with Bebas Neue + Lato fonts
