@@ -249,7 +249,13 @@ function getDayVolume(dayData, tracking, weights) {
         volume += w * r;
       }
     });
-    perExercise.push({ name: ex.name, volume, completedCount, totalSets: ex.sets, weight: fallbackWeight, reps: fallbackReps });
+    const setDetails = setsArr.map((v, si) => {
+      if (!isSetDone(v)) return null;
+      const w = (typeof v === "object" && v.weight !== undefined) ? parseNumericWeight(v.weight) : fallbackWeight;
+      const r = (typeof v === "object" && v.reps !== undefined) ? parseNumericReps(v.reps) : fallbackReps;
+      return { set: si + 1, weight: w, reps: r };
+    }).filter(Boolean);
+    perExercise.push({ name: ex.name, volume, completedCount, totalSets: ex.sets, weight: fallbackWeight, reps: fallbackReps, setDetails });
     totalVolume += volume;
   });
   return { totalVolume, perExercise };
@@ -657,16 +663,31 @@ function HistoryDetailModal({ entry, onClose }) {
             </div>
             <div style={{ display: "flex", flexDirection: "column", gap: 6 }}>
               {sess.exercises.map((ex, ei) => (
-                <div key={ei} style={{ display: "flex", justifyContent: "space-between", alignItems: "center", paddingTop: ei === 0 ? 0 : 6, borderTop: ei === 0 ? "none" : "1px solid rgba(255,255,255,0.04)" }}>
-                  <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
-                    <span style={{ fontFamily: "'Inter', sans-serif", fontSize: 12, color: "#888" }}>{ex.name}</span>
-                    <span style={{ fontFamily: "'Inter', sans-serif", fontSize: 10, color: "#444" }}>
-                      {ex.weight} × {ex.reps} × {ex.completedCount}
+                <div key={ei} style={{ paddingTop: ei === 0 ? 0 : 8, borderTop: ei === 0 ? "none" : "1px solid rgba(255,255,255,0.04)" }}>
+                  <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+                    <span style={{ fontFamily: "'Inter', sans-serif", fontSize: 13, fontWeight: 600, color: ex.completedCount === ex.totalSets ? "#ccc" : "#888" }}>{ex.name}</span>
+                    <span style={{ fontFamily: "'Inter', sans-serif", fontSize: 13, fontWeight: 700, color: ex.completedCount === ex.totalSets ? sess.color : "#555" }}>
+                      {ex.volume.toLocaleString()} lbs
                     </span>
                   </div>
-                  <span style={{ fontFamily: "'Inter', sans-serif", fontSize: 12, fontWeight: 700, color: ex.completedCount === ex.totalSets ? sess.color : "#555" }}>
-                    {ex.volume.toLocaleString()} lbs
-                  </span>
+                  {ex.setDetails && ex.setDetails.length > 0 ? (
+                    <div style={{ display: "flex", gap: 8, marginTop: 6, flexWrap: "wrap" }}>
+                      {ex.setDetails.map((s, si) => (
+                        <div key={si} style={{
+                          background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.06)",
+                          borderRadius: 6, padding: "4px 10px",
+                          fontFamily: "'Inter', sans-serif", fontSize: 11, color: "#999"
+                        }}>
+                          <span style={{ color: sess.color, fontWeight: 600 }}>S{s.set}</span>{" "}
+                          {s.weight} lbs × {s.reps}
+                        </div>
+                      ))}
+                    </div>
+                  ) : (
+                    <div style={{ fontFamily: "'Inter', sans-serif", fontSize: 11, color: "#444", marginTop: 3 }}>
+                      {ex.weight} lbs × {ex.reps} × {ex.completedCount} sets
+                    </div>
+                  )}
                 </div>
               ))}
             </div>
