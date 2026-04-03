@@ -37,7 +37,15 @@ A React-based interactive workout plan application showing a personalized 5-day 
   - Navigate months with prev/next buttons
 - Exercise Swap: each exercise card has a "Swap" button in the expanded detail; opens a modal with 3 alternative exercises (same muscle group/equipment); selecting one replaces the exercise in-place with a "SWAPPED" badge; "Revert" button to restore original; swaps persist in `workout_swaps` localStorage; PR tracking uses the swapped exercise name
 - Completion Overlay: when all sets for a day are done (e.g. 15/15), a full-screen animated overlay appears with staggered reveal (checkmark, title, stats cards, CTA); shows total volume lifted, workout duration (tracked from first logged set), and sets/exercise count; "Save Workout" and "Dismiss" buttons close the overlay; resets on day reset; confetti particle animation with day accent color
-- Set tracking data persists in localStorage, resets daily
+- Full localStorage persistence: all logged data survives page refreshes and browser restarts
+  - `workout_tracking` — daily set logs with per-set weight/reps (auto-resets next day)
+  - `workout_weights` — custom weight overrides per exercise (permanent)
+  - `workout_history` — complete workout history with volume and set details (permanent)
+  - `workout_prs` — personal records (permanent)
+  - `workout_rest_times` — rest timer preferences per exercise (permanent)
+  - `workout_swaps` — exercise swap choices (permanent)
+  - `workout_active_day` — last selected day tab (permanent)
+  - `workout_start_times` — workout start timestamps for duration tracking (cleared on reset)
 - Dark theme (#08080a background) with per-day color coding
 - Modern glassmorphic UI with Inter font, rgba borders, backdrop blur, smooth transitions
 - Bottom tip cards (Progression, Protein Goal, Recovery) and footer text removed for cleaner layout

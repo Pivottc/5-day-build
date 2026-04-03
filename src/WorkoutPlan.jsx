@@ -1702,7 +1702,9 @@ function StatsView({ history }) {
 }
 
 export default function WorkoutPlan() {
-  const [activeDay, setActiveDay] = useState(0);
+  const [activeDay, setActiveDay] = useState(() => {
+    try { const v = localStorage.getItem("workout_active_day"); return v ? parseInt(v, 10) : 0; } catch { return 0; }
+  });
   const [expandedEx, setExpandedEx] = useState(null);
   const [formGuideEx, setFormGuideEx] = useState(null);
   const [tracking, setTracking] = useState(() => initTracking());
@@ -1722,7 +1724,9 @@ export default function WorkoutPlan() {
   });
   const [showCompletion, setShowCompletion] = useState(false);
   const [completionDismissed, setCompletionDismissed] = useState({});
-  const workoutStartTimeRef = useRef({});
+  const workoutStartTimeRef = useRef((() => {
+    try { const v = localStorage.getItem("workout_start_times"); return v ? JSON.parse(v) : {}; } catch { return {}; }
+  })());
   const completionTimeoutRef = useRef(null);
   const restTimerRef = useRef(null);
   const day = workoutData[activeDay];
@@ -1796,6 +1800,7 @@ export default function WorkoutPlan() {
 
     if (!workoutStartTimeRef.current[day.day]) {
       workoutStartTimeRef.current[day.day] = Date.now();
+      localStorage.setItem("workout_start_times", JSON.stringify(workoutStartTimeRef.current));
     }
 
     setTracking(prev => {
@@ -1914,6 +1919,7 @@ export default function WorkoutPlan() {
     setShowCompletion(false);
     setCompletionDismissed(prev => { const n = { ...prev }; delete n[day.day]; return n; });
     delete workoutStartTimeRef.current[day.day];
+    localStorage.setItem("workout_start_times", JSON.stringify(workoutStartTimeRef.current));
     if (completionTimeoutRef.current) { clearTimeout(completionTimeoutRef.current); completionTimeoutRef.current = null; }
   }, [day.day, weights]);
 
@@ -2027,7 +2033,7 @@ export default function WorkoutPlan() {
               const tabComplete = prog.total > 0 && prog.done === prog.total;
               const isActive = activeDay === i;
               return (
-                <button key={i} className="day-tab" onClick={() => { setActiveDay(i); setExpandedEx(null); setShowCompletion(false); if (completionTimeoutRef.current) { clearTimeout(completionTimeoutRef.current); completionTimeoutRef.current = null; } }} style={{
+                <button key={i} className="day-tab" onClick={() => { setActiveDay(i); localStorage.setItem("workout_active_day", String(i)); setExpandedEx(null); setShowCompletion(false); if (completionTimeoutRef.current) { clearTimeout(completionTimeoutRef.current); completionTimeoutRef.current = null; } }} style={{
                   flex: 1, background: isActive ? `rgba(${hexToRgb(d.color)},0.08)` : "transparent",
                   borderBottom: isActive ? `2px solid ${d.color}` : "2px solid transparent",
                   borderRadius: isActive ? "8px 8px 0 0" : "8px 8px 0 0",
