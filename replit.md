@@ -1,13 +1,19 @@
 # 5-Day Build Program
 
 ## Overview
-A React-based interactive workout plan application showing a personalized 5-day training program. Built with Vite + React.
+A React-based interactive workout plan application showing a personalized 5-day training program. Built with Vite + React. Installable as a Progressive Web App (PWA).
 
 ## Structure
 - `src/App.jsx` - Root app component
 - `src/WorkoutPlan.jsx` - Main workout plan component with all workout data, exercise cards, and form guide modal
+- `src/NotificationSettings.jsx` - Notification settings modal (workout reminders, rest timer alerts)
+- `src/NotificationPrompt.jsx` - First-launch notification permission prompt
+- `src/pwaRegister.js` - Service worker registration and notification helpers
+- `public/manifest.json` - PWA manifest (app name, icons, theme/background colors)
+- `public/sw.js` - Service worker (rest timer notifications, scheduled workout reminders)
+- `public/icons/` - PWA icons (192px and 512px)
 - `public/exercises/` - 75 AI-generated exercise form guide illustrations (3 frames per exercise)
-- `src/index.jsx` - Entry point
+- `src/index.jsx` - Entry point (registers service worker)
 - `vite.config.js` - Vite config (port 5000)
 
 ## Features
@@ -37,6 +43,13 @@ A React-based interactive workout plan application showing a personalized 5-day 
   - Navigate months with prev/next buttons
 - Exercise Swap: each exercise card has a "Swap" button in the expanded detail; opens a modal with 3 alternative exercises (same muscle group/equipment); selecting one replaces the exercise in-place with a "SWAPPED" badge; "Revert" button to restore original; swaps persist in `workout_swaps` localStorage; PR tracking uses the swapped exercise name
 - Completion Overlay: when all sets for a day are done (e.g. 15/15), a full-screen animated overlay appears with staggered reveal (checkmark, title, stats cards, CTA); shows total volume lifted, workout duration (tracked from first logged set), and sets/exercise count; "Save Workout" and "Dismiss" buttons close the overlay; resets on day reset; confetti particle animation with day accent color
+- Progressive Web App (PWA):
+  - `manifest.json` with app name, icons, theme color #000000, background color; installable on mobile homescreen
+  - Service worker (`public/sw.js`) handles rest timer notifications and scheduled workout reminders
+  - Rest timer notifications: when rest countdown ends and app is backgrounded, pushes "Rest over. Time for your next set."
+  - Scheduled workout reminders: user picks days of the week and a time (stored in `workout_reminders` localStorage); fires "Time to train. Your [Day Name] workout is ready." at the scheduled time
+  - Notification settings page (⚙ gear icon in header): toggle reminders on/off, pick training days, set reminder time, shows rest timer alert status
+  - First-launch notification permission prompt: clean custom UI prompt (not raw browser default) appears after 2 seconds on first visit; "Enable Notifications" / "Maybe Later" buttons; stores `workout_notif_prompted` flag so it only shows once
 - Full localStorage persistence: all logged data survives page refreshes and browser restarts
   - `workout_tracking` — daily set logs with per-set weight/reps (auto-resets next day)
   - `workout_weights` — custom weight overrides per exercise (permanent)
@@ -46,9 +59,10 @@ A React-based interactive workout plan application showing a personalized 5-day 
   - `workout_swaps` — exercise swap choices (permanent)
   - `workout_active_day` — last selected day tab (permanent)
   - `workout_start_times` — workout start timestamps for duration tracking (cleared on reset)
+  - `workout_reminders` — notification reminder settings (days, time, enabled flag)
+  - `workout_notif_prompted` — tracks whether notification permission prompt has been shown
 - Dark theme (#08080a background) with per-day color coding
 - Modern glassmorphic UI with Inter font, rgba borders, backdrop blur, smooth transitions
-- Bottom tip cards (Progression, Protein Goal, Recovery) and footer text removed for cleaner layout
 
 ## Running
 - `npm run dev` starts the Vite dev server on port 5000

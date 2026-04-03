@@ -1,4 +1,7 @@
 import { useState, useEffect, useCallback, useRef, useMemo } from "react";
+import { sendSWMessage, getNotificationPermission } from "./pwaRegister";
+import NotificationPrompt from "./NotificationPrompt";
+import NotificationSettings from "./NotificationSettings";
 
 const PHASE_LABELS = ["Starting Position", "Movement", "Finish Position"];
 
@@ -1724,6 +1727,20 @@ export default function WorkoutPlan() {
   });
   const [showCompletion, setShowCompletion] = useState(false);
   const [completionDismissed, setCompletionDismissed] = useState({});
+  const [showNotifSettings, setShowNotifSettings] = useState(false);
+
+  useEffect(() => {
+    try {
+      const raw = localStorage.getItem("workout_reminders");
+      if (raw) {
+        const settings = JSON.parse(raw);
+        if (settings.enabled) {
+          sendSWMessage({ type: "SCHEDULE_REMINDERS", settings });
+        }
+      }
+    } catch {}
+  }, []);
+
   const workoutStartTimeRef = useRef((() => {
     try { const v = localStorage.getItem("workout_start_times"); return v ? JSON.parse(v) : {}; } catch { return {}; }
   })());
@@ -1737,6 +1754,9 @@ export default function WorkoutPlan() {
         setRestTimer(prev => {
           if (!prev || prev.remaining <= 1) {
             clearInterval(restTimerRef.current);
+            if (document.hidden && getNotificationPermission() === "granted") {
+              sendSWMessage({ type: "REST_TIMER_DONE" });
+            }
             return null;
           }
           return { ...prev, remaining: prev.remaining - 1 };
@@ -2021,6 +2041,22 @@ export default function WorkoutPlan() {
                     }}
                   >
                     Stats
+                  </button>
+                  <button
+                    className="view-toggle"
+                    onClick={() => setShowNotifSettings(true)}
+                    style={{
+                      background: "rgba(255,255,255,0.04)",
+                      border: "1px solid rgba(255,255,255,0.08)",
+                      color: "rgba(255,255,255,0.5)",
+                      fontFamily: "'Inter', sans-serif", fontSize: 14, fontWeight: 500,
+                      padding: "8px 11px", borderRadius: 10, cursor: "pointer",
+                      transition: "all 0.25s", whiteSpace: "nowrap",
+                      display: "flex", alignItems: "center", justifyContent: "center"
+                    }}
+                    title="Notification Settings"
+                  >
+                    ⚙
                   </button>
                 </>
               )}
@@ -2342,6 +2378,10 @@ export default function WorkoutPlan() {
           }}
         />
       )}
+      {showNotifSettings && (
+        <NotificationSettings color={day.color} onClose={() => setShowNotifSettings(false)} />
+      )}
+      <NotificationPrompt color={day.color} />
     </div>
   );
 }
