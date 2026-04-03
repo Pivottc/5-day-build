@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback, useRef } from "react";
+import { useState, useEffect, useCallback, useRef, useMemo } from "react";
 
 const PHASE_LABELS = ["Starting Position", "Movement", "Finish Position"];
 
@@ -1154,6 +1154,205 @@ function CalendarView({ history, onSelectDate }) {
   );
 }
 
+const MUSCLE_GROUP_COLORS = {
+  "Chest": "#E84A2E", "Upper Chest": "#E84A2E", "Inner Chest": "#E84A2E", "Lower Chest": "#E84A2E",
+  "Shoulders": "#9B59B6", "Front Delt": "#9B59B6", "Side Delts": "#9B59B6", "Rear Delts": "#9B59B6",
+  "Triceps": "#E8A02E", "Triceps Long Head": "#E8A02E",
+  "Biceps": "#2E7BE8",
+  "Back": "#2E7BE8", "Lats": "#2E7BE8", "Mid Back": "#2E7BE8", "Rhomboids": "#2E7BE8",
+  "Quads": "#2ECC71", "Glutes": "#2ECC71", "Hamstrings": "#2ECC71",
+  "Core": "#E8A02E", "Obliques": "#E8A02E",
+  "Cardio": "#E84A2E",
+};
+
+function getWeekRange() {
+  const now = new Date();
+  const dayOfWeek = now.getDay();
+  const start = new Date(now);
+  start.setDate(now.getDate() - dayOfWeek);
+  start.setHours(0, 0, 0, 0);
+  const end = new Date(start);
+  end.setDate(start.getDate() + 6);
+  end.setHours(23, 59, 59, 999);
+  return { start, end };
+}
+
+function computeStats(history) {
+  const now = new Date();
+  const monthKey = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, "0")}`;
+  const { start: weekStart, end: weekEnd } = getWeekRange();
+
+  let monthVolume = 0;
+  let monthSessions = 0;
+  const weeklyMuscleVolume = {};
+  const liftHistory = {};
+
+  let streak = 0;
+  const d = new Date();
+  while (true) {
+    const key = `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,"0")}-${String(d.getDate()).padStart(2,"0")}`;
+    if (history[key]) { streak++; d.setDate(d.getDate() - 1); }
+    else break;
+  }
+
+  Object.entries(history).forEach(([dateKey, entry]) => {
+    if (dateKey.startsWith(monthKey)) {
+      monthSessions += entry.sessions.length;
+      entry.sessions.forEach(sess => {
+        monthVolume += sess.totalVolume;
+      });
+    }
+
+    const dateObj = new Date(dateKey + "T12:00:00");
+    if (dateObj >= weekStart && dateObj <= weekEnd) {
+      entry.sessions.forEach(sess => {
+        sess.exercises.forEach(ex => {
+          const muscles = ex.name;
+          const dayData = workoutData.find(wd => wd.day === sess.dayNum);
+          if (dayData) {
+            const exData = dayData.exercises.find(e => e.name === ex.name);
+            if (exData) {
+              const muscleNames = exData.muscles.split(",").map(m => m.trim().replace(/—.*/, "").trim());
+              const volPerMuscle = ex.volume / Math.max(muscleNames.length, 1);
+              muscleNames.forEach(m => {
+                const key = m.split(",")[0].trim();
+                if (!key) return;
+                weeklyMuscleVolume[key] = (weeklyMuscleVolume[key] || 0) + volPerMuscle;
+              });
+            }
+          }
+        });
+      });
+    }
+
+    entry.sessions.forEach(sess => {
+      sess.exercises.forEach(ex => {
+        if (!liftHistory[ex.name]) liftHistory[ex.name] = [];
+        let maxW = ex.weight || 0;
+        if (ex.setDetails && ex.setDetails.length > 0) {
+          maxW = Math.max(...ex.setDetails.map(s => s.weight));
+        }
+        liftHistory[ex.name].push({ date: dateKey, weight: maxW });
+      });
+    });
+  });
+
+  let mostImproved = null;
+  let bestImprovement = 0;
+  Object.entries(liftHistory).forEach(([name, entries]) => {
+    if (entries.length < 2) return;
+    const sorted = entries.sort((a, b) => a.date.localeCompare(b.date));
+    const first = sorted[0].weight;
+    const last = sorted[sorted.length - 1].weight;
+    if (first > 0 && last > first) {
+      const pct = ((last - first) / first) * 100;
+      if (pct > bestImprovement) {
+        bestImprovement = pct;
+        mostImproved = { name, from: first, to: last, pct: Math.round(pct) };
+      }
+    }
+  });
+
+  return { monthVolume, monthSessions, streak, weeklyMuscleVolume, mostImproved };
+}
+
+function StatsView({ history }) {
+  const stats = useMemo(() => computeStats(history), [history]);
+  const { monthVolume, monthSessions, streak, weeklyMuscleVolume, mostImproved } = stats;
+
+  const muscleEntries = Object.entries(weeklyMuscleVolume).sort((a, b) => b[1] - a[1]);
+  const maxMuscleVol = muscleEntries.length > 0 ? muscleEntries[0][1] : 1;
+
+  return (
+    <div style={{ maxWidth: 760, margin: "0 auto", padding: "28px 24px" }}>
+      <div style={{ marginBottom: 24 }}>
+        <div style={{ fontFamily: "'Inter', sans-serif", fontSize: 10, fontWeight: 700, letterSpacing: "0.25em", color: "#888", textTransform: "uppercase", marginBottom: 4 }}>ANALYTICS</div>
+        <div style={{ fontFamily: "'Inter', sans-serif", fontSize: 42, letterSpacing: "0.04em", color: "#f0ede6", lineHeight: 1 }}>STATS</div>
+      </div>
+
+      <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: 12, marginBottom: 24 }}>
+        <div style={{ background: "rgba(255,255,255,0.03)", border: "1px solid #222", borderRadius: 10, padding: "16px" }}>
+          <div style={{ fontFamily: "'Inter', sans-serif", fontSize: 10, fontWeight: 700, letterSpacing: "0.15em", textTransform: "uppercase", color: "#555", marginBottom: 6 }}>THIS MONTH</div>
+          <div style={{ fontFamily: "'Inter', sans-serif", fontSize: 36, color: "#2ECC71", lineHeight: 1 }}>{monthVolume.toLocaleString()}</div>
+          <div style={{ fontFamily: "'Inter', sans-serif", fontSize: 11, color: "#666", marginTop: 2 }}>lbs lifted</div>
+        </div>
+        <div style={{ background: "rgba(255,255,255,0.03)", border: "1px solid #222", borderRadius: 10, padding: "16px" }}>
+          <div style={{ fontFamily: "'Inter', sans-serif", fontSize: 10, fontWeight: 700, letterSpacing: "0.15em", textTransform: "uppercase", color: "#555", marginBottom: 6 }}>SESSIONS</div>
+          <div style={{ fontFamily: "'Inter', sans-serif", fontSize: 36, color: "#2E7BE8", lineHeight: 1 }}>{monthSessions}</div>
+          <div style={{ fontFamily: "'Inter', sans-serif", fontSize: 11, color: "#666", marginTop: 2 }}>this month</div>
+        </div>
+        <div style={{ background: "rgba(255,255,255,0.03)", border: "1px solid #222", borderRadius: 10, padding: "16px" }}>
+          <div style={{ fontFamily: "'Inter', sans-serif", fontSize: 10, fontWeight: 700, letterSpacing: "0.15em", textTransform: "uppercase", color: "#555", marginBottom: 6 }}>STREAK</div>
+          <div style={{ display: "flex", alignItems: "baseline", gap: 4 }}>
+            <div style={{ fontFamily: "'Inter', sans-serif", fontSize: 36, color: "#E8A02E", lineHeight: 1 }}>{streak}</div>
+          </div>
+          <div style={{ fontFamily: "'Inter', sans-serif", fontSize: 11, color: "#666", marginTop: 2 }}>{streak === 1 ? "day" : "days"} in a row</div>
+        </div>
+      </div>
+
+      {mostImproved && (
+        <div style={{
+          background: "linear-gradient(135deg, rgba(46,204,113,0.08) 0%, rgba(255,255,255,0.02) 100%)",
+          border: "1px solid rgba(46,204,113,0.2)", borderRadius: 12,
+          padding: "18px 20px", marginBottom: 24,
+          display: "flex", justifyContent: "space-between", alignItems: "center"
+        }}>
+          <div>
+            <div style={{ fontFamily: "'Inter', sans-serif", fontSize: 10, fontWeight: 700, letterSpacing: "0.15em", textTransform: "uppercase", color: "#2ECC71", marginBottom: 6 }}>MOST IMPROVED LIFT</div>
+            <div style={{ fontFamily: "'Inter', sans-serif", fontSize: 18, fontWeight: 700, color: "#f0ede6", lineHeight: 1.2 }}>{mostImproved.name}</div>
+            <div style={{ fontFamily: "'Inter', sans-serif", fontSize: 12, color: "rgba(255,255,255,0.4)", marginTop: 4 }}>
+              {mostImproved.from} lbs → {mostImproved.to} lbs
+            </div>
+          </div>
+          <div style={{ textAlign: "right" }}>
+            <div style={{ fontFamily: "'Inter', sans-serif", fontSize: 32, fontWeight: 700, color: "#2ECC71", lineHeight: 1 }}>+{mostImproved.pct}%</div>
+            <div style={{ fontFamily: "'Inter', sans-serif", fontSize: 10, color: "rgba(255,255,255,0.25)", marginTop: 2 }}>improvement</div>
+          </div>
+        </div>
+      )}
+
+      <div style={{ background: "rgba(255,255,255,0.025)", border: "1px solid #1e1e1e", borderRadius: 12, padding: "20px 24px" }}>
+        <div style={{ fontFamily: "'Inter', sans-serif", fontSize: 10, fontWeight: 700, letterSpacing: "0.15em", textTransform: "uppercase", color: "#555", marginBottom: 18 }}>WEEKLY VOLUME BY MUSCLE GROUP</div>
+        {muscleEntries.length === 0 ? (
+          <div style={{ textAlign: "center", padding: "32px 0" }}>
+            <div style={{ fontFamily: "'Inter', sans-serif", fontSize: 13, color: "rgba(255,255,255,0.2)" }}>No workouts logged this week yet.</div>
+            <div style={{ fontFamily: "'Inter', sans-serif", fontSize: 11, color: "rgba(255,255,255,0.12)", marginTop: 6 }}>Log sets to see your muscle volume breakdown.</div>
+          </div>
+        ) : (
+          <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
+            {muscleEntries.map(([muscle, vol]) => {
+              const barColor = MUSCLE_GROUP_COLORS[muscle] || "#888";
+              const pct = (vol / maxMuscleVol) * 100;
+              return (
+                <div key={muscle}>
+                  <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 4 }}>
+                    <span style={{ fontFamily: "'Inter', sans-serif", fontSize: 12, fontWeight: 600, color: "rgba(255,255,255,0.6)" }}>{muscle}</span>
+                    <span style={{ fontFamily: "'Inter', sans-serif", fontSize: 11, fontWeight: 700, color: barColor }}>{Math.round(vol).toLocaleString()} lbs</span>
+                  </div>
+                  <div style={{ height: 8, borderRadius: 4, background: "rgba(255,255,255,0.04)", overflow: "hidden" }}>
+                    <div style={{
+                      height: "100%", borderRadius: 4,
+                      background: `linear-gradient(90deg, ${barColor}, rgba(${hexToRgb(barColor)},0.6))`,
+                      width: `${pct}%`,
+                      transition: "width 0.5s ease"
+                    }} />
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+        )}
+      </div>
+
+      {!mostImproved && Object.keys(history).length === 0 && (
+        <div style={{ textAlign: "center", padding: "40px 0 20px" }}>
+          <div style={{ fontFamily: "'Inter', sans-serif", fontSize: 14, color: "rgba(255,255,255,0.2)" }}>Start logging workouts to see your stats here.</div>
+        </div>
+      )}
+    </div>
+  );
+}
+
 export default function WorkoutPlan() {
   const [activeDay, setActiveDay] = useState(0);
   const [expandedEx, setExpandedEx] = useState(null);
@@ -1360,22 +1559,59 @@ export default function WorkoutPlan() {
               <div style={{ fontFamily: "'Inter', sans-serif", fontWeight: 500, fontSize: 11, letterSpacing: "0.2em", color: "rgba(255,255,255,0.35)", marginBottom: 8, textTransform: "uppercase" }}>Your Program</div>
               <h1 style={{ fontFamily: "'Inter', sans-serif", fontSize: 32, fontWeight: 700, letterSpacing: "-0.02em", lineHeight: 1.1, color: "#fff", marginBottom: 6 }}>5-Day Build</h1>
             </div>
-            <button
-              className="view-toggle"
-              onClick={() => setView(view === "workout" ? "calendar" : "workout")}
-              style={{
-                background: view === "calendar" ? `rgba(${hexToRgb("#2ECC71")},0.1)` : "rgba(255,255,255,0.04)",
-                border: view === "calendar" ? "1px solid rgba(46,204,113,0.25)" : "1px solid rgba(255,255,255,0.08)",
-                color: view === "calendar" ? "#2ECC71" : "rgba(255,255,255,0.5)",
-                fontFamily: "'Inter', sans-serif", fontSize: 11, fontWeight: 600,
-                letterSpacing: "0.05em", textTransform: "uppercase",
-                padding: "10px 18px", borderRadius: 10, cursor: "pointer",
-                transition: "all 0.25s", whiteSpace: "nowrap",
-                display: "flex", alignItems: "center", gap: 6
-              }}
-            >
-              {view === "calendar" ? "< Workout" : "History"}
-            </button>
+            <div style={{ display: "flex", gap: 6 }}>
+              {view !== "workout" && (
+                <button
+                  className="view-toggle"
+                  onClick={() => setView("workout")}
+                  style={{
+                    background: "rgba(255,255,255,0.04)",
+                    border: "1px solid rgba(255,255,255,0.08)",
+                    color: "rgba(255,255,255,0.5)",
+                    fontFamily: "'Inter', sans-serif", fontSize: 11, fontWeight: 600,
+                    letterSpacing: "0.05em", textTransform: "uppercase",
+                    padding: "10px 14px", borderRadius: 10, cursor: "pointer",
+                    transition: "all 0.25s", whiteSpace: "nowrap"
+                  }}
+                >
+                  ← Back
+                </button>
+              )}
+              {view === "workout" && (
+                <>
+                  <button
+                    className="view-toggle"
+                    onClick={() => setView("calendar")}
+                    style={{
+                      background: "rgba(255,255,255,0.04)",
+                      border: "1px solid rgba(255,255,255,0.08)",
+                      color: "rgba(255,255,255,0.5)",
+                      fontFamily: "'Inter', sans-serif", fontSize: 11, fontWeight: 600,
+                      letterSpacing: "0.05em", textTransform: "uppercase",
+                      padding: "10px 14px", borderRadius: 10, cursor: "pointer",
+                      transition: "all 0.25s", whiteSpace: "nowrap"
+                    }}
+                  >
+                    History
+                  </button>
+                  <button
+                    className="view-toggle"
+                    onClick={() => setView("stats")}
+                    style={{
+                      background: "rgba(255,255,255,0.04)",
+                      border: "1px solid rgba(255,255,255,0.08)",
+                      color: "rgba(255,255,255,0.5)",
+                      fontFamily: "'Inter', sans-serif", fontSize: 11, fontWeight: 600,
+                      letterSpacing: "0.05em", textTransform: "uppercase",
+                      padding: "10px 14px", borderRadius: 10, cursor: "pointer",
+                      transition: "all 0.25s", whiteSpace: "nowrap"
+                    }}
+                  >
+                    Stats
+                  </button>
+                </>
+              )}
+            </div>
           </div>
           {view === "workout" && (
           <div style={{ display: "flex", gap: 4 }}>
@@ -1409,6 +1645,10 @@ export default function WorkoutPlan() {
 
       {view === "calendar" && (
         <CalendarView history={history} onSelectDate={(entry) => setHistoryDetail(entry)} />
+      )}
+
+      {view === "stats" && (
+        <StatsView history={history} />
       )}
 
       {view === "workout" && (

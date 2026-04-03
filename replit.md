@@ -21,6 +21,7 @@ A React-based interactive workout plan application showing a personalized 5-day 
 - Rest timer: auto-starts a 90s countdown banner after logging a set (skips if all sets done); customizable per exercise (60/90/120s); +30s extend button; persistent bottom banner with progress bar
 - Personal Records (PRs): stores best weight×reps volume per exercise in `workout_prs` localStorage; gold "PR" badge with pulse/glow animation appears on exercise card when today's set beats the record; expanded detail shows all-time PR with weight, reps, and date
 - Exercise Detail Drawer: tapping the `›` arrow opens a bottom sheet with muscle diagram (SVG body outline with highlighted muscle groups), coaching cues with sets/reps/start weight cards, and a weight progression chart showing the last 8 sessions
+- Stats/Analytics Dashboard: "Stats" tab showing total monthly volume, session count, workout streak, weekly volume per muscle group (horizontal bar chart with per-muscle-group colors), and most improved lift (percentage gain from first to latest logged weight)
 - Per-day progress bar with percentage and set count
 - Completed exercises get dimmed with strikethrough and checkmark
 - Day tabs show checkmark when all sets done, dot when partially done
