@@ -70,6 +70,207 @@ const workoutData = [
   }
 ];
 
+const SWAP_ALTERNATIVES = {
+  "Barbell Bench Press": [
+    { name: "Floor Press", equipment: "Rogue Cage", sets: 3, reps: "10", startWeight: "55 lbs", tip: "Lie on the floor — limits range of motion, great for lockout strength and triceps.", muscles: "Chest, Triceps" },
+    { name: "Close-Grip Bench Press", equipment: "Rogue Cage", sets: 3, reps: "10", startWeight: "55 lbs", tip: "Narrow grip shifts focus to triceps while still hitting chest.", muscles: "Chest, Triceps" },
+    { name: "DB Flat Press", equipment: "Dumbbells + Bench", sets: 3, reps: "10", startWeight: "25 lbs each hand", tip: "Greater range of motion than barbell. Better chest stretch at bottom.", muscles: "Chest, Front Delt, Triceps" },
+  ],
+  "Incline DB Press": [
+    { name: "Incline Cable Fly", equipment: "Centr 2 Functional Trainer", sets: 3, reps: "12", startWeight: "12 lbs per side", tip: "Set bench at 30°, fly with cables for constant tension on upper chest.", muscles: "Upper Chest, Shoulders" },
+    { name: "DB Arnold Press", equipment: "Dumbbells", sets: 3, reps: "12", startWeight: "15 lbs each hand", tip: "Rotate palms during press — hits front delts and upper chest together.", muscles: "Upper Chest, Shoulders" },
+    { name: "Landmine Press", equipment: "Rogue Cage", sets: 3, reps: "12", startWeight: "Bar only + 10 lbs", tip: "Angled pressing targets upper chest with less shoulder stress.", muscles: "Upper Chest, Front Delt" },
+  ],
+  "Cable Chest Fly (Low to High)": [
+    { name: "Cable Chest Fly (High to Low)", equipment: "Centr 2 Functional Trainer", sets: 3, reps: "12", startWeight: "15 lbs per side", tip: "Reverse the angle — emphasizes upper inner chest.", muscles: "Upper Chest, Inner Chest" },
+    { name: "Cable Crossover", equipment: "Centr 2 Functional Trainer", sets: 3, reps: "12", startWeight: "12 lbs per side", tip: "Mid-height cables, cross hands at bottom for peak chest contraction.", muscles: "Chest, Inner Chest" },
+    { name: "Pec Deck Machine Fly", equipment: "Centr 2 Functional Trainer", sets: 3, reps: "12", startWeight: "15 lbs per side", tip: "Seated fly with cables — controlled squeeze for chest isolation.", muscles: "Inner Chest, Chest" },
+  ],
+  "Tricep Rope Pushdown": [
+    { name: "Cable Overhead Tricep Extension", equipment: "Centr 2 Functional Trainer", sets: 3, reps: "12", startWeight: "15 lbs per side", tip: "Face away, extend overhead — targets the long head.", muscles: "Triceps Long Head" },
+    { name: "Straight Bar Pushdown", equipment: "Centr 2 Functional Trainer", sets: 3, reps: "12", startWeight: "20 lbs per side", tip: "Bar attachment instead of rope. More lateral head focus.", muscles: "Triceps" },
+    { name: "Single-Arm Cable Pushdown", equipment: "Centr 2 Functional Trainer", sets: 3, reps: "12 each arm", startWeight: "10 lbs per side", tip: "Isolate each arm. Fix imbalances and improve mind-muscle connection.", muscles: "Triceps" },
+  ],
+  "DB Skull Crushers": [
+    { name: "DB Kickbacks", equipment: "Dumbbells", sets: 3, reps: "12", startWeight: "10 lbs each hand", tip: "Hinge forward, extend arm straight back. Squeeze at the top.", muscles: "Triceps" },
+    { name: "Close-Grip DB Press", equipment: "Dumbbells + Bench", sets: 3, reps: "10", startWeight: "20 lbs each hand", tip: "Press with palms facing each other, elbows close to body.", muscles: "Triceps, Chest" },
+    { name: "Diamond Push-Up", equipment: "Bodyweight", sets: 3, reps: "12", startWeight: "Bodyweight", tip: "Hands together forming a diamond. Excellent tricep finisher.", muscles: "Triceps, Chest" },
+  ],
+  "Barbell Bent-Over Row": [
+    { name: "Pendlay Row", equipment: "Rogue Cage", sets: 3, reps: "10", startWeight: "65 lbs", tip: "Dead stop on floor each rep. Explosive pulling power.", muscles: "Lats, Rhomboids, Rear Delts" },
+    { name: "T-Bar Row (Landmine)", equipment: "Rogue Cage", sets: 3, reps: "10", startWeight: "Bar + 25 lbs", tip: "Straddle the bar, row with both hands. Thick back builder.", muscles: "Mid Back, Lats" },
+    { name: "Chest-Supported DB Row", equipment: "Dumbbells + Bench", sets: 3, reps: "10", startWeight: "20 lbs each hand", tip: "Incline bench, row both arms. Removes lower back from the equation.", muscles: "Lats, Mid Back, Rear Delts" },
+  ],
+  "Single-Arm DB Row": [
+    { name: "Meadows Row (Landmine)", equipment: "Rogue Cage", sets: 3, reps: "10 each side", startWeight: "Bar only", tip: "Stagger stance, single-arm landmine row for thick lats.", muscles: "Lats, Mid Back" },
+    { name: "DB Prone Row", equipment: "Dumbbells + Bench", sets: 3, reps: "10", startWeight: "20 lbs each hand", tip: "Lie chest-down on incline bench, row both arms simultaneously.", muscles: "Mid Back, Lats" },
+    { name: "Cable Single-Arm Row", equipment: "Centr 2 Functional Trainer", sets: 3, reps: "10 each side", startWeight: "20 lbs per side", tip: "Cable provides constant tension. Great lat stretch.", muscles: "Lats, Mid Back" },
+  ],
+  "Cable Straight-Arm Pulldown": [
+    { name: "Cable Pullover", equipment: "Centr 2 Functional Trainer", sets: 3, reps: "12", startWeight: "15 lbs per side", tip: "Lie on bench under cable, pull from overhead to hips.", muscles: "Lats, Serratus" },
+    { name: "Cable Reverse Fly", equipment: "Centr 2 Functional Trainer", sets: 3, reps: "12", startWeight: "10 lbs per side", tip: "Cross cables, pull apart. Rear delt and upper back burner.", muscles: "Rear Delts, Lats" },
+    { name: "Straight-Arm Cable Row", equipment: "Centr 2 Functional Trainer", sets: 3, reps: "12", startWeight: "15 lbs per side", tip: "Low cable, arms extended, pull toward hips. Lat focused.", muscles: "Lats, Lower Back" },
+  ],
+  "Cable Seated Row": [
+    { name: "Cable Wide-Grip Row", equipment: "Centr 2 Functional Trainer", sets: 3, reps: "12", startWeight: "18 lbs per side", tip: "Wide grip targets upper back and rear delts more.", muscles: "Mid Back, Rear Delts" },
+    { name: "Cable Face Pull to Row", equipment: "Centr 2 Functional Trainer", sets: 3, reps: "12", startWeight: "12 lbs per side", tip: "Hybrid move — pull high then row. Hits entire upper back.", muscles: "Mid Back, Rear Delts, Biceps" },
+    { name: "Resistance Band Row", equipment: "Bodyweight", sets: 3, reps: "15", startWeight: "Medium band", tip: "Anchor band, row to chest. Great warm-up or burnout.", muscles: "Mid Back, Biceps" },
+  ],
+  "DB Alternating Curl": [
+    { name: "DB Hammer Curl", equipment: "Dumbbells", sets: 3, reps: "10 each arm", startWeight: "20 lbs each hand", tip: "Neutral grip — builds brachialis for arm thickness.", muscles: "Biceps, Brachialis" },
+    { name: "DB Concentration Curl", equipment: "Dumbbells", sets: 3, reps: "10 each arm", startWeight: "15 lbs", tip: "Seated, elbow braced on thigh. Peak contraction focus.", muscles: "Biceps" },
+    { name: "Cable Curl", equipment: "Centr 2 Functional Trainer", sets: 3, reps: "12", startWeight: "15 lbs per side", tip: "Constant tension from cable. Great for bicep pump.", muscles: "Biceps" },
+  ],
+  "Barbell Back Squat": [
+    { name: "Barbell Front Squat", equipment: "Rogue Cage", sets: 3, reps: "10", startWeight: "55 lbs", tip: "Bar on front delts — more quad dominant, keeps you upright.", muscles: "Quads, Core, Glutes" },
+    { name: "Box Squat", equipment: "Rogue Cage", sets: 3, reps: "10", startWeight: "65 lbs", tip: "Squat to a box or bench. Teaches depth and builds confidence.", muscles: "Quads, Glutes, Hamstrings" },
+    { name: "DB Goblet Squat", equipment: "Dumbbells", sets: 3, reps: "12", startWeight: "30 lbs", tip: "Hold dumbbell at chest. Perfect for learning squat mechanics.", muscles: "Quads, Glutes, Core" },
+  ],
+  "Romanian Deadlift (RDL)": [
+    { name: "DB Romanian Deadlift", equipment: "Dumbbells", sets: 3, reps: "10", startWeight: "25 lbs each hand", tip: "Same hip hinge pattern. Dumbbells allow more natural arm path.", muscles: "Hamstrings, Glutes, Lower Back" },
+    { name: "Single-Leg RDL", equipment: "Dumbbells", sets: 3, reps: "8 each leg", startWeight: "15 lbs", tip: "Balance + hamstring stretch. Fixes left/right imbalances.", muscles: "Hamstrings, Glutes" },
+    { name: "Cable Pull-Through", equipment: "Centr 2 Functional Trainer", sets: 3, reps: "12", startWeight: "20 lbs per side", tip: "Same hip hinge, cable keeps tension at the bottom.", muscles: "Glutes, Hamstrings" },
+  ],
+  "Walking DB Lunges": [
+    { name: "Reverse DB Lunges", equipment: "Dumbbells", sets: 3, reps: "10 each leg", startWeight: "20 lbs each hand", tip: "Step backward — easier on knees, same quad/glute activation.", muscles: "Quads, Glutes" },
+    { name: "Bulgarian Split Squat", equipment: "Dumbbells", sets: 3, reps: "10 each leg", startWeight: "15 lbs each hand", tip: "Rear foot elevated on bench. Intense single-leg quad builder.", muscles: "Quads, Glutes" },
+    { name: "Step-Ups", equipment: "Dumbbells", sets: 3, reps: "10 each leg", startWeight: "15 lbs each hand", tip: "Step onto bench. Mimics real-world movement.", muscles: "Quads, Glutes, Core" },
+  ],
+  "Kettlebell Swing": [
+    { name: "KB Sumo Deadlift", equipment: "Kettlebell", sets: 3, reps: "15", startWeight: "Moderate KB", tip: "Wide stance deadlift. Targets glutes and inner thighs.", muscles: "Glutes, Hamstrings, Core" },
+    { name: "KB Goblet Squat", equipment: "Kettlebell", sets: 3, reps: "15", startWeight: "Moderate KB", tip: "Hold KB at chest, deep squat. Full body compound move.", muscles: "Quads, Glutes, Core" },
+    { name: "DB Thruster", equipment: "Dumbbells", sets: 3, reps: "12", startWeight: "15 lbs each hand", tip: "Squat to overhead press in one motion. Cardio + strength.", muscles: "Quads, Shoulders, Core" },
+  ],
+  "Cable Pull-Through": [
+    { name: "Cable Hip Abduction", equipment: "Centr 2 Functional Trainer", sets: 3, reps: "12 each leg", startWeight: "10 lbs per side", tip: "Ankle strap, lateral leg raise. Glute med activation.", muscles: "Glutes" },
+    { name: "Cable Kickback", equipment: "Centr 2 Functional Trainer", sets: 3, reps: "12 each leg", startWeight: "10 lbs per side", tip: "Ankle strap, kick straight back. Glute isolation.", muscles: "Glutes, Hamstrings" },
+    { name: "Cable Romanian Deadlift", equipment: "Centr 2 Functional Trainer", sets: 3, reps: "12", startWeight: "20 lbs per side", tip: "Hip hinge with cable for constant tension on the posterior chain.", muscles: "Hamstrings, Glutes" },
+  ],
+  "Barbell Overhead Press": [
+    { name: "DB Shoulder Press", equipment: "Dumbbells", sets: 3, reps: "10", startWeight: "20 lbs each hand", tip: "Seated or standing — greater range of motion than barbell.", muscles: "Front Delt, Side Delts, Triceps" },
+    { name: "Push Press", equipment: "Rogue Cage", sets: 3, reps: "10", startWeight: "55 lbs", tip: "Small leg drive to start the press. Move more weight overhead.", muscles: "Shoulders, Triceps, Core" },
+    { name: "Landmine Press", equipment: "Rogue Cage", sets: 3, reps: "10 each arm", startWeight: "Bar only", tip: "Angled press is shoulder-friendly. Great for beginners.", muscles: "Shoulders, Core" },
+  ],
+  "DB Lateral Raise": [
+    { name: "Cable Lateral Raise", equipment: "Centr 2 Functional Trainer", sets: 3, reps: "12", startWeight: "8 lbs per side", tip: "Constant cable tension through entire range. Superior for hypertrophy.", muscles: "Side Delts" },
+    { name: "DB Front Raise", equipment: "Dumbbells", sets: 3, reps: "12", startWeight: "10 lbs each hand", tip: "Alternating front raises target front delts for shoulder width.", muscles: "Front Delt" },
+    { name: "DB Y-Raise", equipment: "Dumbbells", sets: 3, reps: "12", startWeight: "8 lbs each hand", tip: "Raise at 45° angle — hits front and side delts together.", muscles: "Side Delts, Front Delt" },
+  ],
+  "Cable Face Pull": [
+    { name: "Cable External Rotation", equipment: "Centr 2 Functional Trainer", sets: 3, reps: "15", startWeight: "8 lbs per side", tip: "Elbow at side, rotate out. Prehab king for rotator cuff.", muscles: "Rotator Cuff, Rear Delts" },
+    { name: "Band Pull-Apart", equipment: "Bodyweight", sets: 3, reps: "15", startWeight: "Light band", tip: "Hold band at arms length, pull apart. Posture corrector.", muscles: "Rear Delts, Rhomboids" },
+    { name: "Cable Reverse Fly", equipment: "Centr 2 Functional Trainer", sets: 3, reps: "12", startWeight: "10 lbs per side", tip: "Cross cables at face height, pull apart. Rear delt isolation.", muscles: "Rear Delts, Rotator Cuff" },
+  ],
+  "Plank": [
+    { name: "Dead Bug", equipment: "Bodyweight", sets: 3, reps: "10 each side", startWeight: "Bodyweight", tip: "On back, extend opposite arm/leg. Deep core activator.", muscles: "Core, Obliques" },
+    { name: "Side Plank", equipment: "Bodyweight", sets: 3, reps: "30 sec each side", startWeight: "Bodyweight", tip: "Stack feet, hold. Oblique and lateral core strength.", muscles: "Obliques, Core" },
+    { name: "Bird Dog", equipment: "Bodyweight", sets: 3, reps: "10 each side", startWeight: "Bodyweight", tip: "Hands and knees, extend opposite arm/leg. Spine stability.", muscles: "Core, Lower Back" },
+  ],
+  "Cable Woodchop (High to Low)": [
+    { name: "Cable Woodchop (Low to High)", equipment: "Centr 2 Functional Trainer", sets: 3, reps: "12 each side", startWeight: "15 lbs per side", tip: "Reverse angle targets lower abs and obliques differently.", muscles: "Obliques, Core" },
+    { name: "Cable Pallof Press", equipment: "Centr 2 Functional Trainer", sets: 3, reps: "10 each side", startWeight: "12 lbs per side", tip: "Anti-rotation — press cable away from chest, resist the twist.", muscles: "Core, Obliques" },
+    { name: "Russian Twist", equipment: "Bodyweight", sets: 3, reps: "15 each side", startWeight: "Bodyweight", tip: "Seated, lean back, rotate. Add weight when ready.", muscles: "Obliques, Core" },
+  ],
+  "Peloton Tread Intervals": [
+    { name: "Jump Rope Intervals", equipment: "Bodyweight", sets: 1, reps: "10 min", startWeight: "Bodyweight", tip: "30 sec on, 30 sec off. Incredible calorie burner.", muscles: "Cardio, Calves, Core" },
+    { name: "Rowing Machine Intervals", equipment: "Bodyweight", sets: 1, reps: "10 min", startWeight: "Bodyweight", tip: "500m hard, 500m easy, repeat. Full body cardio.", muscles: "Cardio, Back, Legs" },
+    { name: "Stair Climber", equipment: "Bodyweight", sets: 1, reps: "10 min", startWeight: "Bodyweight", tip: "Steady climb — excellent glute and cardio work.", muscles: "Cardio, Glutes, Quads" },
+  ],
+  "DB Goblet Squat": [
+    { name: "DB Sumo Squat", equipment: "Dumbbell", sets: 3, reps: "12", startWeight: "25 lbs", tip: "Wide stance, toes out. Inner thigh and glute emphasis.", muscles: "Quads, Glutes, Adductors" },
+    { name: "DB Front Squat", equipment: "Dumbbells", sets: 3, reps: "12", startWeight: "20 lbs each hand", tip: "DBs on shoulders. Keeps you upright, more quad work.", muscles: "Quads, Core" },
+    { name: "Bodyweight Squat Pulses", equipment: "Bodyweight", sets: 3, reps: "20", startWeight: "Bodyweight", tip: "Stay in the bottom half, pulse. Quad burnout finisher.", muscles: "Quads, Glutes" },
+  ],
+  "Cable Anti-Rotation Press": [
+    { name: "Cable Pallof Hold", equipment: "Centr 2 Functional Trainer", sets: 3, reps: "20 sec each side", startWeight: "10 lbs per side", tip: "Static hold — press out and hold. Pure anti-rotation.", muscles: "Core, Obliques" },
+    { name: "Cable Chop", equipment: "Centr 2 Functional Trainer", sets: 3, reps: "10 each side", startWeight: "12 lbs per side", tip: "Diagonal chop from high to low. Dynamic core rotation.", muscles: "Core, Obliques" },
+    { name: "Cable Lift", equipment: "Centr 2 Functional Trainer", sets: 3, reps: "10 each side", startWeight: "10 lbs per side", tip: "Low to high diagonal — reverse of chop. Full oblique range.", muscles: "Obliques, Core" },
+  ],
+  "Kettlebell Deadlift": [
+    { name: "KB Single-Leg Deadlift", equipment: "Kettlebell", sets: 3, reps: "10 each leg", startWeight: "Moderate KB", tip: "Balance challenge + hamstring focus. Build stability.", muscles: "Glutes, Hamstrings" },
+    { name: "DB Deadlift", equipment: "Dumbbells", sets: 3, reps: "12", startWeight: "25 lbs each hand", tip: "Same pattern, dumbbells give more grip options.", muscles: "Glutes, Hamstrings, Back" },
+    { name: "KB Sumo Deadlift", equipment: "Kettlebell", sets: 3, reps: "12", startWeight: "Moderate KB", tip: "Wide stance, KB between feet. Inner thigh + glute combo.", muscles: "Glutes, Hamstrings, Adductors" },
+  ],
+  "DB Renegade Row": [
+    { name: "DB Push-Up to Row", equipment: "Dumbbells", sets: 3, reps: "8 each arm", startWeight: "15 lbs each hand", tip: "Do a push-up between rows for extra chest work.", muscles: "Back, Chest, Core" },
+    { name: "DB Plank Row", equipment: "Dumbbells", sets: 3, reps: "10 each arm", startWeight: "12 lbs each hand", tip: "Wider stance for stability, focus on the row only.", muscles: "Back, Core" },
+    { name: "Bear Crawl", equipment: "Bodyweight", sets: 3, reps: "30 sec", startWeight: "Bodyweight", tip: "On all fours, knees off ground, move forward. Full body.", muscles: "Core, Shoulders, Back" },
+  ],
+};
+
+function SwapModal({ exercise, alternatives, color, onSwap, onClose }) {
+  useEffect(() => {
+    const handler = (e) => { if (e.key === "Escape") onClose(); };
+    window.addEventListener("keydown", handler);
+    return () => window.removeEventListener("keydown", handler);
+  }, [onClose]);
+
+  const rgb = hexToRgb(color);
+
+  return (
+    <div onClick={onClose} style={{
+      position: "fixed", inset: 0, zIndex: 1000,
+      background: "rgba(0,0,0,0.85)", backdropFilter: "blur(10px)",
+      display: "flex", alignItems: "center", justifyContent: "center",
+      padding: 24, animation: "fadeIn 0.2s ease"
+    }}>
+      <div onClick={e => e.stopPropagation()} style={{
+        width: "100%", maxWidth: 480,
+        background: "linear-gradient(180deg, #141416 0%, #0c0c0e 100%)",
+        borderRadius: 16, border: "1px solid rgba(255,255,255,0.06)",
+        overflow: "hidden", animation: "slideUp 0.25s ease"
+      }}>
+        <div style={{ padding: "20px 24px", borderBottom: "1px solid rgba(255,255,255,0.06)" }}>
+          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+            <div>
+              <div style={{ fontFamily: "'Inter', sans-serif", fontSize: 10, fontWeight: 700, letterSpacing: "0.15em", color: color, textTransform: "uppercase", marginBottom: 4 }}>SWAP EXERCISE</div>
+              <div style={{ fontFamily: "'Inter', sans-serif", fontSize: 16, fontWeight: 700, color: "#f0ede6" }}>Replace {exercise.name}</div>
+              <div style={{ fontFamily: "'Inter', sans-serif", fontSize: 11, color: "rgba(255,255,255,0.3)", marginTop: 3 }}>Same muscle group · Same equipment</div>
+            </div>
+            <button onClick={onClose} style={{
+              background: "rgba(255,255,255,0.06)", border: "1px solid rgba(255,255,255,0.1)", color: "#888",
+              borderRadius: 8, width: 32, height: 32, cursor: "pointer", fontSize: 16,
+              display: "flex", alignItems: "center", justifyContent: "center"
+            }}>×</button>
+          </div>
+        </div>
+
+        <div style={{ padding: "12px 16px", display: "flex", flexDirection: "column", gap: 8 }}>
+          {alternatives.map((alt, i) => (
+            <button key={i} onClick={() => onSwap(alt)} style={{
+              background: "rgba(255,255,255,0.02)", border: "1px solid rgba(255,255,255,0.06)",
+              borderRadius: 12, padding: "16px 18px", cursor: "pointer",
+              textAlign: "left", transition: "all 0.2s", display: "block", width: "100%"
+            }}
+            onMouseEnter={e => { e.currentTarget.style.background = `rgba(${rgb},0.06)`; e.currentTarget.style.borderColor = `rgba(${rgb},0.2)`; }}
+            onMouseLeave={e => { e.currentTarget.style.background = "rgba(255,255,255,0.02)"; e.currentTarget.style.borderColor = "rgba(255,255,255,0.06)"; }}
+            >
+              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start" }}>
+                <div style={{ flex: 1 }}>
+                  <div style={{ fontFamily: "'Inter', sans-serif", fontSize: 14, fontWeight: 700, color: "#f0ede6", marginBottom: 4 }}>{alt.name}</div>
+                  <div style={{ display: "flex", gap: 6, marginBottom: 6, flexWrap: "wrap" }}>
+                    <span style={{ fontFamily: "'Inter', sans-serif", fontSize: 9, fontWeight: 600, background: "rgba(255,255,255,0.04)", color: "rgba(255,255,255,0.35)", padding: "2px 8px", borderRadius: 4, letterSpacing: "0.04em", textTransform: "uppercase" }}>{alt.equipment}</span>
+                    <span style={{ fontFamily: "'Inter', sans-serif", fontSize: 9, fontWeight: 600, background: `rgba(${rgb},0.08)`, color: color, padding: "2px 8px", borderRadius: 4, letterSpacing: "0.04em", textTransform: "uppercase" }}>{alt.muscles}</span>
+                  </div>
+                  <div style={{ fontFamily: "'Inter', sans-serif", fontSize: 11, color: "rgba(255,255,255,0.4)", lineHeight: 1.5 }}>{alt.tip}</div>
+                </div>
+                <div style={{ textAlign: "right", marginLeft: 12, flexShrink: 0 }}>
+                  <div style={{ fontFamily: "'Inter', sans-serif", fontSize: 16, fontWeight: 700, color: color }}>{alt.sets}×{alt.reps}</div>
+                  <div style={{ fontFamily: "'Inter', sans-serif", fontSize: 10, color: "rgba(255,255,255,0.2)", marginTop: 2 }}>{alt.startWeight}</div>
+                </div>
+              </div>
+            </button>
+          ))}
+        </div>
+
+        <div style={{ padding: "12px 24px 20px", textAlign: "center" }}>
+          <div style={{ fontFamily: "'Inter', sans-serif", fontSize: 11, color: "rgba(255,255,255,0.15)" }}>Tap an alternative to swap · Click outside to cancel</div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
 function hexToRgb(hex) {
   const r = parseInt(hex.slice(1,3),16);
   const g = parseInt(hex.slice(3,5),16);
@@ -1368,6 +1569,10 @@ export default function WorkoutPlan() {
   const [prs, setPrs] = useState(() => loadPRs());
   const [newPRs, setNewPRs] = useState({});
   const [detailDrawerEx, setDetailDrawerEx] = useState(null);
+  const [swapModal, setSwapModal] = useState(null);
+  const [swappedExercises, setSwappedExercises] = useState(() => {
+    try { const raw = localStorage.getItem("workout_swaps"); return raw ? JSON.parse(raw) : {}; } catch { return {}; }
+  });
   const restTimerRef = useRef(null);
   const day = workoutData[activeDay];
 
@@ -1424,8 +1629,19 @@ export default function WorkoutPlan() {
     });
   }, [day.day]);
 
+  const getEffectiveExercise = useCallback((dayNum, exIndex, originalEx) => {
+    const key = `${dayNum}-${exIndex}`;
+    const swapped = swappedExercises[key];
+    if (swapped) {
+      return { ...originalEx, name: swapped.name, equipment: swapped.equipment, sets: swapped.sets, reps: swapped.reps, startWeight: swapped.startWeight, tip: swapped.tip, muscles: swapped.muscles, _swapped: true, _originalName: originalEx.name };
+    }
+    return { ...originalEx, _swapped: false };
+  }, [swappedExercises]);
+
   const logSet = useCallback((exerciseIndex, setIndex, weight, reps) => {
-    const exName = day.exercises[exerciseIndex].name;
+    const originalEx = day.exercises[exerciseIndex];
+    const effEx = getEffectiveExercise(day.day, exerciseIndex, originalEx);
+    const exName = effEx.name;
     setTracking(prev => {
       const next = JSON.parse(JSON.stringify(prev));
       next.sets[day.day][exerciseIndex][setIndex] = { weight, reps };
@@ -1456,13 +1672,33 @@ export default function WorkoutPlan() {
       });
     }
 
-    const totalSets = day.exercises[exerciseIndex].sets;
+    const totalSets = effEx.sets;
     const setsArr = tracking.sets[day.day][exerciseIndex] || [];
     const doneAfterThis = setsArr.filter((v, idx) => idx === setIndex ? true : isSetDone(v)).length;
     if (doneAfterThis < totalSets) {
       startRestTimer(exName, exerciseIndex);
     }
-  }, [day, tracking, weights, startRestTimer]);
+  }, [day, tracking, weights, startRestTimer, getEffectiveExercise]);
+
+  const handleSwap = useCallback((dayNum, exIndex, alt) => {
+    const key = `${dayNum}-${exIndex}`;
+    setSwappedExercises(prev => {
+      const next = { ...prev, [key]: alt };
+      localStorage.setItem("workout_swaps", JSON.stringify(next));
+      return next;
+    });
+    setSwapModal(null);
+  }, []);
+
+  const revertSwap = useCallback((dayNum, exIndex) => {
+    const key = `${dayNum}-${exIndex}`;
+    setSwappedExercises(prev => {
+      const next = { ...prev };
+      delete next[key];
+      localStorage.setItem("workout_swaps", JSON.stringify(next));
+      return next;
+    });
+  }, []);
 
   const clearSet = useCallback((exerciseIndex, setIndex) => {
     setTracking(prev => {
@@ -1735,7 +1971,8 @@ export default function WorkoutPlan() {
         )}
 
         <div style={{ display: "flex", flexDirection: "column", gap: 6 }}>
-          {day.exercises.map((ex, i) => {
+          {day.exercises.map((originalEx, i) => {
+            const ex = getEffectiveExercise(day.day, i, originalEx);
             const isOpen = expandedEx === i;
             const setsCompleted = tracking.sets[day.day][i] || [];
             const exDone = setsCompleted.every(v => isSetDone(v));
@@ -1744,6 +1981,8 @@ export default function WorkoutPlan() {
             const defaultReps = ex.reps;
             const hasPR = prs[ex.name] && prs[ex.name].date === getTodayKey();
             const isNewPR = newPRs[ex.name];
+            const originalName = ex._swapped ? ex._originalName : ex.name;
+            const swapAlts = SWAP_ALTERNATIVES[originalName];
             return (
               <div key={i} className={`ex-card ${isOpen ? "open" : ""} ${exDone ? "done-card" : ""}`} style={{ background: "rgba(255,255,255,0.02)", border: hasPR ? "1px solid rgba(255,215,0,0.15)" : "1px solid rgba(255,255,255,0.06)", borderRadius: 14, overflow: "hidden", "--day-color": day.color }}>
                 <div onClick={() => setExpandedEx(isOpen ? null : i)} style={{ display: "flex", alignItems: "center", gap: 14, padding: "16px 18px", cursor: "pointer" }}>
@@ -1753,6 +1992,9 @@ export default function WorkoutPlan() {
                   <div style={{ flex: 1 }}>
                     <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 5 }}>
                       <span style={{ fontFamily: "'Inter', sans-serif", fontSize: 14, fontWeight: 600, color: exDone ? "rgba(255,255,255,0.4)" : "#fff", textDecoration: exDone ? "line-through" : "none", textDecorationColor: `rgba(${hexToRgb(day.color)},0.5)` }}>{ex.name}</span>
+                      {ex._swapped && (
+                        <span style={{ fontFamily: "'Inter', sans-serif", fontSize: 9, fontWeight: 600, letterSpacing: "0.05em", background: `rgba(${hexToRgb(day.color)},0.1)`, color: day.color, padding: "2px 6px", borderRadius: 4, border: `1px solid rgba(${hexToRgb(day.color)},0.2)` }}>SWAPPED</span>
+                      )}
                       {hasPR && (
                         <span style={{
                           fontFamily: "'Inter', sans-serif", fontSize: 9, fontWeight: 700,
@@ -1797,7 +2039,7 @@ export default function WorkoutPlan() {
                   />
                 )}
 
-                <div className="expand-detail" style={{ maxHeight: isOpen ? 340 : 0 }}>
+                <div className="expand-detail" style={{ maxHeight: isOpen ? 400 : 0 }}>
                   <div style={{ borderTop: "1px solid rgba(255,255,255,0.05)", padding: "14px 18px 16px" }}>
                     <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr auto", gap: 16, alignItems: "center" }}>
                       <div style={{ "--day-color": day.color }}>
@@ -1842,6 +2084,28 @@ export default function WorkoutPlan() {
                         );
                       })}
                     </div>
+                    <div style={{ display: "flex", alignItems: "center", gap: 8, marginTop: 12, paddingTop: 10, borderTop: "1px solid rgba(255,255,255,0.04)" }} onClick={e => e.stopPropagation()}>
+                      {swapAlts && (
+                        <button onClick={() => setSwapModal({ exIndex: i, exercise: originalEx, alternatives: swapAlts })} style={{
+                          background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.08)",
+                          color: "rgba(255,255,255,0.4)", fontFamily: "'Inter', sans-serif", fontSize: 10, fontWeight: 600,
+                          padding: "5px 12px", borderRadius: 6, cursor: "pointer", transition: "all 0.2s",
+                          display: "flex", alignItems: "center", gap: 5, letterSpacing: "0.04em"
+                        }}>
+                          ⇄ Swap
+                        </button>
+                      )}
+                      {ex._swapped && (
+                        <button onClick={() => revertSwap(day.day, i)} style={{
+                          background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.08)",
+                          color: "rgba(255,255,255,0.3)", fontFamily: "'Inter', sans-serif", fontSize: 10, fontWeight: 600,
+                          padding: "5px 12px", borderRadius: 6, cursor: "pointer", transition: "all 0.2s",
+                          letterSpacing: "0.04em"
+                        }}>
+                          ↩ Revert
+                        </button>
+                      )}
+                    </div>
                     {prs[ex.name] && (
                       <div style={{ display: "flex", alignItems: "center", gap: 8, marginTop: 10, paddingTop: 8, borderTop: "1px solid rgba(255,255,255,0.04)" }}>
                         <span style={{ fontFamily: "'Inter', sans-serif", fontSize: 9, fontWeight: 700, letterSpacing: "0.06em", textTransform: "uppercase", background: "rgba(255,215,0,0.12)", color: "#FFD700", padding: "2px 6px", borderRadius: 4, border: "1px solid rgba(255,215,0,0.2)" }}>PR</span>
@@ -1876,6 +2140,15 @@ export default function WorkoutPlan() {
       {formGuideEx && <FormGuideModal exercise={formGuideEx} color={day.color} onClose={() => setFormGuideEx(null)} />}
       {historyDetail && <HistoryDetailModal entry={historyDetail} onClose={() => setHistoryDetail(null)} />}
       {detailDrawerEx && <ExerciseDetailDrawer exercise={detailDrawerEx} color={day.color} history={history} prs={prs} onClose={() => setDetailDrawerEx(null)} />}
+      {swapModal && (
+        <SwapModal
+          exercise={swapModal.exercise}
+          alternatives={swapModal.alternatives}
+          color={day.color}
+          onSwap={(alt) => handleSwap(day.day, swapModal.exIndex, alt)}
+          onClose={() => setSwapModal(null)}
+        />
+      )}
     </div>
   );
 }

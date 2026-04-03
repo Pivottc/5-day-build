@@ -35,6 +35,7 @@ A React-based interactive workout plan application showing a personalized 5-day 
   - Recent sessions list (last 7 workouts)
   - Click any past date to see full workout detail modal (exercises, sets, volume breakdown)
   - Navigate months with prev/next buttons
+- Exercise Swap: each exercise card has a "Swap" button in the expanded detail; opens a modal with 3 alternative exercises (same muscle group/equipment); selecting one replaces the exercise in-place with a "SWAPPED" badge; "Revert" button to restore original; swaps persist in `workout_swaps` localStorage; PR tracking uses the swapped exercise name
 - Set tracking data persists in localStorage, resets daily
 - Dark theme (#08080a background) with per-day color coding
 - Modern glassmorphic UI with Inter font, rgba borders, backdrop blur, smooth transitions
