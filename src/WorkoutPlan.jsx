@@ -507,7 +507,7 @@ function CalendarView({ history, onSelectDate }) {
       <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 24 }}>
         <div>
           <div style={{ fontFamily: "'Inter', sans-serif", fontSize: 10, fontWeight: 700, letterSpacing: "0.25em", color: "#888", textTransform: "uppercase", marginBottom: 4 }}>WORKOUT HISTORY</div>
-          <div style={{ fontFamily: "'Inter', sans-serif", fontSize: 42, letterSpacing: "0.04em", color: "#f0ede6", lineHeight: 1 }}>CALENDAR</div>
+          <div style={{ fontFamily: "'Inter', sans-serif", fontSize: 42, letterSpacing: "0.04em", color: "#f0ede6", lineHeight: 1 }}>HISTORY</div>
         </div>
       </div>
 
@@ -738,7 +738,6 @@ export default function WorkoutPlan() {
             <div>
               <div style={{ fontFamily: "'Inter', sans-serif", fontWeight: 500, fontSize: 11, letterSpacing: "0.2em", color: "rgba(255,255,255,0.35)", marginBottom: 8, textTransform: "uppercase" }}>Your Program</div>
               <h1 style={{ fontFamily: "'Inter', sans-serif", fontSize: 32, fontWeight: 700, letterSpacing: "-0.02em", lineHeight: 1.1, color: "#fff", marginBottom: 6 }}>5-Day Build</h1>
-              <p style={{ fontFamily: "'Inter', sans-serif", fontSize: 13, color: "rgba(255,255,255,0.3)", fontWeight: 400, margin: 0 }}>190 lbs · Muscle Mass + Fat Loss · 30–45 min</p>
             </div>
             <button
               className="view-toggle"
@@ -754,7 +753,7 @@ export default function WorkoutPlan() {
                 display: "flex", alignItems: "center", gap: 6
               }}
             >
-              {view === "calendar" ? "< Workout" : "Calendar"}
+              {view === "calendar" ? "< Workout" : "History"}
             </button>
           </div>
           {view === "workout" && (
@@ -800,8 +799,8 @@ export default function WorkoutPlan() {
             <div style={{ fontFamily: "'Inter', sans-serif", fontSize: 12, color: "rgba(255,255,255,0.25)", marginTop: 6, fontWeight: 400 }}>{day.equipment}</div>
           </div>
           <div style={{ background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.06)", borderRadius: 12, padding: "12px 16px", minWidth: 140, backdropFilter: "blur(8px)" }}>
-            <div style={{ fontFamily: "'Inter', sans-serif", fontSize: 10, color: "rgba(255,255,255,0.3)", letterSpacing: "0.1em", textTransform: "uppercase", marginBottom: 4, fontWeight: 500 }}>Warm-Up</div>
-            <div style={{ fontFamily: "'Inter', sans-serif", fontSize: 12, color: "rgba(255,255,255,0.6)", lineHeight: 1.4, fontWeight: 400 }}>{day.warmup}</div>
+            <div style={{ fontFamily: "'Inter', sans-serif", fontSize: 10, color: "rgba(255,255,255,0.3)", letterSpacing: "0.1em", textTransform: "uppercase", marginBottom: 4, fontWeight: 500 }}>Walk/Jog</div>
+            <div style={{ fontFamily: "'Inter', sans-serif", fontSize: 12, color: "rgba(255,255,255,0.6)", lineHeight: 1.4, fontWeight: 400 }}>10 minutes</div>
           </div>
         </div>
 
@@ -905,10 +904,6 @@ export default function WorkoutPlan() {
           })}
         </div>
 
-        <div style={{ marginTop: 16, padding: "12px 16px", background: "rgba(255,255,255,0.02)", border: "1px solid rgba(255,255,255,0.05)", borderRadius: 10, display: "flex", alignItems: "center", gap: 10 }}>
-          <span style={{ fontSize: 14, opacity: 0.5 }}>⏱</span>
-          <span style={{ fontFamily: "'Inter', sans-serif", fontSize: 12, color: "rgba(255,255,255,0.3)", fontWeight: 400 }}>{day.notes}</span>
-        </div>
       </div>
       )}
 
