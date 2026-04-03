@@ -36,6 +36,7 @@ A React-based interactive workout plan application showing a personalized 5-day 
   - Click any past date to see full workout detail modal (exercises, sets, volume breakdown)
   - Navigate months with prev/next buttons
 - Exercise Swap: each exercise card has a "Swap" button in the expanded detail; opens a modal with 3 alternative exercises (same muscle group/equipment); selecting one replaces the exercise in-place with a "SWAPPED" badge; "Revert" button to restore original; swaps persist in `workout_swaps` localStorage; PR tracking uses the swapped exercise name
+- Completion Overlay: when all sets for a day are done (e.g. 15/15), a full-screen animated overlay appears with staggered reveal (checkmark, title, stats cards, CTA); shows total volume lifted, workout duration (tracked from first logged set), and sets/exercise count; "Save Workout" and "Dismiss" buttons close the overlay; resets on day reset; confetti particle animation with day accent color
 - Set tracking data persists in localStorage, resets daily
 - Dark theme (#08080a background) with per-day color coding
 - Modern glassmorphic UI with Inter font, rgba borders, backdrop blur, smooth transitions

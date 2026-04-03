@@ -198,6 +198,153 @@ const SWAP_ALTERNATIVES = {
   ],
 };
 
+function formatDuration(ms) {
+  const totalSec = Math.floor(ms / 1000);
+  const h = Math.floor(totalSec / 3600);
+  const m = Math.floor((totalSec % 3600) / 60);
+  const s = totalSec % 60;
+  if (h > 0) return `${h}h ${m}m`;
+  if (m > 0) return `${m}m ${s}s`;
+  return `${s}s`;
+}
+
+function CompletionOverlay({ dayData, volume, duration, color, onSave, onDismiss }) {
+  const [phase, setPhase] = useState(0);
+  const rgb = hexToRgb(color);
+
+  useEffect(() => {
+    const t1 = setTimeout(() => setPhase(1), 300);
+    const t2 = setTimeout(() => setPhase(2), 800);
+    const t3 = setTimeout(() => setPhase(3), 1400);
+    return () => { clearTimeout(t1); clearTimeout(t2); clearTimeout(t3); };
+  }, []);
+
+  useEffect(() => {
+    document.body.style.overflow = "hidden";
+    return () => { document.body.style.overflow = ""; };
+  }, []);
+
+  const exerciseCount = dayData.exercises.length;
+  const totalSets = dayData.exercises.reduce((s, ex) => s + ex.sets, 0);
+
+  return (
+    <div style={{
+      position: "fixed", inset: 0, zIndex: 2000,
+      background: "rgba(0,0,0,0.92)", backdropFilter: "blur(20px)",
+      display: "flex", alignItems: "center", justifyContent: "center",
+      flexDirection: "column", padding: 32,
+      animation: "fadeIn 0.4s ease"
+    }}>
+      <div style={{
+        position: "absolute", inset: 0, overflow: "hidden", pointerEvents: "none"
+      }}>
+        {[...Array(20)].map((_, i) => (
+          <div key={i} style={{
+            position: "absolute",
+            left: `${10 + Math.random() * 80}%`,
+            top: `${10 + Math.random() * 80}%`,
+            width: 4 + Math.random() * 6,
+            height: 4 + Math.random() * 6,
+            borderRadius: "50%",
+            background: color,
+            opacity: 0,
+            animation: phase >= 1 ? `confettiFade 2s ease ${i * 0.08}s forwards` : "none"
+          }} />
+        ))}
+      </div>
+
+      <div style={{
+        opacity: phase >= 1 ? 1 : 0,
+        transform: phase >= 1 ? "scale(1)" : "scale(0.3)",
+        transition: "all 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275)",
+        marginBottom: 8
+      }}>
+        <div style={{
+          width: 80, height: 80, borderRadius: "50%",
+          background: `rgba(${rgb},0.12)`,
+          border: `2px solid rgba(${rgb},0.3)`,
+          display: "flex", alignItems: "center", justifyContent: "center",
+          margin: "0 auto 16px",
+          boxShadow: `0 0 40px rgba(${rgb},0.2)`
+        }}>
+          <span style={{ fontSize: 36 }}>&#10003;</span>
+        </div>
+      </div>
+
+      <div style={{
+        opacity: phase >= 1 ? 1 : 0,
+        transform: phase >= 1 ? "translateY(0)" : "translateY(20px)",
+        transition: "all 0.5s ease 0.2s",
+        textAlign: "center", marginBottom: 6
+      }}>
+        <div style={{ fontFamily: "'Inter', sans-serif", fontSize: 10, fontWeight: 700, letterSpacing: "0.2em", color, textTransform: "uppercase", marginBottom: 8 }}>WORKOUT COMPLETE</div>
+        <div style={{ fontFamily: "'Inter', sans-serif", fontSize: 28, fontWeight: 700, color: "#f0ede6", lineHeight: 1.2 }}>
+          Day {dayData.day} — {dayData.focus}
+        </div>
+      </div>
+
+      <div style={{
+        opacity: phase >= 2 ? 1 : 0,
+        transform: phase >= 2 ? "translateY(0)" : "translateY(20px)",
+        transition: "all 0.5s ease",
+        display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: 12,
+        width: "100%", maxWidth: 420, margin: "28px 0 32px"
+      }}>
+        <div style={{
+          background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.06)",
+          borderRadius: 14, padding: "18px 14px", textAlign: "center"
+        }}>
+          <div style={{ fontFamily: "'Inter', sans-serif", fontSize: 9, fontWeight: 600, letterSpacing: "0.12em", color: "rgba(255,255,255,0.3)", textTransform: "uppercase", marginBottom: 8 }}>VOLUME</div>
+          <div style={{ fontFamily: "'Inter', sans-serif", fontSize: 22, fontWeight: 700, color, lineHeight: 1 }}>{volume.toLocaleString()}</div>
+          <div style={{ fontFamily: "'Inter', sans-serif", fontSize: 10, fontWeight: 500, color: "rgba(255,255,255,0.3)", marginTop: 4 }}>lbs lifted</div>
+        </div>
+        <div style={{
+          background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.06)",
+          borderRadius: 14, padding: "18px 14px", textAlign: "center"
+        }}>
+          <div style={{ fontFamily: "'Inter', sans-serif", fontSize: 9, fontWeight: 600, letterSpacing: "0.12em", color: "rgba(255,255,255,0.3)", textTransform: "uppercase", marginBottom: 8 }}>DURATION</div>
+          <div style={{ fontFamily: "'Inter', sans-serif", fontSize: 22, fontWeight: 700, color: "#f0ede6", lineHeight: 1 }}>{formatDuration(duration)}</div>
+          <div style={{ fontFamily: "'Inter', sans-serif", fontSize: 10, fontWeight: 500, color: "rgba(255,255,255,0.3)", marginTop: 4 }}>total time</div>
+        </div>
+        <div style={{
+          background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.06)",
+          borderRadius: 14, padding: "18px 14px", textAlign: "center"
+        }}>
+          <div style={{ fontFamily: "'Inter', sans-serif", fontSize: 9, fontWeight: 600, letterSpacing: "0.12em", color: "rgba(255,255,255,0.3)", textTransform: "uppercase", marginBottom: 8 }}>SETS</div>
+          <div style={{ fontFamily: "'Inter', sans-serif", fontSize: 22, fontWeight: 700, color: "#f0ede6", lineHeight: 1 }}>{totalSets}/{totalSets}</div>
+          <div style={{ fontFamily: "'Inter', sans-serif", fontSize: 10, fontWeight: 500, color: "rgba(255,255,255,0.3)", marginTop: 4 }}>{exerciseCount} exercises</div>
+        </div>
+      </div>
+
+      <div style={{
+        opacity: phase >= 3 ? 1 : 0,
+        transform: phase >= 3 ? "translateY(0)" : "translateY(20px)",
+        transition: "all 0.5s ease",
+        display: "flex", flexDirection: "column", gap: 10, width: "100%", maxWidth: 320
+      }}>
+        <button onClick={onSave} style={{
+          width: "100%", padding: "16px 24px", borderRadius: 12,
+          background: `linear-gradient(135deg, ${color}, rgba(${rgb},0.7))`,
+          border: "none", color: "#fff", fontFamily: "'Inter', sans-serif",
+          fontSize: 15, fontWeight: 700, letterSpacing: "0.04em",
+          cursor: "pointer", transition: "all 0.2s",
+          boxShadow: `0 4px 20px rgba(${rgb},0.3)`
+        }}>
+          Save Workout
+        </button>
+        <button onClick={onDismiss} style={{
+          width: "100%", padding: "12px 24px", borderRadius: 12,
+          background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.08)",
+          color: "rgba(255,255,255,0.4)", fontFamily: "'Inter', sans-serif",
+          fontSize: 12, fontWeight: 600, cursor: "pointer", transition: "all 0.2s"
+        }}>
+          Dismiss
+        </button>
+      </div>
+    </div>
+  );
+}
+
 function SwapModal({ exercise, alternatives, color, onSwap, onClose }) {
   useEffect(() => {
     const handler = (e) => { if (e.key === "Escape") onClose(); };
@@ -1573,6 +1720,10 @@ export default function WorkoutPlan() {
   const [swappedExercises, setSwappedExercises] = useState(() => {
     try { const raw = localStorage.getItem("workout_swaps"); return raw ? JSON.parse(raw) : {}; } catch { return {}; }
   });
+  const [showCompletion, setShowCompletion] = useState(false);
+  const [completionDismissed, setCompletionDismissed] = useState({});
+  const workoutStartTimeRef = useRef({});
+  const completionTimeoutRef = useRef(null);
   const restTimerRef = useRef(null);
   const day = workoutData[activeDay];
 
@@ -1642,12 +1793,27 @@ export default function WorkoutPlan() {
     const originalEx = day.exercises[exerciseIndex];
     const effEx = getEffectiveExercise(day.day, exerciseIndex, originalEx);
     const exName = effEx.name;
+
+    if (!workoutStartTimeRef.current[day.day]) {
+      workoutStartTimeRef.current[day.day] = Date.now();
+    }
+
     setTracking(prev => {
       const next = JSON.parse(JSON.stringify(prev));
       next.sets[day.day][exerciseIndex][setIndex] = { weight, reps };
       saveTracking(next);
       const updatedHistory = saveWorkoutToHistory(next, weights);
       setHistory(updatedHistory);
+
+      const prog = getDayProgress(next, day.day);
+      if (prog.total > 0 && prog.done === prog.total && !completionDismissed[day.day]) {
+        if (completionTimeoutRef.current) clearTimeout(completionTimeoutRef.current);
+        completionTimeoutRef.current = setTimeout(() => {
+          setShowCompletion(true);
+          completionTimeoutRef.current = null;
+        }, 600);
+      }
+
       return next;
     });
     setActiveSetLog(null);
@@ -1678,7 +1844,7 @@ export default function WorkoutPlan() {
     if (doneAfterThis < totalSets) {
       startRestTimer(exName, exerciseIndex);
     }
-  }, [day, tracking, weights, startRestTimer, getEffectiveExercise]);
+  }, [day, tracking, weights, startRestTimer, getEffectiveExercise, completionDismissed]);
 
   const handleSwap = useCallback((dayNum, exIndex, alt) => {
     const key = `${dayNum}-${exIndex}`;
@@ -1745,6 +1911,10 @@ export default function WorkoutPlan() {
       setHistory(updatedHistory);
       return next;
     });
+    setShowCompletion(false);
+    setCompletionDismissed(prev => { const n = { ...prev }; delete n[day.day]; return n; });
+    delete workoutStartTimeRef.current[day.day];
+    if (completionTimeoutRef.current) { clearTimeout(completionTimeoutRef.current); completionTimeoutRef.current = null; }
   }, [day.day, weights]);
 
   const dayProgress = getDayProgress(tracking, day.day);
@@ -1760,6 +1930,7 @@ export default function WorkoutPlan() {
         @keyframes prPulse { 0% { transform: scale(0.5); opacity: 0; } 50% { transform: scale(1.3); } 100% { transform: scale(1); opacity: 1; } }
         @keyframes prGlow { 0%, 100% { box-shadow: 0 0 4px rgba(255,215,0,0.3); } 50% { box-shadow: 0 0 12px rgba(255,215,0,0.6); } }
         @keyframes drawerSlideUp { from { transform: translateY(100%); } to { transform: translateY(0); } }
+        @keyframes confettiFade { 0% { opacity: 0; transform: scale(0) translateY(0); } 30% { opacity: 1; transform: scale(1.5) translateY(-20px); } 100% { opacity: 0; transform: scale(0.8) translateY(30px); } }
         * { box-sizing: border-box; margin: 0; padding: 0; }
         body { background: #08080a; }
         .day-tab { cursor: pointer; transition: all 0.25s ease; border: none; }
@@ -1856,7 +2027,7 @@ export default function WorkoutPlan() {
               const tabComplete = prog.total > 0 && prog.done === prog.total;
               const isActive = activeDay === i;
               return (
-                <button key={i} className="day-tab" onClick={() => { setActiveDay(i); setExpandedEx(null); }} style={{
+                <button key={i} className="day-tab" onClick={() => { setActiveDay(i); setExpandedEx(null); setShowCompletion(false); if (completionTimeoutRef.current) { clearTimeout(completionTimeoutRef.current); completionTimeoutRef.current = null; } }} style={{
                   flex: 1, background: isActive ? `rgba(${hexToRgb(d.color)},0.08)` : "transparent",
                   borderBottom: isActive ? `2px solid ${d.color}` : "2px solid transparent",
                   borderRadius: isActive ? "8px 8px 0 0" : "8px 8px 0 0",
@@ -2147,6 +2318,22 @@ export default function WorkoutPlan() {
           color={day.color}
           onSwap={(alt) => handleSwap(day.day, swapModal.exIndex, alt)}
           onClose={() => setSwapModal(null)}
+        />
+      )}
+      {showCompletion && allComplete && (
+        <CompletionOverlay
+          dayData={day}
+          volume={volume.totalVolume}
+          duration={workoutStartTimeRef.current[day.day] ? Date.now() - workoutStartTimeRef.current[day.day] : 0}
+          color={day.color}
+          onSave={() => {
+            setShowCompletion(false);
+            setCompletionDismissed(prev => ({ ...prev, [day.day]: true }));
+          }}
+          onDismiss={() => {
+            setShowCompletion(false);
+            setCompletionDismissed(prev => ({ ...prev, [day.day]: true }));
+          }}
         />
       )}
     </div>
