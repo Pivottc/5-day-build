@@ -604,6 +604,280 @@ function FormGuideModal({ exercise, color, onClose }) {
   );
 }
 
+const MUSCLE_GROUPS = {
+  chest: { label: "Chest", front: true, path: "M85,75 Q100,70 115,75 L120,95 Q100,105 80,95 Z" },
+  "upper chest": { label: "Upper Chest", front: true, path: "M85,68 Q100,63 115,68 L118,80 Q100,85 82,80 Z" },
+  "inner chest": { label: "Inner Chest", front: true, path: "M93,75 Q100,72 107,75 L108,95 Q100,100 92,95 Z" },
+  "lower chest": { label: "Lower Chest", front: true, path: "M83,90 Q100,100 117,90 L118,95 Q100,105 82,95 Z" },
+  "front delt": { label: "Front Deltoid", front: true, path: "M72,68 Q78,60 85,68 L83,82 Q76,80 72,75 Z M115,68 Q122,60 128,68 L128,75 Q124,80 117,82 Z" },
+  shoulders: { label: "Shoulders", front: true, path: "M68,65 Q78,55 88,65 L85,78 Q76,76 68,72 Z M112,65 Q122,55 132,65 L132,72 Q124,76 115,78 Z" },
+  "side delts": { label: "Side Deltoids", front: true, path: "M68,68 Q72,60 78,65 L76,80 Q70,78 68,74 Z M122,65 Q128,60 132,68 L132,74 Q130,78 124,80 Z" },
+  "rear delts": { label: "Rear Deltoids", front: false, path: "M68,68 Q78,58 88,68 L85,80 Q76,78 68,74 Z M112,68 Q122,58 132,68 L132,74 Q124,78 115,80 Z" },
+  triceps: { label: "Triceps", front: false, path: "M68,85 Q72,80 76,85 L78,115 Q72,118 66,115 Z M124,85 Q128,80 132,85 L134,115 Q128,118 122,115 Z" },
+  "triceps long head": { label: "Triceps Long Head", front: false, path: "M69,88 Q73,83 77,88 L78,112 Q73,115 68,112 Z M123,88 Q127,83 131,88 L132,112 Q127,115 122,112 Z" },
+  biceps: { label: "Biceps", front: true, path: "M70,85 Q75,80 80,85 L82,115 Q76,118 68,115 Z M120,85 Q125,80 130,85 L132,115 Q124,118 118,115 Z" },
+  lats: { label: "Lats", front: false, path: "M78,78 Q88,75 95,80 L95,115 Q85,118 78,112 Z M105,80 Q112,75 122,78 L122,112 Q115,118 105,115 Z" },
+  "mid back": { label: "Mid Back", front: false, path: "M88,78 Q100,75 112,78 L112,100 Q100,105 88,100 Z" },
+  rhomboids: { label: "Rhomboids", front: false, path: "M88,72 Q100,68 112,72 L112,88 Q100,92 88,88 Z" },
+  quads: { label: "Quadriceps", front: true, path: "M80,128 Q88,125 93,128 L95,175 Q88,178 78,175 Z M107,128 Q112,125 120,128 L122,175 Q112,178 105,175 Z" },
+  glutes: { label: "Glutes", front: false, path: "M78,118 Q100,112 122,118 L122,140 Q100,148 78,140 Z" },
+  hamstrings: { label: "Hamstrings", front: false, path: "M80,140 Q88,138 95,140 L95,178 Q88,180 78,178 Z M105,140 Q112,138 120,140 L122,178 Q112,180 105,178 Z" },
+  core: { label: "Core", front: true, path: "M88,98 Q100,95 112,98 L112,130 Q100,135 88,130 Z" },
+  obliques: { label: "Obliques", front: true, path: "M80,100 Q86,98 90,100 L88,130 Q84,132 78,128 Z M110,100 Q114,98 120,100 L122,128 Q116,132 112,130 Z" },
+  "transverse abs": { label: "Transverse Abs", front: true, path: "M88,105 Q100,102 112,105 L112,125 Q100,128 88,125 Z" },
+  serratus: { label: "Serratus", front: true, path: "M78,90 Q82,88 85,92 L84,108 Q80,110 76,106 Z M115,92 Q118,88 122,90 L124,106 Q120,110 116,108 Z" },
+  "lower back": { label: "Lower Back", front: false, path: "M88,100 Q100,98 112,100 L112,125 Q100,128 88,125 Z" },
+  "rotator cuff": { label: "Rotator Cuff", front: false, path: "M75,65 Q82,60 88,65 L86,75 Q80,73 75,70 Z M112,65 Q118,60 125,65 L125,70 Q120,73 114,75 Z" },
+  cardio: { label: "Cardio", front: true, path: "M93,75 Q100,70 107,75 L107,88 Q100,92 93,88 Z" },
+  "shoulder stability": { label: "Shoulder Stability", front: true, path: "M70,62 Q80,55 88,62 L86,72 Q78,70 70,68 Z M112,62 Q120,55 130,62 L130,68 Q122,70 114,72 Z" },
+};
+
+function parseMuscleKeys(muscleStr) {
+  if (!muscleStr) return [];
+  const cleaned = muscleStr.toLowerCase().replace(/—[^,]*/g, "").replace("front & side delts", "front delt, side delts").trim();
+  const tokens = cleaned.split(",").map(t => t.trim()).filter(Boolean);
+  const found = new Set();
+  const sortedKeys = Object.keys(MUSCLE_GROUPS).sort((a, b) => b.length - a.length);
+  for (const token of tokens) {
+    let matched = false;
+    for (const k of sortedKeys) {
+      if (token.includes(k)) { found.add(k); matched = true; }
+    }
+    if (!matched) {
+      if (token === "back") found.add("lats");
+      else if (token === "legs") { found.add("quads"); found.add("hamstrings"); }
+    }
+  }
+  return [...found];
+}
+
+function MuscleMap({ muscles, color }) {
+  const keys = parseMuscleKeys(muscles);
+  const hasFront = keys.some(k => MUSCLE_GROUPS[k]?.front);
+  const hasBack = keys.some(k => MUSCLE_GROUPS[k] && !MUSCLE_GROUPS[k].front);
+  const rgb = hexToRgb(color);
+
+  const renderBody = (isFront) => (
+    <svg viewBox="55 40 90 160" style={{ width: "100%", height: "100%" }}>
+      <g opacity="0.15" stroke="rgba(255,255,255,0.2)" strokeWidth="0.5" fill="none">
+        <ellipse cx="100" cy="52" rx="12" ry="14" />
+        <path d="M88,66 Q78,58 68,66 L66,120 Q68,125 78,128 L80,128 Q88,135 88,128 L88,66 Z" />
+        <path d="M112,66 Q122,58 132,66 L134,120 Q132,125 122,128 L120,128 Q112,135 112,128 L112,66 Z" />
+        <path d="M88,66 L88,130 Q88,135 93,135 L93,190 Q88,192 85,190 L78,128" />
+        <path d="M112,66 L112,130 Q112,135 107,135 L107,190 Q112,192 115,190 L122,128" />
+      </g>
+      {keys.map((k, i) => {
+        const mg = MUSCLE_GROUPS[k];
+        if (!mg || mg.front !== isFront) return null;
+        return <path key={i} d={mg.path} fill={`rgba(${rgb},0.4)`} stroke={color} strokeWidth="0.8" opacity="0.9" />;
+      })}
+      <text x="100" y="198" textAnchor="middle" fontSize="7" fill="rgba(255,255,255,0.3)" fontFamily="Inter, sans-serif">{isFront ? "FRONT" : "BACK"}</text>
+    </svg>
+  );
+
+  return (
+    <div style={{ display: "flex", gap: 12, justifyContent: "center" }}>
+      {(hasFront || !hasBack) && <div style={{ width: 100, height: 170 }}>{renderBody(true)}</div>}
+      {hasBack && <div style={{ width: 100, height: 170 }}>{renderBody(false)}</div>}
+    </div>
+  );
+}
+
+function WeightChart({ exerciseName, history, color }) {
+  const dataPoints = [];
+  const sortedDates = Object.keys(history).sort();
+  sortedDates.forEach(dateKey => {
+    const entry = history[dateKey];
+    entry.sessions.forEach(sess => {
+      sess.exercises.forEach(ex => {
+        if (ex.name === exerciseName && ex.completedCount > 0) {
+          let maxWeight = ex.weight;
+          if (ex.setDetails && ex.setDetails.length > 0) {
+            maxWeight = Math.max(...ex.setDetails.map(s => s.weight));
+          }
+          dataPoints.push({ date: dateKey, weight: maxWeight });
+        }
+      });
+    });
+  });
+
+  const last8 = dataPoints.slice(-8);
+  if (last8.length === 0) {
+    return (
+      <div style={{ textAlign: "center", padding: "24px 0" }}>
+        <div style={{ fontFamily: "'Inter', sans-serif", fontSize: 11, color: "rgba(255,255,255,0.25)" }}>No history yet. Log sets to see your progression.</div>
+      </div>
+    );
+  }
+
+  const weights = last8.map(d => d.weight);
+  const minW = Math.min(...weights) * 0.85;
+  const maxW = Math.max(...weights) * 1.05;
+  const range = maxW - minW || 1;
+  const chartW = 280;
+  const chartH = 100;
+  const padL = 36;
+  const padR = 10;
+  const padT = 10;
+  const padB = 24;
+  const plotW = chartW - padL - padR;
+  const plotH = chartH - padT - padB;
+
+  const points = last8.map((d, i) => ({
+    x: padL + (last8.length === 1 ? plotW / 2 : (i / (last8.length - 1)) * plotW),
+    y: padT + plotH - ((d.weight - minW) / range) * plotH,
+    ...d
+  }));
+
+  const linePath = points.map((p, i) => `${i === 0 ? "M" : "L"}${p.x},${p.y}`).join(" ");
+  const areaPath = linePath + ` L${points[points.length-1].x},${padT + plotH} L${points[0].x},${padT + plotH} Z`;
+  const rgb = hexToRgb(color);
+
+  return (
+    <svg viewBox={`0 0 ${chartW} ${chartH}`} style={{ width: "100%", height: "auto" }}>
+      {[0, 0.5, 1].map((f, i) => {
+        const y = padT + plotH * (1 - f);
+        const val = Math.round(minW + range * f);
+        return (
+          <g key={i}>
+            <line x1={padL} y1={y} x2={chartW - padR} y2={y} stroke="rgba(255,255,255,0.06)" strokeWidth="0.5" />
+            <text x={padL - 4} y={y + 3} textAnchor="end" fontSize="6" fill="rgba(255,255,255,0.25)" fontFamily="Inter, sans-serif">{val}</text>
+          </g>
+        );
+      })}
+      <defs>
+        <linearGradient id={`chartGrad-${color.replace('#','')}`} x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stopColor={color} stopOpacity="0.25" />
+          <stop offset="100%" stopColor={color} stopOpacity="0" />
+        </linearGradient>
+      </defs>
+      <path d={areaPath} fill={`url(#chartGrad-${color.replace('#','')})`} />
+      <path d={linePath} fill="none" stroke={color} strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+      {points.map((p, i) => (
+        <g key={i}>
+          <circle cx={p.x} cy={p.y} r="3" fill="#08080a" stroke={color} strokeWidth="1.5" />
+          <text x={p.x} y={padT + plotH + 14} textAnchor="middle" fontSize="5" fill="rgba(255,255,255,0.2)" fontFamily="Inter, sans-serif">
+            {p.date.slice(5)}
+          </text>
+        </g>
+      ))}
+    </svg>
+  );
+}
+
+function ExerciseDetailDrawer({ exercise, color, history, prs, onClose }) {
+  useEffect(() => {
+    const handler = (e) => { if (e.key === "Escape") onClose(); };
+    window.addEventListener("keydown", handler);
+    document.body.style.overflow = "hidden";
+    return () => { window.removeEventListener("keydown", handler); document.body.style.overflow = ""; };
+  }, [onClose]);
+
+  const rgb = hexToRgb(color);
+  const pr = prs[exercise.name];
+  const muscleList = exercise.muscles.split(",").map(m => m.trim());
+
+  return (
+    <div onClick={onClose} style={{
+      position: "fixed", inset: 0, zIndex: 1000,
+      background: "rgba(0,0,0,0.7)", backdropFilter: "blur(8px)",
+      display: "flex", alignItems: "flex-end", justifyContent: "center",
+      animation: "fadeIn 0.2s ease"
+    }}>
+      <div onClick={e => e.stopPropagation()} style={{
+        width: "100%", maxWidth: 480,
+        background: "linear-gradient(180deg, #141416 0%, #0c0c0e 100%)",
+        borderRadius: "20px 20px 0 0",
+        border: "1px solid rgba(255,255,255,0.06)",
+        borderBottom: "none",
+        maxHeight: "85vh", overflowY: "auto",
+        animation: "drawerSlideUp 0.35s cubic-bezier(0.16, 1, 0.3, 1)"
+      }}>
+        <div style={{ width: 36, height: 4, borderRadius: 2, background: "rgba(255,255,255,0.15)", margin: "12px auto 0" }} />
+
+        <div style={{ padding: "20px 24px 0" }}>
+          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start" }}>
+            <div>
+              <div style={{ fontFamily: "'Inter', sans-serif", fontSize: 10, fontWeight: 700, letterSpacing: "0.15em", color: color, textTransform: "uppercase", marginBottom: 4 }}>{exercise.equipment}</div>
+              <div style={{ fontFamily: "'Inter', sans-serif", fontSize: 22, fontWeight: 700, color: "#f0ede6", lineHeight: 1.2 }}>{exercise.name}</div>
+            </div>
+            <button onClick={onClose} style={{
+              background: "rgba(255,255,255,0.06)", border: "1px solid rgba(255,255,255,0.1)", color: "#888",
+              borderRadius: 8, width: 32, height: 32, cursor: "pointer", fontSize: 16,
+              display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0
+            }}>×</button>
+          </div>
+
+          <div style={{ display: "flex", gap: 6, marginTop: 10, flexWrap: "wrap" }}>
+            {muscleList.map((m, i) => (
+              <span key={i} style={{
+                fontFamily: "'Inter', sans-serif", fontSize: 10, fontWeight: 600,
+                background: `rgba(${rgb},0.1)`, color: color,
+                padding: "3px 10px", borderRadius: 20,
+                border: `1px solid rgba(${rgb},0.2)`,
+                letterSpacing: "0.03em"
+              }}>{m}</span>
+            ))}
+          </div>
+          {pr && (
+            <div style={{
+              display: "flex", alignItems: "center", gap: 8, marginTop: 10,
+              background: "rgba(255,215,0,0.06)", border: "1px solid rgba(255,215,0,0.12)",
+              borderRadius: 8, padding: "8px 12px"
+            }}>
+              <span style={{ fontFamily: "'Inter', sans-serif", fontSize: 9, fontWeight: 700, letterSpacing: "0.06em", background: "rgba(255,215,0,0.15)", color: "#FFD700", padding: "2px 6px", borderRadius: 4, border: "1px solid rgba(255,215,0,0.2)" }}>PR</span>
+              <span style={{ fontFamily: "'Inter', sans-serif", fontSize: 12, color: "rgba(255,215,0,0.7)", fontWeight: 500 }}>{pr.weight} lbs × {pr.reps} reps</span>
+              <span style={{ fontFamily: "'Inter', sans-serif", fontSize: 10, color: "rgba(255,215,0,0.35)" }}>({pr.date})</span>
+            </div>
+          )}
+        </div>
+
+        <div style={{ padding: "20px 24px" }}>
+          <div style={{ fontFamily: "'Inter', sans-serif", fontSize: 10, fontWeight: 700, letterSpacing: "0.15em", textTransform: "uppercase", color: "rgba(255,255,255,0.3)", marginBottom: 14 }}>MUSCLE MAP</div>
+          <div style={{
+            background: "rgba(255,255,255,0.02)", border: "1px solid rgba(255,255,255,0.06)",
+            borderRadius: 12, padding: "16px 12px", display: "flex", justifyContent: "center"
+          }}>
+            <MuscleMap muscles={exercise.muscles} color={color} />
+          </div>
+        </div>
+
+        <div style={{ padding: "0 24px 20px" }}>
+          <div style={{ fontFamily: "'Inter', sans-serif", fontSize: 10, fontWeight: 700, letterSpacing: "0.15em", textTransform: "uppercase", color: "rgba(255,255,255,0.3)", marginBottom: 10 }}>COACHING CUES</div>
+          <div style={{
+            background: "rgba(255,255,255,0.02)", border: "1px solid rgba(255,255,255,0.06)",
+            borderRadius: 12, padding: 16
+          }}>
+            <div style={{ fontFamily: "'Inter', sans-serif", fontSize: 13, color: "rgba(255,255,255,0.7)", lineHeight: 1.7 }}>
+              {exercise.tip}
+            </div>
+            <div style={{ marginTop: 12, display: "flex", gap: 8 }}>
+              <div style={{ background: `rgba(${rgb},0.08)`, border: `1px solid rgba(${rgb},0.15)`, borderRadius: 8, padding: "8px 12px", flex: 1, textAlign: "center" }}>
+                <div style={{ fontFamily: "'Inter', sans-serif", fontSize: 18, fontWeight: 700, color: color }}>{exercise.sets}×{exercise.reps}</div>
+                <div style={{ fontFamily: "'Inter', sans-serif", fontSize: 9, color: "rgba(255,255,255,0.3)", letterSpacing: "0.06em", marginTop: 2 }}>SETS × REPS</div>
+              </div>
+              <div style={{ background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.06)", borderRadius: 8, padding: "8px 12px", flex: 1, textAlign: "center" }}>
+                <div style={{ fontFamily: "'Inter', sans-serif", fontSize: 18, fontWeight: 700, color: "#f0ede6" }}>{exercise.startWeight}</div>
+                <div style={{ fontFamily: "'Inter', sans-serif", fontSize: 9, color: "rgba(255,255,255,0.3)", letterSpacing: "0.06em", marginTop: 2 }}>START WEIGHT</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div style={{ padding: "0 24px 28px" }}>
+          <div style={{ fontFamily: "'Inter', sans-serif", fontSize: 10, fontWeight: 700, letterSpacing: "0.15em", textTransform: "uppercase", color: "rgba(255,255,255,0.3)", marginBottom: 10 }}>WEIGHT PROGRESSION</div>
+          <div style={{
+            background: "rgba(255,255,255,0.02)", border: "1px solid rgba(255,255,255,0.06)",
+            borderRadius: 12, padding: "16px 12px"
+          }}>
+            <WeightChart exerciseName={exercise.name} history={history} color={color} />
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
 function HistoryDetailModal({ entry, onClose }) {
   useEffect(() => {
     const handler = (e) => { if (e.key === "Escape") onClose(); };
@@ -894,6 +1168,7 @@ export default function WorkoutPlan() {
   const [restTimer, setRestTimer] = useState(null);
   const [prs, setPrs] = useState(() => loadPRs());
   const [newPRs, setNewPRs] = useState({});
+  const [detailDrawerEx, setDetailDrawerEx] = useState(null);
   const restTimerRef = useRef(null);
   const day = workoutData[activeDay];
 
@@ -1049,6 +1324,7 @@ export default function WorkoutPlan() {
         @keyframes slideUp { from { opacity: 0; transform: translateY(24px); } to { opacity: 1; transform: translateY(0); } }
         @keyframes prPulse { 0% { transform: scale(0.5); opacity: 0; } 50% { transform: scale(1.3); } 100% { transform: scale(1); opacity: 1; } }
         @keyframes prGlow { 0%, 100% { box-shadow: 0 0 4px rgba(255,215,0,0.3); } 50% { box-shadow: 0 0 12px rgba(255,215,0,0.6); } }
+        @keyframes drawerSlideUp { from { transform: translateY(100%); } to { transform: translateY(0); } }
         * { box-sizing: border-box; margin: 0; padding: 0; }
         body { background: #08080a; }
         .day-tab { cursor: pointer; transition: all 0.25s ease; border: none; }
@@ -1263,7 +1539,11 @@ export default function WorkoutPlan() {
                       <div style={{ fontFamily: "'Inter', sans-serif", fontSize: 9, color: "rgba(255,255,255,0.2)", letterSpacing: "0.06em", textTransform: "uppercase", marginTop: 2, fontWeight: 500 }}>sets × reps</div>
                     </div>
                   </div>
-                  <div style={{ color: "rgba(255,255,255,0.15)", fontSize: 16, transform: isOpen ? "rotate(90deg)" : "rotate(0deg)", transition: "transform 0.3s cubic-bezier(0.4, 0, 0.2, 1)", marginLeft: 2 }}>›</div>
+                  <button onClick={(e) => { e.stopPropagation(); setDetailDrawerEx(ex); }} style={{
+                    background: "none", border: "none", color: "rgba(255,255,255,0.2)", fontSize: 16, cursor: "pointer",
+                    padding: "6px 2px", marginLeft: 2, transition: "color 0.2s",
+                    display: "flex", alignItems: "center", justifyContent: "center"
+                  }} title="Exercise details">›</button>
                 </div>
 
                 {showSetLog && (
@@ -1355,6 +1635,7 @@ export default function WorkoutPlan() {
 
       {formGuideEx && <FormGuideModal exercise={formGuideEx} color={day.color} onClose={() => setFormGuideEx(null)} />}
       {historyDetail && <HistoryDetailModal entry={historyDetail} onClose={() => setHistoryDetail(null)} />}
+      {detailDrawerEx && <ExerciseDetailDrawer exercise={detailDrawerEx} color={day.color} history={history} prs={prs} onClose={() => setDetailDrawerEx(null)} />}
     </div>
   );
 }
