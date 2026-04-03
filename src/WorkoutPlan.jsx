@@ -2,6 +2,7 @@ import { useState, useEffect, useCallback, useRef, useMemo } from "react";
 import { sendSWMessage, getNotificationPermission } from "./pwaRegister";
 import NotificationPrompt from "./NotificationPrompt";
 import NotificationSettings from "./NotificationSettings";
+import BodyMetrics from "./BodyMetrics";
 
 const PHASE_LABELS = ["Starting Position", "Movement", "Finish Position"];
 
@@ -2044,6 +2045,21 @@ export default function WorkoutPlan() {
                   </button>
                   <button
                     className="view-toggle"
+                    onClick={() => setView("body")}
+                    style={{
+                      background: "rgba(255,255,255,0.04)",
+                      border: "1px solid rgba(255,255,255,0.08)",
+                      color: "rgba(255,255,255,0.5)",
+                      fontFamily: "'Inter', sans-serif", fontSize: 11, fontWeight: 600,
+                      letterSpacing: "0.05em", textTransform: "uppercase",
+                      padding: "10px 14px", borderRadius: 10, cursor: "pointer",
+                      transition: "all 0.25s", whiteSpace: "nowrap"
+                    }}
+                  >
+                    Body
+                  </button>
+                  <button
+                    className="view-toggle"
                     onClick={() => setShowNotifSettings(true)}
                     style={{
                       background: "rgba(255,255,255,0.04)",
@@ -2098,6 +2114,10 @@ export default function WorkoutPlan() {
 
       {view === "stats" && (
         <StatsView history={history} />
+      )}
+
+      {view === "body" && (
+        <BodyMetrics />
       )}
 
       {view === "workout" && (

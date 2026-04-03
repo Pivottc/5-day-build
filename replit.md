@@ -8,6 +8,7 @@ A React-based interactive workout plan application showing a personalized 5-day 
 - `src/WorkoutPlan.jsx` - Main workout plan component with all workout data, exercise cards, and form guide modal
 - `src/NotificationSettings.jsx` - Notification settings modal (workout reminders, rest timer alerts)
 - `src/NotificationPrompt.jsx` - First-launch notification permission prompt
+- `src/BodyMetrics.jsx` - Body metrics tracker (weight chart, measurements, log sheet)
 - `src/pwaRegister.js` - Service worker registration and notification helpers
 - `public/manifest.json` - PWA manifest (app name, icons, theme/background colors)
 - `public/sw.js` - Service worker (rest timer notifications, scheduled workout reminders)
@@ -50,6 +51,13 @@ A React-based interactive workout plan application showing a personalized 5-day 
   - Scheduled workout reminders: user picks days of the week and a time (stored in `workout_reminders` localStorage); fires "Time to train. Your [Day Name] workout is ready." at the scheduled time
   - Notification settings page (⚙ gear icon in header): toggle reminders on/off, pick training days, set reminder time, shows rest timer alert status
   - First-launch notification permission prompt: clean custom UI prompt (not raw browser default) appears after 2 seconds on first visit; "Enable Notifications" / "Maybe Later" buttons; stores `workout_notif_prompted` flag so it only shows once
+- Body Metrics Tracker ("Body" tab in header nav):
+  - Log body weight (lbs or kg, toggleable), body fat % (optional), and 8 body measurements (neck, chest, waist, hips, left/right arm, left/right thigh)
+  - Line chart for body weight over time with selectable range (30/90/180 days), shows current weight and delta
+  - Measurements summary card with delta since first entry for each measurement site
+  - Recent entries list showing last 5 logged dates with summary
+  - "+ Log Today" floating button opens a quick-entry bottom sheet for fast logging
+  - All entries stored in `workout_body_metrics` localStorage with timestamps; unit preference in `workout_body_unit`
 - Full localStorage persistence: all logged data survives page refreshes and browser restarts
   - `workout_tracking` — daily set logs with per-set weight/reps (auto-resets next day)
   - `workout_weights` — custom weight overrides per exercise (permanent)
@@ -61,6 +69,8 @@ A React-based interactive workout plan application showing a personalized 5-day 
   - `workout_start_times` — workout start timestamps for duration tracking (cleared on reset)
   - `workout_reminders` — notification reminder settings (days, time, enabled flag)
   - `workout_notif_prompted` — tracks whether notification permission prompt has been shown
+  - `workout_body_metrics` — body weight, body fat %, and measurement entries with timestamps
+  - `workout_body_unit` — unit preference for body metrics (imperial/metric)
 - Dark theme (#08080a background) with per-day color coding
 - Modern glassmorphic UI with Inter font, rgba borders, backdrop blur, smooth transitions
 
