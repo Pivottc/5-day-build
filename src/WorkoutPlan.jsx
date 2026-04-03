@@ -137,6 +137,19 @@ function getWeight(weights, dayNum, exIndex, fallback) {
   return weights[key] !== undefined ? weights[key] : fallback;
 }
 
+function loadPRs() {
+  try {
+    const raw = localStorage.getItem("workout_prs");
+    if (!raw) return {};
+    return JSON.parse(raw);
+  } catch { return {}; }
+}
+
+function savePRs(data) {
+  localStorage.setItem("workout_prs", JSON.stringify(data));
+}
+
+
 function loadHistory() {
   try {
     const raw = localStorage.getItem("workout_history");
@@ -858,6 +871,8 @@ export default function WorkoutPlan() {
   const [activeSetLog, setActiveSetLog] = useState(null);
   const [restTimes, setRestTimes] = useState(() => loadRestTimes());
   const [restTimer, setRestTimer] = useState(null);
+  const [prs, setPrs] = useState(() => loadPRs());
+  const [newPRs, setNewPRs] = useState({});
   const restTimerRef = useRef(null);
   const day = workoutData[activeDay];
 
@@ -925,6 +940,27 @@ export default function WorkoutPlan() {
       return next;
     });
     setActiveSetLog(null);
+
+    const w = parseNumericWeight(weight);
+    const r = parseNumericReps(reps);
+    const vol = w * r;
+    if (vol > 0) {
+      setPrs(prev => {
+        const existing = prev[exName];
+        if (!existing || !existing.volume || vol > existing.volume) {
+          const dateKey = getTodayKey();
+          const next = { ...prev, [exName]: { volume: vol, weight: w, reps: r, date: dateKey } };
+          savePRs(next);
+          setNewPRs(p => ({ ...p, [exName]: true }));
+          setTimeout(() => {
+            setNewPRs(p => { const n = { ...p }; delete n[exName]; return n; });
+          }, 4000);
+          return next;
+        }
+        return prev;
+      });
+    }
+
     const totalSets = day.exercises[exerciseIndex].sets;
     const setsArr = tracking.sets[day.day][exerciseIndex] || [];
     const doneAfterThis = setsArr.filter((v, idx) => idx === setIndex ? true : isSetDone(v)).length;
@@ -990,6 +1026,8 @@ export default function WorkoutPlan() {
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
         @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
         @keyframes slideUp { from { opacity: 0; transform: translateY(24px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes prPulse { 0% { transform: scale(0.5); opacity: 0; } 50% { transform: scale(1.3); } 100% { transform: scale(1); opacity: 1; } }
+        @keyframes prGlow { 0%, 100% { box-shadow: 0 0 4px rgba(255,215,0,0.3); } 50% { box-shadow: 0 0 12px rgba(255,215,0,0.6); } }
         * { box-sizing: border-box; margin: 0; padding: 0; }
         body { background: #08080a; }
         .day-tab { cursor: pointer; transition: all 0.25s ease; border: none; }
@@ -1167,14 +1205,31 @@ export default function WorkoutPlan() {
             const showSetLog = activeSetLog && activeSetLog.exIndex === i;
             const defaultWeight = getWeight(weights, day.day, i, ex.startWeight);
             const defaultReps = ex.reps;
+            const hasPR = prs[ex.name] && prs[ex.name].date === getTodayKey();
+            const isNewPR = newPRs[ex.name];
             return (
-              <div key={i} className={`ex-card ${isOpen ? "open" : ""} ${exDone ? "done-card" : ""}`} style={{ background: "rgba(255,255,255,0.02)", border: "1px solid rgba(255,255,255,0.06)", borderRadius: 14, overflow: "hidden", "--day-color": day.color }}>
+              <div key={i} className={`ex-card ${isOpen ? "open" : ""} ${exDone ? "done-card" : ""}`} style={{ background: "rgba(255,255,255,0.02)", border: hasPR ? "1px solid rgba(255,215,0,0.15)" : "1px solid rgba(255,255,255,0.06)", borderRadius: 14, overflow: "hidden", "--day-color": day.color }}>
                 <div onClick={() => setExpandedEx(isOpen ? null : i)} style={{ display: "flex", alignItems: "center", gap: 14, padding: "16px 18px", cursor: "pointer" }}>
                   <div style={{ fontFamily: "'Inter', sans-serif", fontSize: 20, fontWeight: 700, color: exDone ? day.color : (isOpen ? day.color : "rgba(255,255,255,0.12)"), minWidth: 28, transition: "color 0.25s", lineHeight: 1, textAlign: "center" }}>
                     {exDone ? "✓" : String(i + 1).padStart(2, "0")}
                   </div>
                   <div style={{ flex: 1 }}>
-                    <div style={{ fontFamily: "'Inter', sans-serif", fontSize: 14, fontWeight: 600, color: exDone ? "rgba(255,255,255,0.4)" : "#fff", marginBottom: 5, textDecoration: exDone ? "line-through" : "none", textDecorationColor: `rgba(${hexToRgb(day.color)},0.5)` }}>{ex.name}</div>
+                    <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 5 }}>
+                      <span style={{ fontFamily: "'Inter', sans-serif", fontSize: 14, fontWeight: 600, color: exDone ? "rgba(255,255,255,0.4)" : "#fff", textDecoration: exDone ? "line-through" : "none", textDecorationColor: `rgba(${hexToRgb(day.color)},0.5)` }}>{ex.name}</span>
+                      {hasPR && (
+                        <span style={{
+                          fontFamily: "'Inter', sans-serif", fontSize: 9, fontWeight: 700,
+                          letterSpacing: "0.06em", textTransform: "uppercase",
+                          background: "rgba(255,215,0,0.15)", color: "#FFD700",
+                          padding: "2px 7px", borderRadius: 5,
+                          border: "1px solid rgba(255,215,0,0.25)",
+                          animation: isNewPR ? "prPulse 0.5s ease, prGlow 2s ease infinite" : "prGlow 3s ease infinite",
+                          display: "inline-flex", alignItems: "center", gap: 3
+                        }}>
+                          PR
+                        </span>
+                      )}
+                    </div>
                     <div style={{ display: "flex", gap: 5, flexWrap: "wrap" }}>
                       <span className="pill">{ex.equipment}</span>
                       <span className="pill">{ex.muscles}</span>
@@ -1201,7 +1256,7 @@ export default function WorkoutPlan() {
                   />
                 )}
 
-                <div className="expand-detail" style={{ maxHeight: isOpen ? 280 : 0 }}>
+                <div className="expand-detail" style={{ maxHeight: isOpen ? 340 : 0 }}>
                   <div style={{ borderTop: "1px solid rgba(255,255,255,0.05)", padding: "14px 18px 16px" }}>
                     <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr auto", gap: 16, alignItems: "center" }}>
                       <div style={{ "--day-color": day.color }}>
@@ -1246,6 +1301,17 @@ export default function WorkoutPlan() {
                         );
                       })}
                     </div>
+                    {prs[ex.name] && (
+                      <div style={{ display: "flex", alignItems: "center", gap: 8, marginTop: 10, paddingTop: 8, borderTop: "1px solid rgba(255,255,255,0.04)" }}>
+                        <span style={{ fontFamily: "'Inter', sans-serif", fontSize: 9, fontWeight: 700, letterSpacing: "0.06em", textTransform: "uppercase", background: "rgba(255,215,0,0.12)", color: "#FFD700", padding: "2px 6px", borderRadius: 4, border: "1px solid rgba(255,215,0,0.2)" }}>PR</span>
+                        <span style={{ fontFamily: "'Inter', sans-serif", fontSize: 11, color: "rgba(255,255,255,0.4)", fontWeight: 500 }}>
+                          {prs[ex.name].weight} lbs × {prs[ex.name].reps} reps
+                        </span>
+                        <span style={{ fontFamily: "'Inter', sans-serif", fontSize: 10, color: "rgba(255,255,255,0.2)", fontWeight: 400 }}>
+                          ({prs[ex.name].date})
+                        </span>
+                      </div>
+                    )}
                   </div>
                 </div>
               </div>
