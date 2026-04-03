@@ -32,8 +32,9 @@ A React-based interactive workout plan application showing a personalized 5-day 
   - Click any past date to see full workout detail modal (exercises, sets, volume breakdown)
   - Navigate months with prev/next buttons
 - Set tracking data persists in localStorage, resets daily
-- Dark theme with per-day color coding
-- Fully inline styles with Bebas Neue + Lato fonts
+- Dark theme (#08080a background) with per-day color coding
+- Modern glassmorphic UI with Inter font, rgba borders, backdrop blur, smooth transitions
+- Bottom tip cards (Progression, Protein Goal, Recovery) and footer text removed for cleaner layout
 
 ## Running
 - `npm run dev` starts the Vite dev server on port 5000
