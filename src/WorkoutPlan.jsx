@@ -98,15 +98,24 @@ function saveTracking(data) {
 
 function initTracking() {
   const existing = loadTracking();
-  if (existing) return existing;
+  if (existing) {
+    if (!existing.warmup) {
+      existing.warmup = {};
+      workoutData.forEach((day) => { existing.warmup[day.day] = false; });
+      saveTracking(existing);
+    }
+    return existing;
+  }
   const sets = {};
+  const warmup = {};
   workoutData.forEach((day) => {
     sets[day.day] = {};
+    warmup[day.day] = false;
     day.exercises.forEach((ex, ei) => {
       sets[day.day][ei] = Array(ex.sets).fill(false);
     });
   });
-  const fresh = { date: getTodayKey(), sets };
+  const fresh = { date: getTodayKey(), sets, warmup };
   saveTracking(fresh);
   return fresh;
 }
@@ -680,6 +689,18 @@ export default function WorkoutPlan() {
     });
   }, [day.day, weights]);
 
+  const toggleWarmup = useCallback(() => {
+    setTracking(prev => {
+      const next = JSON.parse(JSON.stringify(prev));
+      if (!next.warmup) next.warmup = {};
+      next.warmup[day.day] = !next.warmup[day.day];
+      saveTracking(next);
+      const updatedHistory = saveWorkoutToHistory(next, weights);
+      setHistory(updatedHistory);
+      return next;
+    });
+  }, [day.day, weights]);
+
   const resetDay = useCallback(() => {
     setTracking(prev => {
       const next = JSON.parse(JSON.stringify(prev));
@@ -687,6 +708,7 @@ export default function WorkoutPlan() {
       Object.keys(daySets).forEach(ei => {
         daySets[ei] = daySets[ei].map(() => false);
       });
+      if (next.warmup) next.warmup[day.day] = false;
       saveTracking(next);
       const updatedHistory = saveWorkoutToHistory(next, weights);
       setHistory(updatedHistory);
@@ -798,10 +820,38 @@ export default function WorkoutPlan() {
             <h2 style={{ fontFamily: "'Inter', sans-serif", fontSize: 28, fontWeight: 700, letterSpacing: "-0.02em", lineHeight: 1.1, color: "#fff" }}>{day.title}</h2>
             <div style={{ fontFamily: "'Inter', sans-serif", fontSize: 12, color: "rgba(255,255,255,0.25)", marginTop: 6, fontWeight: 400 }}>{day.equipment}</div>
           </div>
-          <div style={{ background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.06)", borderRadius: 12, padding: "12px 16px", minWidth: 140, backdropFilter: "blur(8px)" }}>
-            <div style={{ fontFamily: "'Inter', sans-serif", fontSize: 10, color: "rgba(255,255,255,0.3)", letterSpacing: "0.1em", textTransform: "uppercase", marginBottom: 4, fontWeight: 500 }}>Walk/Jog</div>
-            <div style={{ fontFamily: "'Inter', sans-serif", fontSize: 12, color: "rgba(255,255,255,0.6)", lineHeight: 1.4, fontWeight: 400 }}>10 minutes</div>
-          </div>
+          {(() => {
+            const warmupDone = tracking.warmup && tracking.warmup[day.day];
+            return (
+              <button
+                onClick={toggleWarmup}
+                style={{
+                  background: warmupDone ? `rgba(${hexToRgb(day.color)},0.1)` : "rgba(255,255,255,0.03)",
+                  border: warmupDone ? `1px solid rgba(${hexToRgb(day.color)},0.25)` : "1px solid rgba(255,255,255,0.06)",
+                  borderRadius: 12, padding: "12px 16px", minWidth: 140,
+                  backdropFilter: "blur(8px)", cursor: "pointer",
+                  transition: "all 0.25s", textAlign: "left",
+                  display: "flex", alignItems: "center", gap: 10
+                }}
+              >
+                <div style={{
+                  width: 22, height: 22, borderRadius: "50%",
+                  border: `1.5px solid ${warmupDone ? day.color : "rgba(255,255,255,0.15)"}`,
+                  background: warmupDone ? `rgba(${hexToRgb(day.color)},0.2)` : "transparent",
+                  display: "flex", alignItems: "center", justifyContent: "center",
+                  transition: "all 0.25s", flexShrink: 0,
+                  color: warmupDone ? day.color : "transparent",
+                  fontFamily: "'Inter', sans-serif", fontSize: 11, fontWeight: 700
+                }}>
+                  {warmupDone ? "✓" : ""}
+                </div>
+                <div>
+                  <div style={{ fontFamily: "'Inter', sans-serif", fontSize: 10, color: warmupDone ? day.color : "rgba(255,255,255,0.3)", letterSpacing: "0.1em", textTransform: "uppercase", marginBottom: 3, fontWeight: 500, transition: "color 0.25s" }}>Walk/Jog</div>
+                  <div style={{ fontFamily: "'Inter', sans-serif", fontSize: 12, color: warmupDone ? "rgba(255,255,255,0.4)" : "rgba(255,255,255,0.6)", lineHeight: 1.4, fontWeight: 400, textDecoration: warmupDone ? "line-through" : "none", textDecorationColor: `rgba(${hexToRgb(day.color)},0.5)`, transition: "all 0.25s" }}>10 minutes</div>
+                </div>
+              </button>
+            );
+          })()}
         </div>
 
         <div style={{ marginBottom: 20, padding: "16px 20px", background: "rgba(255,255,255,0.02)", border: "1px solid rgba(255,255,255,0.06)", borderRadius: 14 }}>
