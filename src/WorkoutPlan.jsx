@@ -156,7 +156,7 @@ function saveWorkoutToHistory(tracking, weights) {
   workoutData.forEach((dayData) => {
     const daySets = tracking.sets[dayData.day];
     if (!daySets) return;
-    const completedCount = Object.values(daySets).reduce((sum, arr) => sum + arr.filter(Boolean).length, 0);
+    const completedCount = Object.values(daySets).reduce((sum, arr) => sum + arr.filter(v => isSetDone(v)).length, 0);
     if (completedCount === 0) return;
     const totalSets = Object.values(daySets).reduce((sum, arr) => sum + arr.length, 0);
     const vol = getDayVolume(dayData, tracking, weights);
@@ -191,12 +191,18 @@ function getMonthDays(year, month) {
 
 const MONTH_NAMES = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
 
+function isSetDone(v) {
+  if (!v) return false;
+  if (v === true) return true;
+  return typeof v === "object" && v.weight !== undefined;
+}
+
 function getDayProgress(tracking, dayNum) {
   const daySets = tracking.sets[dayNum];
   if (!daySets) return { done: 0, total: 0 };
   let done = 0, total = 0;
   Object.values(daySets).forEach(arr => {
-    arr.forEach(v => { total++; if (v) done++; });
+    arr.forEach(v => { total++; if (isSetDone(v)) done++; });
   });
   return { done, total };
 }
@@ -217,38 +223,142 @@ function getDayVolume(dayData, tracking, weights) {
   let totalVolume = 0;
   let perExercise = [];
   dayData.exercises.forEach((ex, ei) => {
-    const setsCompleted = tracking.sets[dayData.day]?.[ei] || [];
-    const completedCount = setsCompleted.filter(Boolean).length;
-    const weightVal = parseNumericWeight(getWeight(weights, dayData.day, ei, ex.startWeight));
-    const repsVal = parseNumericReps(ex.reps);
-    const volume = weightVal * repsVal * completedCount;
-    perExercise.push({ name: ex.name, volume, completedCount, totalSets: ex.sets, weight: weightVal, reps: repsVal });
+    const setsArr = tracking.sets[dayData.day]?.[ei] || [];
+    let completedCount = 0;
+    let volume = 0;
+    const fallbackWeight = parseNumericWeight(getWeight(weights, dayData.day, ei, ex.startWeight));
+    const fallbackReps = parseNumericReps(ex.reps);
+    setsArr.forEach(v => {
+      if (isSetDone(v)) {
+        completedCount++;
+        const w = (typeof v === "object" && v.weight !== undefined) ? parseNumericWeight(v.weight) : fallbackWeight;
+        const r = (typeof v === "object" && v.reps !== undefined) ? parseNumericReps(v.reps) : fallbackReps;
+        volume += w * r;
+      }
+    });
+    perExercise.push({ name: ex.name, volume, completedCount, totalSets: ex.sets, weight: fallbackWeight, reps: fallbackReps });
     totalVolume += volume;
   });
   return { totalVolume, perExercise };
 }
 
-function SetCircles({ count, completed, color, onToggle }) {
+function SetCircles({ count, completed, color, onTap }) {
   return (
     <div style={{ display: "flex", gap: 6, alignItems: "center" }}>
-      {Array.from({ length: count }).map((_, s) => (
+      {Array.from({ length: count }).map((_, s) => {
+        const done = isSetDone(completed[s]);
+        return (
+          <button
+            key={s}
+            onClick={(e) => { e.stopPropagation(); onTap(s); }}
+            style={{
+              width: 26, height: 26, borderRadius: "50%",
+              border: `1.5px solid ${done ? color : "rgba(255,255,255,0.12)"}`,
+              background: done ? `rgba(${hexToRgb(color)},0.15)` : "transparent",
+              color: done ? color : "rgba(255,255,255,0.25)",
+              fontFamily: "'Inter', sans-serif", fontSize: 10, fontWeight: 600,
+              cursor: "pointer", transition: "all 0.25s ease",
+              display: "flex", alignItems: "center", justifyContent: "center",
+            }}
+            title={`Set ${s + 1}`}
+          >
+            {done ? "✓" : s + 1}
+          </button>
+        );
+      })}
+    </div>
+  );
+}
+
+function SetLogInput({ setIndex, defaultWeight, defaultReps, color, onLog, onCancel }) {
+  const [weight, setWeight] = useState(String(defaultWeight));
+  const [reps, setReps] = useState(String(defaultReps));
+  const weightRef = useRef(null);
+
+  useEffect(() => {
+    if (weightRef.current) {
+      weightRef.current.focus();
+      weightRef.current.select();
+    }
+  }, []);
+
+  const handleSubmit = (e) => {
+    if (e) e.preventDefault();
+    onLog(weight, reps);
+  };
+
+  return (
+    <div onClick={(e) => e.stopPropagation()} style={{
+      borderTop: "1px solid rgba(255,255,255,0.05)",
+      padding: "12px 18px",
+      background: `rgba(${hexToRgb(color)},0.04)`,
+      animation: "fadeIn 0.15s ease"
+    }}>
+      <form onSubmit={handleSubmit} style={{ display: "flex", alignItems: "center", gap: 12 }}>
+        <div style={{
+          fontFamily: "'Inter', sans-serif", fontSize: 11, fontWeight: 600,
+          color: color, minWidth: 42, textAlign: "center"
+        }}>
+          Set {setIndex + 1}
+        </div>
+        <div style={{ display: "flex", alignItems: "center", gap: 6, flex: 1 }}>
+          <div style={{ flex: 1 }}>
+            <div style={{ fontFamily: "'Inter', sans-serif", fontSize: 9, color: "rgba(255,255,255,0.25)", letterSpacing: "0.08em", textTransform: "uppercase", marginBottom: 3, fontWeight: 500 }}>Weight</div>
+            <input
+              ref={weightRef}
+              type="text"
+              inputMode="decimal"
+              value={weight}
+              onChange={(e) => setWeight(e.target.value)}
+              style={{
+                background: "rgba(255,255,255,0.06)", border: `1px solid rgba(${hexToRgb(color)},0.25)`,
+                borderRadius: 8, padding: "7px 10px", fontFamily: "'Inter', sans-serif",
+                fontSize: 14, fontWeight: 600, color: color, width: "100%", outline: "none",
+                transition: "all 0.2s"
+              }}
+            />
+          </div>
+          <div style={{ fontFamily: "'Inter', sans-serif", fontSize: 14, color: "rgba(255,255,255,0.15)", paddingTop: 14 }}>×</div>
+          <div style={{ flex: 1 }}>
+            <div style={{ fontFamily: "'Inter', sans-serif", fontSize: 9, color: "rgba(255,255,255,0.25)", letterSpacing: "0.08em", textTransform: "uppercase", marginBottom: 3, fontWeight: 500 }}>Reps</div>
+            <input
+              type="text"
+              inputMode="numeric"
+              value={reps}
+              onChange={(e) => setReps(e.target.value)}
+              style={{
+                background: "rgba(255,255,255,0.06)", border: `1px solid rgba(${hexToRgb(color)},0.25)`,
+                borderRadius: 8, padding: "7px 10px", fontFamily: "'Inter', sans-serif",
+                fontSize: 14, fontWeight: 600, color: color, width: "100%", outline: "none",
+                transition: "all 0.2s"
+              }}
+            />
+          </div>
+        </div>
         <button
-          key={s}
-          onClick={(e) => { e.stopPropagation(); onToggle(s); }}
+          type="submit"
           style={{
-            width: 26, height: 26, borderRadius: "50%",
-            border: `1.5px solid ${completed[s] ? color : "rgba(255,255,255,0.12)"}`,
-            background: completed[s] ? `rgba(${hexToRgb(color)},0.15)` : "transparent",
-            color: completed[s] ? color : "rgba(255,255,255,0.25)",
-            fontFamily: "'Inter', sans-serif", fontSize: 10, fontWeight: 600,
-            cursor: "pointer", transition: "all 0.25s ease",
-            display: "flex", alignItems: "center", justifyContent: "center",
+            background: `rgba(${hexToRgb(color)},0.15)`, border: `1px solid rgba(${hexToRgb(color)},0.3)`,
+            color: color, fontFamily: "'Inter', sans-serif", fontSize: 11, fontWeight: 600,
+            padding: "8px 16px", borderRadius: 8, cursor: "pointer", transition: "all 0.2s",
+            letterSpacing: "0.04em", marginTop: 12
           }}
-          title={`Set ${s + 1}`}
         >
-          {completed[s] ? "✓" : s + 1}
+          Log
         </button>
-      ))}
+        <button
+          type="button"
+          onClick={onCancel}
+          style={{
+            background: "transparent", border: "1px solid rgba(255,255,255,0.08)",
+            color: "rgba(255,255,255,0.3)", fontFamily: "'Inter', sans-serif", fontSize: 11, fontWeight: 500,
+            padding: "8px 12px", borderRadius: 8, cursor: "pointer", transition: "all 0.2s",
+            marginTop: 12
+          }}
+        >
+          ×
+        </button>
+      </form>
     </div>
   );
 }
@@ -661,6 +771,7 @@ export default function WorkoutPlan() {
   const [view, setView] = useState("workout");
   const [history, setHistory] = useState(() => loadHistory());
   const [historyDetail, setHistoryDetail] = useState(null);
+  const [activeSetLog, setActiveSetLog] = useState(null);
   const day = workoutData[activeDay];
 
   const updateWeight = useCallback((exerciseIndex, value) => {
@@ -677,17 +788,37 @@ export default function WorkoutPlan() {
     });
   }, [day.day]);
 
-  const toggleSet = useCallback((exerciseIndex, setIndex) => {
+  const logSet = useCallback((exerciseIndex, setIndex, weight, reps) => {
     setTracking(prev => {
       const next = JSON.parse(JSON.stringify(prev));
-      const arr = next.sets[day.day][exerciseIndex];
-      arr[setIndex] = !arr[setIndex];
+      next.sets[day.day][exerciseIndex][setIndex] = { weight, reps };
+      saveTracking(next);
+      const updatedHistory = saveWorkoutToHistory(next, weights);
+      setHistory(updatedHistory);
+      return next;
+    });
+    setActiveSetLog(null);
+  }, [day.day, weights]);
+
+  const clearSet = useCallback((exerciseIndex, setIndex) => {
+    setTracking(prev => {
+      const next = JSON.parse(JSON.stringify(prev));
+      next.sets[day.day][exerciseIndex][setIndex] = false;
       saveTracking(next);
       const updatedHistory = saveWorkoutToHistory(next, weights);
       setHistory(updatedHistory);
       return next;
     });
   }, [day.day, weights]);
+
+  const handleSetTap = useCallback((exerciseIndex, setIndex) => {
+    const setsArr = tracking.sets[day.day][exerciseIndex] || [];
+    if (isSetDone(setsArr[setIndex])) {
+      clearSet(exerciseIndex, setIndex);
+    } else {
+      setActiveSetLog({ exIndex: exerciseIndex, setIndex });
+    }
+  }, [tracking, day.day, clearSet]);
 
   const toggleWarmup = useCallback(() => {
     setTracking(prev => {
@@ -899,7 +1030,10 @@ export default function WorkoutPlan() {
           {day.exercises.map((ex, i) => {
             const isOpen = expandedEx === i;
             const setsCompleted = tracking.sets[day.day][i] || [];
-            const exDone = setsCompleted.every(Boolean);
+            const exDone = setsCompleted.every(v => isSetDone(v));
+            const showSetLog = activeSetLog && activeSetLog.exIndex === i;
+            const defaultWeight = getWeight(weights, day.day, i, ex.startWeight);
+            const defaultReps = ex.reps;
             return (
               <div key={i} className={`ex-card ${isOpen ? "open" : ""} ${exDone ? "done-card" : ""}`} style={{ background: "rgba(255,255,255,0.02)", border: "1px solid rgba(255,255,255,0.06)", borderRadius: 14, overflow: "hidden", "--day-color": day.color }}>
                 <div onClick={() => setExpandedEx(isOpen ? null : i)} style={{ display: "flex", alignItems: "center", gap: 14, padding: "16px 18px", cursor: "pointer" }}>
@@ -914,7 +1048,7 @@ export default function WorkoutPlan() {
                     </div>
                   </div>
                   <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
-                    <SetCircles count={ex.sets} completed={setsCompleted} color={day.color} onToggle={(s) => toggleSet(i, s)} />
+                    <SetCircles count={ex.sets} completed={setsCompleted} color={day.color} onTap={(s) => handleSetTap(i, s)} />
                     <div style={{ textAlign: "right", minWidth: 54 }}>
                       <div style={{ fontFamily: "'Inter', sans-serif", fontSize: 18, fontWeight: 700, color: day.color, lineHeight: 1, letterSpacing: "-0.01em" }}>{ex.sets}×{ex.reps}</div>
                       <div style={{ fontFamily: "'Inter', sans-serif", fontSize: 9, color: "rgba(255,255,255,0.2)", letterSpacing: "0.06em", textTransform: "uppercase", marginTop: 2, fontWeight: 500 }}>sets × reps</div>
@@ -923,10 +1057,21 @@ export default function WorkoutPlan() {
                   <div style={{ color: "rgba(255,255,255,0.15)", fontSize: 16, transform: isOpen ? "rotate(90deg)" : "rotate(0deg)", transition: "transform 0.3s cubic-bezier(0.4, 0, 0.2, 1)", marginLeft: 2 }}>›</div>
                 </div>
 
+                {showSetLog && (
+                  <SetLogInput
+                    setIndex={activeSetLog.setIndex}
+                    defaultWeight={defaultWeight}
+                    defaultReps={defaultReps}
+                    color={day.color}
+                    onLog={(w, r) => logSet(i, activeSetLog.setIndex, w, r)}
+                    onCancel={() => setActiveSetLog(null)}
+                  />
+                )}
+
                 <div className="expand-detail" style={{ maxHeight: isOpen ? 220 : 0 }}>
                   <div style={{ borderTop: "1px solid rgba(255,255,255,0.05)", padding: "14px 18px 16px", display: "grid", gridTemplateColumns: "1fr 1fr auto", gap: 16, alignItems: "center" }}>
                     <div style={{ "--day-color": day.color }}>
-                      <div style={{ fontFamily: "'Inter', sans-serif", fontSize: 10, color: "rgba(255,255,255,0.25)", letterSpacing: "0.1em", textTransform: "uppercase", marginBottom: 6, fontWeight: 500 }}>Weight</div>
+                      <div style={{ fontFamily: "'Inter', sans-serif", fontSize: 10, color: "rgba(255,255,255,0.25)", letterSpacing: "0.1em", textTransform: "uppercase", marginBottom: 6, fontWeight: 500 }}>Default Weight</div>
                       <input
                         className="weight-input"
                         type="text"

@@ -17,7 +17,7 @@ A React-based interactive workout plan application showing a personalized 5-day 
   - 75 AI-generated images (3 per exercise) auto-play like a GIF at 1.5s intervals
   - Play/pause control and clickable frame indicators
   - Phase labels overlay (Starting Position / Movement / Finish Position)
-- Set tracking: clickable circles per exercise to mark sets complete
+- Per-set logging: tapping a set circle opens an inline input to log actual weight and reps; logs per-set data for accurate volume tracking
 - Per-day progress bar with percentage and set count
 - Completed exercises get dimmed with strikethrough and checkmark
 - Day tabs show checkmark when all sets done, dot when partially done
