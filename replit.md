@@ -18,6 +18,7 @@ A React-based interactive workout plan application showing a personalized 5-day 
   - Play/pause control and clickable frame indicators
   - Phase labels overlay (Starting Position / Movement / Finish Position)
 - Per-set logging: tapping a set circle opens an inline input to log actual weight and reps; logs per-set data for accurate volume tracking
+- Rest timer: auto-starts a 90s countdown banner after logging a set (skips if all sets done); customizable per exercise (60/90/120s); +30s extend button; persistent bottom banner with progress bar
 - Per-day progress bar with percentage and set count
 - Completed exercises get dimmed with strikethrough and checkmark
 - Day tabs show checkmark when all sets done, dot when partially done

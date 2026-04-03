@@ -363,6 +363,90 @@ function SetLogInput({ setIndex, defaultWeight, defaultReps, color, onLog, onCan
   );
 }
 
+function loadRestTimes() {
+  try {
+    const raw = localStorage.getItem("workout_rest_times");
+    if (!raw) return {};
+    return JSON.parse(raw);
+  } catch { return {}; }
+}
+
+function saveRestTimes(data) {
+  localStorage.setItem("workout_rest_times", JSON.stringify(data));
+}
+
+function getRestTime(restTimes, dayNum, exIndex) {
+  const key = `${dayNum}-${exIndex}`;
+  return restTimes[key] !== undefined ? restTimes[key] : 90;
+}
+
+function RestTimer({ seconds, exerciseName, color, onDismiss, onAddTime }) {
+  const mins = Math.floor(seconds / 60);
+  const secs = seconds % 60;
+  const pct = Math.max(0, seconds / 90 * 100);
+
+  return (
+    <div style={{
+      position: "fixed", bottom: 0, left: 0, right: 0, zIndex: 900,
+      background: "rgba(10,10,12,0.95)", backdropFilter: "blur(16px)",
+      borderTop: `1px solid rgba(${hexToRgb(color)},0.2)`,
+      padding: "0", animation: "slideUp 0.3s ease"
+    }}>
+      <div style={{
+        height: 3, background: `rgba(${hexToRgb(color)},0.15)`, width: "100%"
+      }}>
+        <div style={{
+          height: "100%", width: `${pct}%`,
+          background: `linear-gradient(90deg, ${color}, ${color}aa)`,
+          transition: "width 1s linear", borderRadius: "0 2px 2px 0"
+        }} />
+      </div>
+      <div style={{
+        maxWidth: 720, margin: "0 auto", padding: "14px 24px",
+        display: "flex", alignItems: "center", justifyContent: "space-between"
+      }}>
+        <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
+          <div style={{
+            fontFamily: "'Inter', sans-serif", fontSize: 28, fontWeight: 700,
+            color: seconds <= 10 ? "#ff4444" : color, letterSpacing: "-0.02em",
+            fontVariantNumeric: "tabular-nums", minWidth: 70, transition: "color 0.3s"
+          }}>
+            {mins}:{String(secs).padStart(2, "0")}
+          </div>
+          <div>
+            <div style={{ fontFamily: "'Inter', sans-serif", fontSize: 10, fontWeight: 600, letterSpacing: "0.08em", textTransform: "uppercase", color: "rgba(255,255,255,0.3)" }}>Rest</div>
+            <div style={{ fontFamily: "'Inter', sans-serif", fontSize: 12, color: "rgba(255,255,255,0.5)", fontWeight: 400 }}>{exerciseName}</div>
+          </div>
+        </div>
+        <div style={{ display: "flex", gap: 8 }}>
+          <button
+            onClick={onAddTime}
+            style={{
+              background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.1)",
+              color: "rgba(255,255,255,0.5)", fontFamily: "'Inter', sans-serif", fontSize: 11,
+              fontWeight: 600, padding: "8px 14px", borderRadius: 8, cursor: "pointer",
+              transition: "all 0.2s"
+            }}
+          >
+            +30s
+          </button>
+          <button
+            onClick={onDismiss}
+            style={{
+              background: `rgba(${hexToRgb(color)},0.12)`, border: `1px solid rgba(${hexToRgb(color)},0.25)`,
+              color: color, fontFamily: "'Inter', sans-serif", fontSize: 11,
+              fontWeight: 600, padding: "8px 14px", borderRadius: 8, cursor: "pointer",
+              transition: "all 0.2s"
+            }}
+          >
+            Skip
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+}
+
 function ProgressBar({ done, total, color }) {
   const pct = total === 0 ? 0 : Math.round((done / total) * 100);
   return (
@@ -772,7 +856,49 @@ export default function WorkoutPlan() {
   const [history, setHistory] = useState(() => loadHistory());
   const [historyDetail, setHistoryDetail] = useState(null);
   const [activeSetLog, setActiveSetLog] = useState(null);
+  const [restTimes, setRestTimes] = useState(() => loadRestTimes());
+  const [restTimer, setRestTimer] = useState(null);
+  const restTimerRef = useRef(null);
   const day = workoutData[activeDay];
+
+  useEffect(() => {
+    if (restTimer && restTimer.remaining > 0) {
+      restTimerRef.current = setInterval(() => {
+        setRestTimer(prev => {
+          if (!prev || prev.remaining <= 1) {
+            clearInterval(restTimerRef.current);
+            return null;
+          }
+          return { ...prev, remaining: prev.remaining - 1 };
+        });
+      }, 1000);
+    }
+    return () => { if (restTimerRef.current) clearInterval(restTimerRef.current); };
+  }, [restTimer?.exerciseName, restTimer?.startTime]);
+
+  const startRestTimer = useCallback((exerciseName, exerciseIndex) => {
+    if (restTimerRef.current) clearInterval(restTimerRef.current);
+    const duration = getRestTime(restTimes, day.day, exerciseIndex);
+    setRestTimer({ exerciseName, remaining: duration, startTime: Date.now() });
+  }, [restTimes, day.day]);
+
+  const dismissRestTimer = useCallback(() => {
+    if (restTimerRef.current) clearInterval(restTimerRef.current);
+    setRestTimer(null);
+  }, []);
+
+  const addRestTime = useCallback(() => {
+    setRestTimer(prev => prev ? { ...prev, remaining: prev.remaining + 30 } : null);
+  }, []);
+
+  const updateRestTime = useCallback((exerciseIndex, value) => {
+    const key = `${day.day}-${exerciseIndex}`;
+    setRestTimes(prev => {
+      const next = { ...prev, [key]: value };
+      saveRestTimes(next);
+      return next;
+    });
+  }, [day.day]);
 
   const updateWeight = useCallback((exerciseIndex, value) => {
     const key = `${day.day}-${exerciseIndex}`;
@@ -789,6 +915,7 @@ export default function WorkoutPlan() {
   }, [day.day]);
 
   const logSet = useCallback((exerciseIndex, setIndex, weight, reps) => {
+    const exName = day.exercises[exerciseIndex].name;
     setTracking(prev => {
       const next = JSON.parse(JSON.stringify(prev));
       next.sets[day.day][exerciseIndex][setIndex] = { weight, reps };
@@ -798,7 +925,13 @@ export default function WorkoutPlan() {
       return next;
     });
     setActiveSetLog(null);
-  }, [day.day, weights]);
+    const totalSets = day.exercises[exerciseIndex].sets;
+    const setsArr = tracking.sets[day.day][exerciseIndex] || [];
+    const doneAfterThis = setsArr.filter((v, idx) => idx === setIndex ? true : isSetDone(v)).length;
+    if (doneAfterThis < totalSets) {
+      startRestTimer(exName, exerciseIndex);
+    }
+  }, [day, tracking, weights, startRestTimer]);
 
   const clearSet = useCallback((exerciseIndex, setIndex) => {
     setTracking(prev => {
@@ -1068,30 +1201,51 @@ export default function WorkoutPlan() {
                   />
                 )}
 
-                <div className="expand-detail" style={{ maxHeight: isOpen ? 220 : 0 }}>
-                  <div style={{ borderTop: "1px solid rgba(255,255,255,0.05)", padding: "14px 18px 16px", display: "grid", gridTemplateColumns: "1fr 1fr auto", gap: 16, alignItems: "center" }}>
-                    <div style={{ "--day-color": day.color }}>
-                      <div style={{ fontFamily: "'Inter', sans-serif", fontSize: 10, color: "rgba(255,255,255,0.25)", letterSpacing: "0.1em", textTransform: "uppercase", marginBottom: 6, fontWeight: 500 }}>Default Weight</div>
-                      <input
-                        className="weight-input"
-                        type="text"
-                        value={getWeight(weights, day.day, i, ex.startWeight)}
-                        placeholder={ex.startWeight}
-                        onClick={(e) => e.stopPropagation()}
-                        onChange={(e) => updateWeight(i, e.target.value)}
-                      />
+                <div className="expand-detail" style={{ maxHeight: isOpen ? 280 : 0 }}>
+                  <div style={{ borderTop: "1px solid rgba(255,255,255,0.05)", padding: "14px 18px 16px" }}>
+                    <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr auto", gap: 16, alignItems: "center" }}>
+                      <div style={{ "--day-color": day.color }}>
+                        <div style={{ fontFamily: "'Inter', sans-serif", fontSize: 10, color: "rgba(255,255,255,0.25)", letterSpacing: "0.1em", textTransform: "uppercase", marginBottom: 6, fontWeight: 500 }}>Default Weight</div>
+                        <input
+                          className="weight-input"
+                          type="text"
+                          value={getWeight(weights, day.day, i, ex.startWeight)}
+                          placeholder={ex.startWeight}
+                          onClick={(e) => e.stopPropagation()}
+                          onChange={(e) => updateWeight(i, e.target.value)}
+                        />
+                      </div>
+                      <div>
+                        <div style={{ fontFamily: "'Inter', sans-serif", fontSize: 10, color: "rgba(255,255,255,0.25)", letterSpacing: "0.1em", textTransform: "uppercase", marginBottom: 6, fontWeight: 500 }}>Tip</div>
+                        <div style={{ fontFamily: "'Inter', sans-serif", fontSize: 12, color: "rgba(255,255,255,0.5)", lineHeight: 1.5, fontWeight: 400 }}>{ex.tip}</div>
+                      </div>
+                      <button
+                        className="form-btn"
+                        style={{ "--day-color": day.color }}
+                        onClick={(e) => { e.stopPropagation(); setFormGuideEx(ex); }}
+                      >
+                        Form Guide
+                      </button>
                     </div>
-                    <div>
-                      <div style={{ fontFamily: "'Inter', sans-serif", fontSize: 10, color: "rgba(255,255,255,0.25)", letterSpacing: "0.1em", textTransform: "uppercase", marginBottom: 6, fontWeight: 500 }}>Tip</div>
-                      <div style={{ fontFamily: "'Inter', sans-serif", fontSize: 12, color: "rgba(255,255,255,0.5)", lineHeight: 1.5, fontWeight: 400 }}>{ex.tip}</div>
+                    <div style={{ display: "flex", alignItems: "center", gap: 8, marginTop: 12, paddingTop: 10, borderTop: "1px solid rgba(255,255,255,0.04)" }} onClick={(e) => e.stopPropagation()}>
+                      <div style={{ fontFamily: "'Inter', sans-serif", fontSize: 10, color: "rgba(255,255,255,0.25)", letterSpacing: "0.08em", textTransform: "uppercase", fontWeight: 500 }}>Rest</div>
+                      {[60, 90, 120].map(sec => {
+                        const current = getRestTime(restTimes, day.day, i);
+                        const isActive = current === sec;
+                        return (
+                          <button key={sec} onClick={() => updateRestTime(i, sec)} style={{
+                            background: isActive ? `rgba(${hexToRgb(day.color)},0.12)` : "rgba(255,255,255,0.03)",
+                            border: isActive ? `1px solid rgba(${hexToRgb(day.color)},0.25)` : "1px solid rgba(255,255,255,0.06)",
+                            color: isActive ? day.color : "rgba(255,255,255,0.3)",
+                            fontFamily: "'Inter', sans-serif", fontSize: 10, fontWeight: 600,
+                            padding: "4px 10px", borderRadius: 6, cursor: "pointer",
+                            transition: "all 0.2s"
+                          }}>
+                            {sec}s
+                          </button>
+                        );
+                      })}
                     </div>
-                    <button
-                      className="form-btn"
-                      style={{ "--day-color": day.color }}
-                      onClick={(e) => { e.stopPropagation(); setFormGuideEx(ex); }}
-                    >
-                      Form Guide
-                    </button>
                   </div>
                 </div>
               </div>
@@ -1100,6 +1254,16 @@ export default function WorkoutPlan() {
         </div>
 
       </div>
+      )}
+
+      {restTimer && (
+        <RestTimer
+          seconds={restTimer.remaining}
+          exerciseName={restTimer.exerciseName}
+          color={day.color}
+          onDismiss={dismissRestTimer}
+          onAddTime={addRestTime}
+        />
       )}
 
       {formGuideEx && <FormGuideModal exercise={formGuideEx} color={day.color} onClose={() => setFormGuideEx(null)} />}
