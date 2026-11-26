@@ -40,7 +40,7 @@ export default function NotificationPrompt({ color }) {
       background: "linear-gradient(135deg, #1a1a1e 0%, #111113 100%)",
       border: `1px solid rgba(${rgb},0.2)`,
       borderRadius: 16, padding: "20px 22px",
-      boxShadow: `0 8px 32px rgba(0,0,0,0.6), 0 0 20px rgba(${rgb},0.08)`,
+      boxShadow: `0 8px 32px rgba(80,60,30,0.14), 0 0 20px rgba(${rgb},0.08)`,
       animation: "slideUp 0.4s ease"
     }}>
       <div style={{ display: "flex", gap: 14, alignItems: "flex-start" }}>
@@ -53,10 +53,10 @@ export default function NotificationPrompt({ color }) {
           🔔
         </div>
         <div style={{ flex: 1 }}>
-          <div style={{ fontFamily: "'Inter', sans-serif", fontSize: 14, fontWeight: 700, color: "#f0ede6", marginBottom: 4 }}>
+          <div style={{ fontFamily: "'Inter', sans-serif", fontSize: 14, fontWeight: 700, color: "#2B251E", marginBottom: 4 }}>
             Stay on track
           </div>
-          <div style={{ fontFamily: "'Inter', sans-serif", fontSize: 12, color: "rgba(255,255,255,0.4)", lineHeight: 1.5 }}>
+          <div style={{ fontFamily: "'Inter', sans-serif", fontSize: 12, color: "rgba(43,37,30,0.52)", lineHeight: 1.5 }}>
             Get rest timer alerts and workout reminders so you never miss a set or a session.
           </div>
         </div>
@@ -64,8 +64,8 @@ export default function NotificationPrompt({ color }) {
       <div style={{ display: "flex", gap: 10, marginTop: 16 }}>
         <button onClick={handleLater} style={{
           flex: 1, padding: "11px 16px", borderRadius: 10,
-          background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.08)",
-          color: "rgba(255,255,255,0.4)", fontFamily: "'Inter', sans-serif",
+          background: "rgba(255,253,248,0.8)", border: "1px solid rgba(120,96,60,0.16)",
+          color: "rgba(43,37,30,0.52)", fontFamily: "'Inter', sans-serif",
           fontSize: 12, fontWeight: 600, cursor: "pointer", transition: "all 0.2s"
         }}>
           Maybe Later

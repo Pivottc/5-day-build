@@ -1,4 +1,4 @@
-# 5-Day Build Program
+# The Abadie
 
 ## Overview
 A React-based interactive workout plan application showing a personalized 5-day training program. Built with Vite + React. Installable as a Progressive Web App (PWA).
