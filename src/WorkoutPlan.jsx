@@ -3,7 +3,7 @@ import { sendSWMessage, getNotificationPermission } from "./pwaRegister";
 import NotificationPrompt from "./NotificationPrompt";
 import NotificationSettings from "./NotificationSettings";
 import BodyMetrics from "./BodyMetrics";
-import { VIDEO_IDS, FORM_CUES, youtubeSearchUrl } from "./exerciseGuides";
+import { FORM_CUES } from "./exerciseGuides";
 
 const PHASE_LABELS = ["Starting Position", "Movement", "Finish Position"];
 
@@ -934,9 +934,7 @@ function ProgressBar({ done, total, color }) {
 function FormGuideModal({ exercise, color, onClose }) {
   const images = (exercise.images || []).filter(Boolean);
   const cues = FORM_CUES[exercise.name] || [];
-  const videoId = VIDEO_IDS[exercise.name];
   const rgb = hexToRgb(color);
-  const [tab, setTab] = useState(images.length ? "illustrated" : "video");
   const [activeFrame, setActiveFrame] = useState(0);
   const [isPlaying, setIsPlaying] = useState(true);
   const steps = Math.max(images.length, cues.length);
@@ -948,23 +946,12 @@ function FormGuideModal({ exercise, color, onClose }) {
   }, [onClose]);
 
   useEffect(() => {
-    if (tab !== "illustrated" || !isPlaying || steps < 2) return;
+    if (!isPlaying || steps < 2) return;
     const t = setInterval(() => setActiveFrame(prev => (prev + 1) % steps), 2400);
     return () => clearInterval(t);
-  }, [tab, isPlaying, steps]);
+  }, [isPlaying, steps]);
 
   const goTo = (idx) => { setActiveFrame(idx); setIsPlaying(false); };
-
-  const tabBtn = (id, label) => (
-    <button key={id} onClick={() => setTab(id)} style={{
-      flex: 1, padding: "9px 0", borderRadius: 999, border: "none", cursor: "pointer",
-      background: tab === id ? "#FFFDF8" : "transparent",
-      boxShadow: tab === id ? "0 1px 3px rgba(80,60,30,0.15)" : "none",
-      color: tab === id ? "#2B251E" : "rgba(43,37,30,0.5)",
-      fontFamily: "'Inter', sans-serif", fontSize: 11, fontWeight: 600, letterSpacing: "0.1em", textTransform: "uppercase",
-      transition: "all 0.25s ease"
-    }}>{label}</button>
-  );
 
   return (
     <div onClick={onClose} style={{
@@ -992,13 +979,7 @@ function FormGuideModal({ exercise, color, onClose }) {
           }}>×</button>
         </div>
 
-        <div style={{ display: "flex", gap: 4, padding: 4, borderRadius: 999, background: "rgba(120,96,60,0.09)", marginBottom: 16 }}>
-          {tabBtn("illustrated", images.length ? "Illustrated" : "Steps")}
-          {tabBtn("video", "Video")}
-        </div>
-
-        {tab === "illustrated" && (
-          <>
+        <>
             {images.length > 0 && (
               <div style={{
                 position: "relative", borderRadius: 16, overflow: "hidden", aspectRatio: "1024 / 717",
@@ -1055,45 +1036,9 @@ function FormGuideModal({ exercise, color, onClose }) {
             )}
 
             {!images.length && !cues.length && (
-              <div style={{ padding: 24, textAlign: "center", fontFamily: "'Inter', sans-serif", fontSize: 13, color: "rgba(43,37,30,0.5)" }}>No step guide for this exercise yet — try the Video tab.</div>
+              <div style={{ padding: 24, textAlign: "center", fontFamily: "'Inter', sans-serif", fontSize: 13, color: "rgba(43,37,30,0.5)" }}>No step guide for this exercise yet.</div>
             )}
-          </>
-        )}
-
-        {tab === "video" && (
-          <div>
-            {videoId ? (
-              <div style={{ position: "relative", borderRadius: 16, overflow: "hidden", aspectRatio: "16 / 9", background: "#33291F", border: "1px solid rgba(176,138,78,0.35)" }}>
-                <iframe
-                  src={`https://www.youtube-nocookie.com/embed/${videoId}?rel=0&modestbranding=1&playsinline=1`}
-                  title={`${exercise.name} form video`}
-                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                  allowFullScreen
-                  style={{ position: "absolute", inset: 0, width: "100%", height: "100%", border: 0 }}
-                />
-              </div>
-            ) : (
-              <div style={{
-                borderRadius: 16, padding: "36px 20px", textAlign: "center",
-                background: "linear-gradient(160deg, #3A2F24, #2A221A)", border: "1px solid rgba(176,138,78,0.35)"
-              }}>
-                <div style={{ width: 56, height: 56, borderRadius: "50%", margin: "0 auto 14px", background: "rgba(176,138,78,0.18)", border: "1px solid rgba(176,138,78,0.5)", display: "flex", alignItems: "center", justifyContent: "center", color: "#D9BF8C", fontSize: 18 }}>▶</div>
-                <div style={{ fontFamily: "'Cormorant Garamond', Georgia, serif", fontSize: 22, color: "#F6F1E7", marginBottom: 6 }}>Watch a form demo</div>
-                <div style={{ fontFamily: "'Inter', sans-serif", fontSize: 12, color: "rgba(246,241,231,0.6)", marginBottom: 18 }}>Opens YouTube with demos of {exercise.name}.</div>
-                <a href={youtubeSearchUrl(exercise.name)} target="_blank" rel="noopener noreferrer" style={{
-                  display: "inline-block", padding: "11px 20px", borderRadius: 999, textDecoration: "none",
-                  background: "#B08A4E", color: "#FFFDF8", fontFamily: "'Inter', sans-serif", fontSize: 12, fontWeight: 600, letterSpacing: "0.06em"
-                }}>Find videos on YouTube</a>
-              </div>
-            )}
-            {videoId && (
-              <div style={{ display: "flex", justifyContent: "space-between", marginTop: 10, fontFamily: "'Inter', sans-serif", fontSize: 12 }}>
-                <a href={`https://www.youtube.com/watch?v=${videoId}`} target="_blank" rel="noopener noreferrer" style={{ color, textDecoration: "none", fontWeight: 600 }}>Open in YouTube ↗</a>
-                <a href={youtubeSearchUrl(exercise.name)} target="_blank" rel="noopener noreferrer" style={{ color: "rgba(43,37,30,0.5)", textDecoration: "none" }}>More videos</a>
-              </div>
-            )}
-          </div>
-        )}
+        </>
 
         {exercise.tip && (
           <div style={{

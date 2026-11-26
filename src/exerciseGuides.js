@@ -1,37 +1,4 @@
-// Video and step-by-step form guides for each exercise, keyed by exercise name.
-
-// YouTube video IDs restored from the app's earlier video guides.
-// Exercises without an entry fall back to a YouTube search for that exercise.
-export const VIDEO_IDS = {
-  "Barbell Bench Press": "rT7DgCr-3pg",
-  "Incline DB Press": "8iPEnn-ltC8",
-  "Cable Chest Fly (Low to High)": "pYcpY20QaE8",
-  "Tricep Rope Pushdown": "vB5OHsJ3EME",
-  "DB Skull Crushers": "d_KZxkY_5cM",
-  "Barbell Bent-Over Row": "FWJR5Ve8bnQ",
-  "Single-Arm DB Row": "roCP6wCXPqo",
-  "Cable Seated Row": "GZbfZ033f74",
-  "DB Alternating Curl": "sAq_ocpRh_I",
-  "Barbell Back Squat": "ultWZbUMPL8",
-  "Romanian Deadlift (RDL)": "jEy_czb3RKA",
-  "Walking DB Lunges": "L8fvypPrzzs",
-  "Kettlebell Swing": "sSESeQAir2M",
-  "Cable Pull-Through": "mr5gaRn8coo",
-  "Barbell Overhead Press": "2yjwXTZQDDI",
-  "DB Lateral Raise": "3VcKaXpzqRo",
-  "Cable Face Pull": "rep-qVOkqgk",
-  "Plank": "ASdvN_XEl_c",
-  "Cable Woodchop (High to Low)": "vqSvAzvnHMc",
-  "Peloton Tread Intervals": "lzJNsD2yjKw",
-  "DB Goblet Squat": "MeIiIdhvXT4",
-  "Cable Anti-Rotation Press": "rHGFuFBzH5Y",
-  "Kettlebell Deadlift": "tPNBHmFPuGU",
-  "DB Renegade Row": "hzFuGGM3mHM",
-};
-
-export function youtubeSearchUrl(name) {
-  return `https://www.youtube.com/results?search_query=${encodeURIComponent(`${name} proper form`)}`;
-}
+// Step-by-step form guides for each exercise, keyed by exercise name.
 
 // Three cues per exercise: setup, the movement, and the finish.
 export const FORM_CUES = {

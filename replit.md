@@ -6,7 +6,7 @@ A React-based interactive workout plan application: a personalized 5-day core tr
 ## Structure
 - `src/App.jsx` - Root app component
 - `src/WorkoutPlan.jsx` - Main workout plan component with all workout data, exercise cards, form guide modal, wheel picker and bottom navigation
-- `src/exerciseGuides.js` - YouTube video IDs and 3-step form cues for every exercise
+- `src/exerciseGuides.js` - 3-step form cues for every exercise
 - `src/NotificationSettings.jsx` - Notification settings modal (workout reminders, rest timer alerts)
 - `src/NotificationPrompt.jsx` - First-launch notification permission prompt
 - `src/BodyMetrics.jsx` - Body metrics tracker (weight chart, measurements, log sheet)
@@ -22,7 +22,7 @@ A React-based interactive workout plan application: a personalized 5-day core tr
 - Light, luxe theme (ivory, warm ink, champagne gold, Cormorant Garamond display type)
 - Bottom icon navigation bar: Train, History, Stats, Body, Settings
 - 9 workout days: D1–D5 core program plus D6 Chest Sculpt, D7 Core Strength, D8 Back Builder, D9 Rear Delts + Posture (scrollable day tabs)
-- Form guide with two tabs: Illustrated (crossfading frames with a written cue per step) and Video (embedded YouTube guide, or a YouTube search link when no video is set)
+- Form guide: crossfading illustration frames with a written cue per step (no third-party videos)
 - Scroll-wheel picker for logging weight (2.5 lb steps) and reps/seconds per set
 - 5-day tabbed workout navigation (Push, Pull, Lower, Press, Fat Loss)
 - Expandable exercise cards with starting weight, coaching tips
