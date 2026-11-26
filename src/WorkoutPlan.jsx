@@ -9,7 +9,7 @@ const PHASE_LABELS = ["Starting Position", "Movement", "Finish Position"];
 const workoutData = [
   {
     day: 1, label: "DAY 01", title: "Chest + Triceps", focus: "Push Day",
-    equipment: "Rogue Cage + Functional Trainer + Dumbbells", color: "#E84A2E",
+    equipment: "Rogue Cage + Functional Trainer + Dumbbells", color: "#9C4F3C",
     warmup: "5 min Peloton Tread easy walk/light jog",
     exercises: [
       { name: "Barbell Bench Press", equipment: "Rogue Cage", sets: 3, reps: "10", startWeight: "65 lbs (bar + 10s each side)", tip: "Control the descent — 2 seconds down, press up. Key for chest development.", muscles: "Chest, Front Delt, Triceps", images: ["/exercises/barbell-bench-press-1.png", "/exercises/barbell-bench-press-2.png", "/exercises/barbell-bench-press-3.png"] },
@@ -22,7 +22,7 @@ const workoutData = [
   },
   {
     day: 2, label: "DAY 02", title: "Back + Biceps", focus: "Pull Day",
-    equipment: "Rogue Cage + Functional Trainer + Dumbbells", color: "#2E7BE8",
+    equipment: "Rogue Cage + Functional Trainer + Dumbbells", color: "#3F5B7A",
     warmup: "5 min Peloton Tread moderate walk",
     exercises: [
       { name: "Barbell Bent-Over Row", equipment: "Rogue Cage", sets: 3, reps: "10", startWeight: "65 lbs", tip: "Hinge at hips, chest up, pull bar to belly button. Back is your biggest fat-burning muscle.", muscles: "Lats, Rhomboids, Rear Delts", images: ["/exercises/barbell-bent-row-1.png", "/exercises/barbell-bent-row-2.png", "/exercises/barbell-bent-row-3.png"] },
@@ -35,7 +35,7 @@ const workoutData = [
   },
   {
     day: 3, label: "DAY 03", title: "Legs + Glutes", focus: "Lower Body",
-    equipment: "Rogue Cage + Functional Trainer + Kettlebell", color: "#2ECC71",
+    equipment: "Rogue Cage + Functional Trainer + Kettlebell", color: "#5E7B5C",
     warmup: "5 min Peloton Tread incline walk",
     exercises: [
       { name: "Barbell Back Squat", equipment: "Rogue Cage", sets: 3, reps: "10", startWeight: "75 lbs (bar + 15s each side)", tip: "Depth to parallel. Biggest compound move — burns the most calories.", muscles: "Quads, Glutes, Hamstrings, Core", images: ["/exercises/barbell-squat-1.png", "/exercises/barbell-squat-2.png", "/exercises/barbell-squat-3.png"] },
@@ -48,7 +48,7 @@ const workoutData = [
   },
   {
     day: 4, label: "DAY 04", title: "Shoulders + Core", focus: "Press & Stability",
-    equipment: "Rogue Cage + Functional Trainer + Dumbbells", color: "#9B59B6",
+    equipment: "Rogue Cage + Functional Trainer + Dumbbells", color: "#7B5D80",
     warmup: "5 min Peloton easy ride or walk",
     exercises: [
       { name: "Barbell Overhead Press", equipment: "Rogue Cage", sets: 3, reps: "10", startWeight: "45 lbs (just the bar to start)", tip: "Core tight, press straight up. Builds the boulder shoulder look.", muscles: "Front & Side Delts, Triceps, Core", images: ["/exercises/overhead-press-1.png", "/exercises/overhead-press-2.png", "/exercises/overhead-press-3.png"] },
@@ -61,7 +61,7 @@ const workoutData = [
   },
   {
     day: 5, label: "DAY 05", title: "Full Body + Cardio Burn", focus: "Fat Loss Finisher",
-    equipment: "Peloton Tread + Functional Trainer + Dumbbells + Kettlebell", color: "#E8A02E",
+    equipment: "Peloton Tread + Functional Trainer + Dumbbells + Kettlebell", color: "#B08A4E",
     warmup: "None — first exercise is the warm-up",
     exercises: [
       { name: "Peloton Tread Intervals", equipment: "Peloton Tread", sets: 1, reps: "10 min", startWeight: "Walk 3 min → Jog 2 min → Walk 2 min → Jog 3 min", tip: "This is your metabolic primer. Gets heart rate up before lifting.", muscles: "Cardio, Legs, Core", images: ["/exercises/tread-intervals-1.png", "/exercises/tread-intervals-2.png", "/exercises/tread-intervals-3.png"] },
@@ -234,7 +234,7 @@ function CompletionOverlay({ dayData, volume, duration, color, onSave, onDismiss
   return (
     <div style={{
       position: "fixed", inset: 0, zIndex: 2000,
-      background: "rgba(0,0,0,0.92)", backdropFilter: "blur(20px)",
+      background: "rgba(52,42,30,0.32)", backdropFilter: "blur(20px)",
       display: "flex", alignItems: "center", justifyContent: "center",
       flexDirection: "column", padding: 32,
       animation: "fadeIn 0.4s ease"
@@ -282,7 +282,7 @@ function CompletionOverlay({ dayData, volume, duration, color, onSave, onDismiss
         textAlign: "center", marginBottom: 6
       }}>
         <div style={{ fontFamily: "'Inter', sans-serif", fontSize: 10, fontWeight: 700, letterSpacing: "0.2em", color, textTransform: "uppercase", marginBottom: 8 }}>WORKOUT COMPLETE</div>
-        <div style={{ fontFamily: "'Inter', sans-serif", fontSize: 28, fontWeight: 700, color: "#f0ede6", lineHeight: 1.2 }}>
+        <div style={{ fontFamily: "'Cormorant Garamond', Georgia, serif", fontSize: 32, fontWeight: 600, color: "#2B251E", lineHeight: 1.2 }}>
           Day {dayData.day} — {dayData.focus}
         </div>
       </div>
@@ -295,28 +295,28 @@ function CompletionOverlay({ dayData, volume, duration, color, onSave, onDismiss
         width: "100%", maxWidth: 420, margin: "28px 0 32px"
       }}>
         <div style={{
-          background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.06)",
+          background: "rgba(255,253,248,0.8)", border: "1px solid rgba(120,96,60,0.12)",
           borderRadius: 14, padding: "18px 14px", textAlign: "center"
         }}>
-          <div style={{ fontFamily: "'Inter', sans-serif", fontSize: 9, fontWeight: 600, letterSpacing: "0.12em", color: "rgba(255,255,255,0.3)", textTransform: "uppercase", marginBottom: 8 }}>VOLUME</div>
-          <div style={{ fontFamily: "'Inter', sans-serif", fontSize: 22, fontWeight: 700, color, lineHeight: 1 }}>{volume.toLocaleString()}</div>
-          <div style={{ fontFamily: "'Inter', sans-serif", fontSize: 10, fontWeight: 500, color: "rgba(255,255,255,0.3)", marginTop: 4 }}>lbs lifted</div>
+          <div style={{ fontFamily: "'Inter', sans-serif", fontSize: 9, fontWeight: 600, letterSpacing: "0.12em", color: "rgba(43,37,30,0.39)", textTransform: "uppercase", marginBottom: 8 }}>VOLUME</div>
+          <div style={{ fontFamily: "'Cormorant Garamond', Georgia, serif", fontSize: 26, fontWeight: 600, color, lineHeight: 1 }}>{volume.toLocaleString()}</div>
+          <div style={{ fontFamily: "'Inter', sans-serif", fontSize: 10, fontWeight: 500, color: "rgba(43,37,30,0.39)", marginTop: 4 }}>lbs lifted</div>
         </div>
         <div style={{
-          background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.06)",
+          background: "rgba(255,253,248,0.8)", border: "1px solid rgba(120,96,60,0.12)",
           borderRadius: 14, padding: "18px 14px", textAlign: "center"
         }}>
-          <div style={{ fontFamily: "'Inter', sans-serif", fontSize: 9, fontWeight: 600, letterSpacing: "0.12em", color: "rgba(255,255,255,0.3)", textTransform: "uppercase", marginBottom: 8 }}>DURATION</div>
-          <div style={{ fontFamily: "'Inter', sans-serif", fontSize: 22, fontWeight: 700, color: "#f0ede6", lineHeight: 1 }}>{formatDuration(duration)}</div>
-          <div style={{ fontFamily: "'Inter', sans-serif", fontSize: 10, fontWeight: 500, color: "rgba(255,255,255,0.3)", marginTop: 4 }}>total time</div>
+          <div style={{ fontFamily: "'Inter', sans-serif", fontSize: 9, fontWeight: 600, letterSpacing: "0.12em", color: "rgba(43,37,30,0.39)", textTransform: "uppercase", marginBottom: 8 }}>DURATION</div>
+          <div style={{ fontFamily: "'Cormorant Garamond', Georgia, serif", fontSize: 26, fontWeight: 600, color: "#2B251E", lineHeight: 1 }}>{formatDuration(duration)}</div>
+          <div style={{ fontFamily: "'Inter', sans-serif", fontSize: 10, fontWeight: 500, color: "rgba(43,37,30,0.39)", marginTop: 4 }}>total time</div>
         </div>
         <div style={{
-          background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.06)",
+          background: "rgba(255,253,248,0.8)", border: "1px solid rgba(120,96,60,0.12)",
           borderRadius: 14, padding: "18px 14px", textAlign: "center"
         }}>
-          <div style={{ fontFamily: "'Inter', sans-serif", fontSize: 9, fontWeight: 600, letterSpacing: "0.12em", color: "rgba(255,255,255,0.3)", textTransform: "uppercase", marginBottom: 8 }}>SETS</div>
-          <div style={{ fontFamily: "'Inter', sans-serif", fontSize: 22, fontWeight: 700, color: "#f0ede6", lineHeight: 1 }}>{totalSets}/{totalSets}</div>
-          <div style={{ fontFamily: "'Inter', sans-serif", fontSize: 10, fontWeight: 500, color: "rgba(255,255,255,0.3)", marginTop: 4 }}>{exerciseCount} exercises</div>
+          <div style={{ fontFamily: "'Inter', sans-serif", fontSize: 9, fontWeight: 600, letterSpacing: "0.12em", color: "rgba(43,37,30,0.39)", textTransform: "uppercase", marginBottom: 8 }}>SETS</div>
+          <div style={{ fontFamily: "'Cormorant Garamond', Georgia, serif", fontSize: 26, fontWeight: 600, color: "#2B251E", lineHeight: 1 }}>{totalSets}/{totalSets}</div>
+          <div style={{ fontFamily: "'Inter', sans-serif", fontSize: 10, fontWeight: 500, color: "rgba(43,37,30,0.39)", marginTop: 4 }}>{exerciseCount} exercises</div>
         </div>
       </div>
 
@@ -329,7 +329,7 @@ function CompletionOverlay({ dayData, volume, duration, color, onSave, onDismiss
         <button onClick={onSave} style={{
           width: "100%", padding: "16px 24px", borderRadius: 12,
           background: `linear-gradient(135deg, ${color}, rgba(${rgb},0.7))`,
-          border: "none", color: "#fff", fontFamily: "'Inter', sans-serif",
+          border: "none", color: "#FFFDF8", fontFamily: "'Inter', sans-serif",
           fontSize: 15, fontWeight: 700, letterSpacing: "0.04em",
           cursor: "pointer", transition: "all 0.2s",
           boxShadow: `0 4px 20px rgba(${rgb},0.3)`
@@ -338,8 +338,8 @@ function CompletionOverlay({ dayData, volume, duration, color, onSave, onDismiss
         </button>
         <button onClick={onDismiss} style={{
           width: "100%", padding: "12px 24px", borderRadius: 12,
-          background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.08)",
-          color: "rgba(255,255,255,0.4)", fontFamily: "'Inter', sans-serif",
+          background: "rgba(255,253,248,0.8)", border: "1px solid rgba(120,96,60,0.16)",
+          color: "rgba(43,37,30,0.52)", fontFamily: "'Inter', sans-serif",
           fontSize: 12, fontWeight: 600, cursor: "pointer", transition: "all 0.2s"
         }}>
           Dismiss
@@ -361,25 +361,25 @@ function SwapModal({ exercise, alternatives, color, onSwap, onClose }) {
   return (
     <div onClick={onClose} style={{
       position: "fixed", inset: 0, zIndex: 1000,
-      background: "rgba(0,0,0,0.85)", backdropFilter: "blur(10px)",
+      background: "rgba(52,42,30,0.32)", backdropFilter: "blur(10px)",
       display: "flex", alignItems: "center", justifyContent: "center",
       padding: 24, animation: "fadeIn 0.2s ease"
     }}>
       <div onClick={e => e.stopPropagation()} style={{
         width: "100%", maxWidth: 480,
-        background: "linear-gradient(180deg, #141416 0%, #0c0c0e 100%)",
-        borderRadius: 16, border: "1px solid rgba(255,255,255,0.06)",
+        background: "linear-gradient(180deg, #FCFAF5 0%, #F6F1E7 100%)",
+        borderRadius: 16, border: "1px solid rgba(120,96,60,0.12)",
         overflow: "hidden", animation: "slideUp 0.25s ease"
       }}>
-        <div style={{ padding: "20px 24px", borderBottom: "1px solid rgba(255,255,255,0.06)" }}>
+        <div style={{ padding: "20px 24px", borderBottom: "1px solid rgba(120,96,60,0.12)" }}>
           <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
             <div>
               <div style={{ fontFamily: "'Inter', sans-serif", fontSize: 10, fontWeight: 700, letterSpacing: "0.15em", color: color, textTransform: "uppercase", marginBottom: 4 }}>SWAP EXERCISE</div>
-              <div style={{ fontFamily: "'Inter', sans-serif", fontSize: 16, fontWeight: 700, color: "#f0ede6" }}>Replace {exercise.name}</div>
-              <div style={{ fontFamily: "'Inter', sans-serif", fontSize: 11, color: "rgba(255,255,255,0.3)", marginTop: 3 }}>Same muscle group · Same equipment</div>
+              <div style={{ fontFamily: "'Inter', sans-serif", fontSize: 16, fontWeight: 700, color: "#2B251E" }}>Replace {exercise.name}</div>
+              <div style={{ fontFamily: "'Inter', sans-serif", fontSize: 11, color: "rgba(43,37,30,0.39)", marginTop: 3 }}>Same muscle group · Same equipment</div>
             </div>
             <button onClick={onClose} style={{
-              background: "rgba(255,255,255,0.06)", border: "1px solid rgba(255,255,255,0.1)", color: "#888",
+              background: "rgba(120,96,60,0.12)", border: "1px solid rgba(43,37,30,0.13)", color: "#7A6F61",
               borderRadius: 8, width: 32, height: 32, cursor: "pointer", fontSize: 16,
               display: "flex", alignItems: "center", justifyContent: "center"
             }}>×</button>
@@ -389,25 +389,25 @@ function SwapModal({ exercise, alternatives, color, onSwap, onClose }) {
         <div style={{ padding: "12px 16px", display: "flex", flexDirection: "column", gap: 8 }}>
           {alternatives.map((alt, i) => (
             <button key={i} onClick={() => onSwap(alt)} style={{
-              background: "rgba(255,255,255,0.02)", border: "1px solid rgba(255,255,255,0.06)",
+              background: "rgba(255,253,248,0.8)", border: "1px solid rgba(120,96,60,0.12)",
               borderRadius: 12, padding: "16px 18px", cursor: "pointer",
               textAlign: "left", transition: "all 0.2s", display: "block", width: "100%"
             }}
             onMouseEnter={e => { e.currentTarget.style.background = `rgba(${rgb},0.06)`; e.currentTarget.style.borderColor = `rgba(${rgb},0.2)`; }}
-            onMouseLeave={e => { e.currentTarget.style.background = "rgba(255,255,255,0.02)"; e.currentTarget.style.borderColor = "rgba(255,255,255,0.06)"; }}
+            onMouseLeave={e => { e.currentTarget.style.background = "rgba(255,253,248,0.8)"; e.currentTarget.style.borderColor = "rgba(120,96,60,0.12)"; }}
             >
               <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start" }}>
                 <div style={{ flex: 1 }}>
-                  <div style={{ fontFamily: "'Inter', sans-serif", fontSize: 14, fontWeight: 700, color: "#f0ede6", marginBottom: 4 }}>{alt.name}</div>
+                  <div style={{ fontFamily: "'Inter', sans-serif", fontSize: 14, fontWeight: 700, color: "#2B251E", marginBottom: 4 }}>{alt.name}</div>
                   <div style={{ display: "flex", gap: 6, marginBottom: 6, flexWrap: "wrap" }}>
-                    <span style={{ fontFamily: "'Inter', sans-serif", fontSize: 9, fontWeight: 600, background: "rgba(255,255,255,0.04)", color: "rgba(255,255,255,0.35)", padding: "2px 8px", borderRadius: 4, letterSpacing: "0.04em", textTransform: "uppercase" }}>{alt.equipment}</span>
+                    <span style={{ fontFamily: "'Inter', sans-serif", fontSize: 9, fontWeight: 600, background: "rgba(255,253,248,0.8)", color: "rgba(43,37,30,0.455)", padding: "2px 8px", borderRadius: 4, letterSpacing: "0.04em", textTransform: "uppercase" }}>{alt.equipment}</span>
                     <span style={{ fontFamily: "'Inter', sans-serif", fontSize: 9, fontWeight: 600, background: `rgba(${rgb},0.08)`, color: color, padding: "2px 8px", borderRadius: 4, letterSpacing: "0.04em", textTransform: "uppercase" }}>{alt.muscles}</span>
                   </div>
-                  <div style={{ fontFamily: "'Inter', sans-serif", fontSize: 11, color: "rgba(255,255,255,0.4)", lineHeight: 1.5 }}>{alt.tip}</div>
+                  <div style={{ fontFamily: "'Inter', sans-serif", fontSize: 11, color: "rgba(43,37,30,0.52)", lineHeight: 1.5 }}>{alt.tip}</div>
                 </div>
                 <div style={{ textAlign: "right", marginLeft: 12, flexShrink: 0 }}>
                   <div style={{ fontFamily: "'Inter', sans-serif", fontSize: 16, fontWeight: 700, color: color }}>{alt.sets}×{alt.reps}</div>
-                  <div style={{ fontFamily: "'Inter', sans-serif", fontSize: 10, color: "rgba(255,255,255,0.2)", marginTop: 2 }}>{alt.startWeight}</div>
+                  <div style={{ fontFamily: "'Inter', sans-serif", fontSize: 10, color: "rgba(43,37,30,0.26)", marginTop: 2 }}>{alt.startWeight}</div>
                 </div>
               </div>
             </button>
@@ -415,7 +415,7 @@ function SwapModal({ exercise, alternatives, color, onSwap, onClose }) {
         </div>
 
         <div style={{ padding: "12px 24px 20px", textAlign: "center" }}>
-          <div style={{ fontFamily: "'Inter', sans-serif", fontSize: 11, color: "rgba(255,255,255,0.15)" }}>Tap an alternative to swap · Click outside to cancel</div>
+          <div style={{ fontFamily: "'Inter', sans-serif", fontSize: 11, color: "rgba(43,37,30,0.195)" }}>Tap an alternative to swap · Click outside to cancel</div>
         </div>
       </div>
     </div>
@@ -624,9 +624,9 @@ function SetCircles({ count, completed, color, onTap }) {
             onClick={(e) => { e.stopPropagation(); onTap(s); }}
             style={{
               width: 26, height: 26, borderRadius: "50%",
-              border: `1.5px solid ${done ? color : "rgba(255,255,255,0.12)"}`,
+              border: `1.5px solid ${done ? color : "rgba(43,37,30,0.156)"}`,
               background: done ? `rgba(${hexToRgb(color)},0.15)` : "transparent",
-              color: done ? color : "rgba(255,255,255,0.25)",
+              color: done ? color : "rgba(43,37,30,0.325)",
               fontFamily: "'Inter', sans-serif", fontSize: 10, fontWeight: 600,
               cursor: "pointer", transition: "all 0.25s ease",
               display: "flex", alignItems: "center", justifyContent: "center",
@@ -660,7 +660,7 @@ function SetLogInput({ setIndex, defaultWeight, defaultReps, color, onLog, onCan
 
   return (
     <div onClick={(e) => e.stopPropagation()} style={{
-      borderTop: "1px solid rgba(255,255,255,0.05)",
+      borderTop: "1px solid rgba(120,96,60,0.1)",
       padding: "12px 18px",
       background: `rgba(${hexToRgb(color)},0.04)`,
       animation: "fadeIn 0.15s ease"
@@ -674,7 +674,7 @@ function SetLogInput({ setIndex, defaultWeight, defaultReps, color, onLog, onCan
         </div>
         <div style={{ display: "flex", alignItems: "center", gap: 6, flex: 1 }}>
           <div style={{ flex: 1 }}>
-            <div style={{ fontFamily: "'Inter', sans-serif", fontSize: 9, color: "rgba(255,255,255,0.25)", letterSpacing: "0.08em", textTransform: "uppercase", marginBottom: 3, fontWeight: 500 }}>Weight</div>
+            <div style={{ fontFamily: "'Inter', sans-serif", fontSize: 9, color: "rgba(43,37,30,0.325)", letterSpacing: "0.08em", textTransform: "uppercase", marginBottom: 3, fontWeight: 500 }}>Weight</div>
             <input
               ref={weightRef}
               type="text"
@@ -682,23 +682,23 @@ function SetLogInput({ setIndex, defaultWeight, defaultReps, color, onLog, onCan
               value={weight}
               onChange={(e) => setWeight(e.target.value)}
               style={{
-                background: "rgba(255,255,255,0.06)", border: `1px solid rgba(${hexToRgb(color)},0.25)`,
+                background: "rgba(120,96,60,0.12)", border: `1px solid rgba(${hexToRgb(color)},0.25)`,
                 borderRadius: 8, padding: "7px 10px", fontFamily: "'Inter', sans-serif",
                 fontSize: 14, fontWeight: 600, color: color, width: "100%", outline: "none",
                 transition: "all 0.2s"
               }}
             />
           </div>
-          <div style={{ fontFamily: "'Inter', sans-serif", fontSize: 14, color: "rgba(255,255,255,0.15)", paddingTop: 14 }}>×</div>
+          <div style={{ fontFamily: "'Inter', sans-serif", fontSize: 14, color: "rgba(43,37,30,0.195)", paddingTop: 14 }}>×</div>
           <div style={{ flex: 1 }}>
-            <div style={{ fontFamily: "'Inter', sans-serif", fontSize: 9, color: "rgba(255,255,255,0.25)", letterSpacing: "0.08em", textTransform: "uppercase", marginBottom: 3, fontWeight: 500 }}>Reps</div>
+            <div style={{ fontFamily: "'Inter', sans-serif", fontSize: 9, color: "rgba(43,37,30,0.325)", letterSpacing: "0.08em", textTransform: "uppercase", marginBottom: 3, fontWeight: 500 }}>Reps</div>
             <input
               type="text"
               inputMode="numeric"
               value={reps}
               onChange={(e) => setReps(e.target.value)}
               style={{
-                background: "rgba(255,255,255,0.06)", border: `1px solid rgba(${hexToRgb(color)},0.25)`,
+                background: "rgba(120,96,60,0.12)", border: `1px solid rgba(${hexToRgb(color)},0.25)`,
                 borderRadius: 8, padding: "7px 10px", fontFamily: "'Inter', sans-serif",
                 fontSize: 14, fontWeight: 600, color: color, width: "100%", outline: "none",
                 transition: "all 0.2s"
@@ -721,8 +721,8 @@ function SetLogInput({ setIndex, defaultWeight, defaultReps, color, onLog, onCan
           type="button"
           onClick={onCancel}
           style={{
-            background: "transparent", border: "1px solid rgba(255,255,255,0.08)",
-            color: "rgba(255,255,255,0.3)", fontFamily: "'Inter', sans-serif", fontSize: 11, fontWeight: 500,
+            background: "transparent", border: "1px solid rgba(120,96,60,0.16)",
+            color: "rgba(43,37,30,0.39)", fontFamily: "'Inter', sans-serif", fontSize: 11, fontWeight: 500,
             padding: "8px 12px", borderRadius: 8, cursor: "pointer", transition: "all 0.2s",
             marginTop: 12
           }}
@@ -778,23 +778,23 @@ function RestTimer({ seconds, exerciseName, color, onDismiss, onAddTime }) {
       }}>
         <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
           <div style={{
-            fontFamily: "'Inter', sans-serif", fontSize: 28, fontWeight: 700,
-            color: seconds <= 10 ? "#ff4444" : color, letterSpacing: "-0.02em",
+            fontFamily: "'Cormorant Garamond', Georgia, serif", fontSize: 32, fontWeight: 600,
+            color: seconds <= 10 ? "#9C4F3C" : color, letterSpacing: "-0.02em",
             fontVariantNumeric: "tabular-nums", minWidth: 70, transition: "color 0.3s"
           }}>
             {mins}:{String(secs).padStart(2, "0")}
           </div>
           <div>
-            <div style={{ fontFamily: "'Inter', sans-serif", fontSize: 10, fontWeight: 600, letterSpacing: "0.08em", textTransform: "uppercase", color: "rgba(255,255,255,0.3)" }}>Rest</div>
-            <div style={{ fontFamily: "'Inter', sans-serif", fontSize: 12, color: "rgba(255,255,255,0.5)", fontWeight: 400 }}>{exerciseName}</div>
+            <div style={{ fontFamily: "'Inter', sans-serif", fontSize: 10, fontWeight: 600, letterSpacing: "0.08em", textTransform: "uppercase", color: "rgba(43,37,30,0.39)" }}>Rest</div>
+            <div style={{ fontFamily: "'Inter', sans-serif", fontSize: 12, color: "rgba(43,37,30,0.65)", fontWeight: 400 }}>{exerciseName}</div>
           </div>
         </div>
         <div style={{ display: "flex", gap: 8 }}>
           <button
             onClick={onAddTime}
             style={{
-              background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.1)",
-              color: "rgba(255,255,255,0.5)", fontFamily: "'Inter', sans-serif", fontSize: 11,
+              background: "rgba(255,253,248,0.8)", border: "1px solid rgba(43,37,30,0.13)",
+              color: "rgba(43,37,30,0.65)", fontFamily: "'Inter', sans-serif", fontSize: 11,
               fontWeight: 600, padding: "8px 14px", borderRadius: 8, cursor: "pointer",
               transition: "all 0.2s"
             }}
@@ -822,14 +822,14 @@ function ProgressBar({ done, total, color }) {
   const pct = total === 0 ? 0 : Math.round((done / total) * 100);
   return (
     <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
-      <div style={{ flex: 1, height: 4, background: "rgba(255,255,255,0.06)", borderRadius: 2, overflow: "hidden" }}>
+      <div style={{ flex: 1, height: 4, background: "rgba(120,96,60,0.12)", borderRadius: 2, overflow: "hidden" }}>
         <div style={{
           width: `${pct}%`, height: "100%",
           background: `linear-gradient(90deg, ${color}, ${color}aa)`,
           borderRadius: 2, transition: "width 0.5s cubic-bezier(0.4, 0, 0.2, 1)"
         }} />
       </div>
-      <span style={{ fontFamily: "'Inter', sans-serif", fontSize: 11, fontWeight: 600, color: pct === 100 ? color : "rgba(255,255,255,0.25)", minWidth: 36, textAlign: "right" }}>
+      <span style={{ fontFamily: "'Inter', sans-serif", fontSize: 11, fontWeight: 600, color: pct === 100 ? color : "rgba(43,37,30,0.325)", minWidth: 36, textAlign: "right" }}>
         {pct}%
       </span>
     </div>
@@ -862,7 +862,7 @@ function FormGuideModal({ exercise, color, onClose }) {
   return (
     <div onClick={onClose} style={{
       position: "fixed", inset: 0, zIndex: 1000,
-      background: "rgba(0,0,0,0.93)",
+      background: "rgba(52,42,30,0.32)",
       display: "flex", alignItems: "center", justifyContent: "center",
       padding: 24, backdropFilter: "blur(10px)",
       animation: "fadeIn 0.2s ease"
@@ -871,11 +871,11 @@ function FormGuideModal({ exercise, color, onClose }) {
         <div style={{ display: "flex", alignItems: "flex-start", justifyContent: "space-between", marginBottom: 14 }}>
           <div>
             <div style={{ fontFamily: "'Inter', sans-serif", fontSize: 10, fontWeight: 600, letterSpacing: "0.15em", textTransform: "uppercase", color: color, marginBottom: 6 }}>Form Guide</div>
-            <div style={{ fontFamily: "'Inter', sans-serif", fontSize: 24, fontWeight: 700, letterSpacing: "-0.02em", color: "#fff", lineHeight: 1.1 }}>{exercise.name}</div>
-            <div style={{ fontFamily: "'Inter', sans-serif", fontSize: 12, color: "rgba(255,255,255,0.35)", marginTop: 4, fontWeight: 400 }}>{exercise.muscles}</div>
+            <div style={{ fontFamily: "'Cormorant Garamond', Georgia, serif", fontSize: 28, fontWeight: 600, letterSpacing: "-0.02em", color: "#2B251E", lineHeight: 1.1 }}>{exercise.name}</div>
+            <div style={{ fontFamily: "'Inter', sans-serif", fontSize: 12, color: "rgba(43,37,30,0.455)", marginTop: 4, fontWeight: 400 }}>{exercise.muscles}</div>
           </div>
           <button onClick={onClose} style={{
-            background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.1)", color: "rgba(255,255,255,0.5)",
+            background: "rgba(255,253,248,0.8)", border: "1px solid rgba(43,37,30,0.13)", color: "rgba(43,37,30,0.65)",
             borderRadius: 10, width: 36, height: 36, cursor: "pointer", fontSize: 18,
             display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0, marginLeft: 16,
             transition: "all 0.2s"
@@ -918,7 +918,7 @@ function FormGuideModal({ exercise, color, onClose }) {
                       style={{
                         width: idx === activeFrame ? 24 : 8, height: 8,
                         borderRadius: 4,
-                        background: idx === activeFrame ? color : "rgba(255,255,255,0.3)",
+                        background: idx === activeFrame ? color : "rgba(43,37,30,0.39)",
                         border: "none", cursor: "pointer",
                         transition: "all 0.3s ease"
                       }}
@@ -928,8 +928,8 @@ function FormGuideModal({ exercise, color, onClose }) {
                 <button
                   onClick={() => setIsPlaying(!isPlaying)}
                   style={{
-                    background: "rgba(255,255,255,0.1)", border: "1px solid rgba(255,255,255,0.2)",
-                    color: "#fff", borderRadius: 4, width: 28, height: 28,
+                    background: "rgba(43,37,30,0.13)", border: "1px solid rgba(43,37,30,0.26)",
+                    color: "#2B251E", borderRadius: 4, width: 28, height: 28,
                     cursor: "pointer", fontSize: 12,
                     display: "flex", alignItems: "center", justifyContent: "center"
                   }}
@@ -948,9 +948,9 @@ function FormGuideModal({ exercise, color, onClose }) {
           borderRadius: 8, display: "flex", gap: 10, alignItems: "flex-start"
         }}>
           <span style={{ fontSize: 16, marginTop: 1 }}>💡</span>
-          <span style={{ fontFamily: "'Inter', sans-serif", fontSize: 13, color: "#aaa", lineHeight: 1.5, fontStyle: "italic" }}>{exercise.tip}</span>
+          <span style={{ fontFamily: "'Inter', sans-serif", fontSize: 13, color: "#6B6155", lineHeight: 1.5, fontStyle: "italic" }}>{exercise.tip}</span>
         </div>
-        <div style={{ textAlign: "center", marginTop: 10, fontFamily: "'Inter', sans-serif", fontSize: 11, color: "#333" }}>Click outside or press ESC to close</div>
+        <div style={{ textAlign: "center", marginTop: 10, fontFamily: "'Inter', sans-serif", fontSize: 11, color: "#B9AE9C" }}>Click outside or press ESC to close</div>
       </div>
     </div>
   );
@@ -1011,7 +1011,7 @@ function MuscleMap({ muscles, color }) {
 
   const renderBody = (isFront) => (
     <svg viewBox="55 40 90 160" style={{ width: "100%", height: "100%" }}>
-      <g opacity="0.15" stroke="rgba(255,255,255,0.2)" strokeWidth="0.5" fill="none">
+      <g opacity="0.15" stroke="rgba(43,37,30,0.4)" strokeWidth="0.5" fill="none">
         <ellipse cx="100" cy="52" rx="12" ry="14" />
         <path d="M88,66 Q78,58 68,66 L66,120 Q68,125 78,128 L80,128 Q88,135 88,128 L88,66 Z" />
         <path d="M112,66 Q122,58 132,66 L134,120 Q132,125 122,128 L120,128 Q112,135 112,128 L112,66 Z" />
@@ -1023,7 +1023,7 @@ function MuscleMap({ muscles, color }) {
         if (!mg || mg.front !== isFront) return null;
         return <path key={i} d={mg.path} fill={`rgba(${rgb},0.4)`} stroke={color} strokeWidth="0.8" opacity="0.9" />;
       })}
-      <text x="100" y="198" textAnchor="middle" fontSize="7" fill="rgba(255,255,255,0.3)" fontFamily="Inter, sans-serif">{isFront ? "FRONT" : "BACK"}</text>
+      <text x="100" y="198" textAnchor="middle" fontSize="7" fill="rgba(43,37,30,0.6)" fontFamily="Inter, sans-serif">{isFront ? "FRONT" : "BACK"}</text>
     </svg>
   );
 
@@ -1057,7 +1057,7 @@ function WeightChart({ exerciseName, history, color }) {
   if (last8.length === 0) {
     return (
       <div style={{ textAlign: "center", padding: "24px 0" }}>
-        <div style={{ fontFamily: "'Inter', sans-serif", fontSize: 11, color: "rgba(255,255,255,0.25)" }}>No history yet. Log sets to see your progression.</div>
+        <div style={{ fontFamily: "'Inter', sans-serif", fontSize: 11, color: "rgba(43,37,30,0.325)" }}>No history yet. Log sets to see your progression.</div>
       </div>
     );
   }
@@ -1092,8 +1092,8 @@ function WeightChart({ exerciseName, history, color }) {
         const val = Math.round(minW + range * f);
         return (
           <g key={i}>
-            <line x1={padL} y1={y} x2={chartW - padR} y2={y} stroke="rgba(255,255,255,0.06)" strokeWidth="0.5" />
-            <text x={padL - 4} y={y + 3} textAnchor="end" fontSize="6" fill="rgba(255,255,255,0.25)" fontFamily="Inter, sans-serif">{val}</text>
+            <line x1={padL} y1={y} x2={chartW - padR} y2={y} stroke="rgba(43,37,30,0.12)" strokeWidth="0.5" />
+            <text x={padL - 4} y={y + 3} textAnchor="end" fontSize="6" fill="rgba(43,37,30,0.5)" fontFamily="Inter, sans-serif">{val}</text>
           </g>
         );
       })}
@@ -1107,8 +1107,8 @@ function WeightChart({ exerciseName, history, color }) {
       <path d={linePath} fill="none" stroke={color} strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
       {points.map((p, i) => (
         <g key={i}>
-          <circle cx={p.x} cy={p.y} r="3" fill="#08080a" stroke={color} strokeWidth="1.5" />
-          <text x={p.x} y={padT + plotH + 14} textAnchor="middle" fontSize="5" fill="rgba(255,255,255,0.2)" fontFamily="Inter, sans-serif">
+          <circle cx={p.x} cy={p.y} r="3" fill="#F6F1E7" stroke={color} strokeWidth="1.5" />
+          <text x={p.x} y={padT + plotH + 14} textAnchor="middle" fontSize="5" fill="rgba(43,37,30,0.4)" fontFamily="Inter, sans-serif">
             {p.date.slice(5)}
           </text>
         </g>
@@ -1138,23 +1138,23 @@ function ExerciseDetailDrawer({ exercise, color, history, prs, onClose }) {
     }}>
       <div onClick={e => e.stopPropagation()} style={{
         width: "100%", maxWidth: 480,
-        background: "linear-gradient(180deg, #141416 0%, #0c0c0e 100%)",
+        background: "linear-gradient(180deg, #FCFAF5 0%, #F6F1E7 100%)",
         borderRadius: "20px 20px 0 0",
-        border: "1px solid rgba(255,255,255,0.06)",
+        border: "1px solid rgba(120,96,60,0.12)",
         borderBottom: "none",
         maxHeight: "85vh", overflowY: "auto",
         animation: "drawerSlideUp 0.35s cubic-bezier(0.16, 1, 0.3, 1)"
       }}>
-        <div style={{ width: 36, height: 4, borderRadius: 2, background: "rgba(255,255,255,0.15)", margin: "12px auto 0" }} />
+        <div style={{ width: 36, height: 4, borderRadius: 2, background: "rgba(43,37,30,0.195)", margin: "12px auto 0" }} />
 
         <div style={{ padding: "20px 24px 0" }}>
           <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start" }}>
             <div>
               <div style={{ fontFamily: "'Inter', sans-serif", fontSize: 10, fontWeight: 700, letterSpacing: "0.15em", color: color, textTransform: "uppercase", marginBottom: 4 }}>{exercise.equipment}</div>
-              <div style={{ fontFamily: "'Inter', sans-serif", fontSize: 22, fontWeight: 700, color: "#f0ede6", lineHeight: 1.2 }}>{exercise.name}</div>
+              <div style={{ fontFamily: "'Cormorant Garamond', Georgia, serif", fontSize: 26, fontWeight: 600, color: "#2B251E", lineHeight: 1.2 }}>{exercise.name}</div>
             </div>
             <button onClick={onClose} style={{
-              background: "rgba(255,255,255,0.06)", border: "1px solid rgba(255,255,255,0.1)", color: "#888",
+              background: "rgba(120,96,60,0.12)", border: "1px solid rgba(43,37,30,0.13)", color: "#7A6F61",
               borderRadius: 8, width: 32, height: 32, cursor: "pointer", fontSize: 16,
               display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0
             }}>×</button>
@@ -1174,20 +1174,20 @@ function ExerciseDetailDrawer({ exercise, color, history, prs, onClose }) {
           {pr && (
             <div style={{
               display: "flex", alignItems: "center", gap: 8, marginTop: 10,
-              background: "rgba(255,215,0,0.06)", border: "1px solid rgba(255,215,0,0.12)",
+              background: "rgba(176,138,78,0.06)", border: "1px solid rgba(176,138,78,0.12)",
               borderRadius: 8, padding: "8px 12px"
             }}>
-              <span style={{ fontFamily: "'Inter', sans-serif", fontSize: 9, fontWeight: 700, letterSpacing: "0.06em", background: "rgba(255,215,0,0.15)", color: "#FFD700", padding: "2px 6px", borderRadius: 4, border: "1px solid rgba(255,215,0,0.2)" }}>PR</span>
-              <span style={{ fontFamily: "'Inter', sans-serif", fontSize: 12, color: "rgba(255,215,0,0.7)", fontWeight: 500 }}>{pr.weight} lbs × {pr.reps} reps</span>
-              <span style={{ fontFamily: "'Inter', sans-serif", fontSize: 10, color: "rgba(255,215,0,0.35)" }}>({pr.date})</span>
+              <span style={{ fontFamily: "'Inter', sans-serif", fontSize: 9, fontWeight: 700, letterSpacing: "0.06em", background: "rgba(176,138,78,0.15)", color: "#B08A4E", padding: "2px 6px", borderRadius: 4, border: "1px solid rgba(176,138,78,0.2)" }}>PR</span>
+              <span style={{ fontFamily: "'Inter', sans-serif", fontSize: 12, color: "rgba(176,138,78,0.7)", fontWeight: 500 }}>{pr.weight} lbs × {pr.reps} reps</span>
+              <span style={{ fontFamily: "'Inter', sans-serif", fontSize: 10, color: "rgba(176,138,78,0.35)" }}>({pr.date})</span>
             </div>
           )}
         </div>
 
         <div style={{ padding: "20px 24px" }}>
-          <div style={{ fontFamily: "'Inter', sans-serif", fontSize: 10, fontWeight: 700, letterSpacing: "0.15em", textTransform: "uppercase", color: "rgba(255,255,255,0.3)", marginBottom: 14 }}>MUSCLE MAP</div>
+          <div style={{ fontFamily: "'Inter', sans-serif", fontSize: 10, fontWeight: 700, letterSpacing: "0.15em", textTransform: "uppercase", color: "rgba(43,37,30,0.39)", marginBottom: 14 }}>MUSCLE MAP</div>
           <div style={{
-            background: "rgba(255,255,255,0.02)", border: "1px solid rgba(255,255,255,0.06)",
+            background: "rgba(255,253,248,0.8)", border: "1px solid rgba(120,96,60,0.12)",
             borderRadius: 12, padding: "16px 12px", display: "flex", justifyContent: "center"
           }}>
             <MuscleMap muscles={exercise.muscles} color={color} />
@@ -1195,31 +1195,31 @@ function ExerciseDetailDrawer({ exercise, color, history, prs, onClose }) {
         </div>
 
         <div style={{ padding: "0 24px 20px" }}>
-          <div style={{ fontFamily: "'Inter', sans-serif", fontSize: 10, fontWeight: 700, letterSpacing: "0.15em", textTransform: "uppercase", color: "rgba(255,255,255,0.3)", marginBottom: 10 }}>COACHING CUES</div>
+          <div style={{ fontFamily: "'Inter', sans-serif", fontSize: 10, fontWeight: 700, letterSpacing: "0.15em", textTransform: "uppercase", color: "rgba(43,37,30,0.39)", marginBottom: 10 }}>COACHING CUES</div>
           <div style={{
-            background: "rgba(255,255,255,0.02)", border: "1px solid rgba(255,255,255,0.06)",
+            background: "rgba(255,253,248,0.8)", border: "1px solid rgba(120,96,60,0.12)",
             borderRadius: 12, padding: 16
           }}>
-            <div style={{ fontFamily: "'Inter', sans-serif", fontSize: 13, color: "rgba(255,255,255,0.7)", lineHeight: 1.7 }}>
+            <div style={{ fontFamily: "'Inter', sans-serif", fontSize: 13, color: "rgba(43,37,30,0.91)", lineHeight: 1.7 }}>
               {exercise.tip}
             </div>
             <div style={{ marginTop: 12, display: "flex", gap: 8 }}>
               <div style={{ background: `rgba(${rgb},0.08)`, border: `1px solid rgba(${rgb},0.15)`, borderRadius: 8, padding: "8px 12px", flex: 1, textAlign: "center" }}>
-                <div style={{ fontFamily: "'Inter', sans-serif", fontSize: 18, fontWeight: 700, color: color }}>{exercise.sets}×{exercise.reps}</div>
-                <div style={{ fontFamily: "'Inter', sans-serif", fontSize: 9, color: "rgba(255,255,255,0.3)", letterSpacing: "0.06em", marginTop: 2 }}>SETS × REPS</div>
+                <div style={{ fontFamily: "'Cormorant Garamond', Georgia, serif", fontSize: 22, fontWeight: 600, color: color }}>{exercise.sets}×{exercise.reps}</div>
+                <div style={{ fontFamily: "'Inter', sans-serif", fontSize: 9, color: "rgba(43,37,30,0.39)", letterSpacing: "0.06em", marginTop: 2 }}>SETS × REPS</div>
               </div>
-              <div style={{ background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.06)", borderRadius: 8, padding: "8px 12px", flex: 1, textAlign: "center" }}>
-                <div style={{ fontFamily: "'Inter', sans-serif", fontSize: 18, fontWeight: 700, color: "#f0ede6" }}>{exercise.startWeight}</div>
-                <div style={{ fontFamily: "'Inter', sans-serif", fontSize: 9, color: "rgba(255,255,255,0.3)", letterSpacing: "0.06em", marginTop: 2 }}>START WEIGHT</div>
+              <div style={{ background: "rgba(255,253,248,0.8)", border: "1px solid rgba(120,96,60,0.12)", borderRadius: 8, padding: "8px 12px", flex: 1, textAlign: "center" }}>
+                <div style={{ fontFamily: "'Cormorant Garamond', Georgia, serif", fontSize: 22, fontWeight: 600, color: "#2B251E" }}>{exercise.startWeight}</div>
+                <div style={{ fontFamily: "'Inter', sans-serif", fontSize: 9, color: "rgba(43,37,30,0.39)", letterSpacing: "0.06em", marginTop: 2 }}>START WEIGHT</div>
               </div>
             </div>
           </div>
         </div>
 
         <div style={{ padding: "0 24px 28px" }}>
-          <div style={{ fontFamily: "'Inter', sans-serif", fontSize: 10, fontWeight: 700, letterSpacing: "0.15em", textTransform: "uppercase", color: "rgba(255,255,255,0.3)", marginBottom: 10 }}>WEIGHT PROGRESSION</div>
+          <div style={{ fontFamily: "'Inter', sans-serif", fontSize: 10, fontWeight: 700, letterSpacing: "0.15em", textTransform: "uppercase", color: "rgba(43,37,30,0.39)", marginBottom: 10 }}>WEIGHT PROGRESSION</div>
           <div style={{
-            background: "rgba(255,255,255,0.02)", border: "1px solid rgba(255,255,255,0.06)",
+            background: "rgba(255,253,248,0.8)", border: "1px solid rgba(120,96,60,0.12)",
             borderRadius: 12, padding: "16px 12px"
           }}>
             <WeightChart exerciseName={exercise.name} history={history} color={color} />
@@ -1244,7 +1244,7 @@ function HistoryDetailModal({ entry, onClose }) {
   return (
     <div onClick={onClose} style={{
       position: "fixed", inset: 0, zIndex: 1000,
-      background: "rgba(0,0,0,0.93)",
+      background: "rgba(52,42,30,0.32)",
       display: "flex", alignItems: "center", justifyContent: "center",
       padding: 24, backdropFilter: "blur(10px)",
       animation: "fadeIn 0.2s ease"
@@ -1252,47 +1252,47 @@ function HistoryDetailModal({ entry, onClose }) {
       <div onClick={e => e.stopPropagation()} style={{ width: "100%", maxWidth: 560, maxHeight: "80vh", overflowY: "auto", animation: "slideUp 0.25s ease" }}>
         <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: 20 }}>
           <div>
-            <div style={{ fontFamily: "'Inter', sans-serif", fontSize: 10, fontWeight: 700, letterSpacing: "0.25em", textTransform: "uppercase", color: "#888", marginBottom: 4 }}>WORKOUT HISTORY</div>
-            <div style={{ fontFamily: "'Inter', sans-serif", fontSize: 32, letterSpacing: "0.04em", color: "#f0ede6", lineHeight: 1 }}>{dateStr}</div>
+            <div style={{ fontFamily: "'Inter', sans-serif", fontSize: 10, fontWeight: 700, letterSpacing: "0.25em", textTransform: "uppercase", color: "#7A6F61", marginBottom: 4 }}>WORKOUT HISTORY</div>
+            <div style={{ fontFamily: "'Inter', sans-serif", fontSize: 32, letterSpacing: "0.04em", color: "#2B251E", lineHeight: 1 }}>{dateStr}</div>
           </div>
           <button onClick={onClose} style={{
-            background: "rgba(255,255,255,0.06)", border: "1px solid #333", color: "#888",
+            background: "rgba(120,96,60,0.12)", border: "1px solid #B9AE9C", color: "#7A6F61",
             borderRadius: 6, width: 36, height: 36, cursor: "pointer", fontSize: 18,
             display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0
           }}>×</button>
         </div>
 
         <div style={{
-          padding: "14px 18px", background: "rgba(255,255,255,0.03)", border: "1px solid #222",
+          padding: "14px 18px", background: "rgba(255,253,248,0.8)", border: "1px solid #E8E0D2",
           borderRadius: 10, marginBottom: 16, display: "flex", justifyContent: "space-between", alignItems: "center"
         }}>
-          <span style={{ fontFamily: "'Inter', sans-serif", fontSize: 10, fontWeight: 700, letterSpacing: "0.15em", textTransform: "uppercase", color: "#555" }}>TOTAL VOLUME</span>
-          <span style={{ fontFamily: "'Inter', sans-serif", fontSize: 36, color: "#f0ede6", lineHeight: 1 }}>{grandTotal.toLocaleString()} lbs</span>
+          <span style={{ fontFamily: "'Inter', sans-serif", fontSize: 10, fontWeight: 700, letterSpacing: "0.15em", textTransform: "uppercase", color: "#8C8172" }}>TOTAL VOLUME</span>
+          <span style={{ fontFamily: "'Inter', sans-serif", fontSize: 36, color: "#2B251E", lineHeight: 1 }}>{grandTotal.toLocaleString()} lbs</span>
         </div>
 
         {entry.sessions.map((sess, si) => (
           <div key={si} style={{
             marginBottom: 12, padding: "16px 18px",
-            background: `linear-gradient(135deg, rgba(${hexToRgb(sess.color)},0.08) 0%, rgba(255,255,255,0.02) 100%)`,
+            background: `linear-gradient(135deg, rgba(${hexToRgb(sess.color)},0.08) 0%, rgba(255,253,248,0.8) 100%)`,
             border: `1px solid rgba(${hexToRgb(sess.color)},0.2)`,
             borderRadius: 10
           }}>
             <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 12 }}>
               <div>
                 <div style={{ fontFamily: "'Inter', sans-serif", fontSize: 10, fontWeight: 700, letterSpacing: "0.15em", color: sess.color, textTransform: "uppercase" }}>DAY {sess.dayNum} · {sess.focus}</div>
-                <div style={{ fontFamily: "'Inter', sans-serif", fontSize: 24, color: "#f0ede6", lineHeight: 1, marginTop: 2 }}>{sess.dayTitle}</div>
+                <div style={{ fontFamily: "'Inter', sans-serif", fontSize: 24, color: "#2B251E", lineHeight: 1, marginTop: 2 }}>{sess.dayTitle}</div>
               </div>
               <div style={{ textAlign: "right" }}>
                 <div style={{ fontFamily: "'Inter', sans-serif", fontSize: 22, color: sess.color, lineHeight: 1 }}>{sess.totalVolume.toLocaleString()} lbs</div>
-                <div style={{ fontFamily: "'Inter', sans-serif", fontSize: 10, color: "#555", marginTop: 2 }}>{sess.completedSets}/{sess.totalSets} sets</div>
+                <div style={{ fontFamily: "'Inter', sans-serif", fontSize: 10, color: "#8C8172", marginTop: 2 }}>{sess.completedSets}/{sess.totalSets} sets</div>
               </div>
             </div>
             <div style={{ display: "flex", flexDirection: "column", gap: 6 }}>
               {sess.exercises.map((ex, ei) => (
-                <div key={ei} style={{ paddingTop: ei === 0 ? 0 : 8, borderTop: ei === 0 ? "none" : "1px solid rgba(255,255,255,0.04)" }}>
+                <div key={ei} style={{ paddingTop: ei === 0 ? 0 : 8, borderTop: ei === 0 ? "none" : "1px solid rgba(255,253,248,0.8)" }}>
                   <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-                    <span style={{ fontFamily: "'Inter', sans-serif", fontSize: 13, fontWeight: 600, color: ex.completedCount === ex.totalSets ? "#ccc" : "#888" }}>{ex.name}</span>
-                    <span style={{ fontFamily: "'Inter', sans-serif", fontSize: 13, fontWeight: 700, color: ex.completedCount === ex.totalSets ? sess.color : "#555" }}>
+                    <span style={{ fontFamily: "'Inter', sans-serif", fontSize: 13, fontWeight: 600, color: ex.completedCount === ex.totalSets ? "#4A4238" : "#7A6F61" }}>{ex.name}</span>
+                    <span style={{ fontFamily: "'Inter', sans-serif", fontSize: 13, fontWeight: 700, color: ex.completedCount === ex.totalSets ? sess.color : "#8C8172" }}>
                       {ex.volume.toLocaleString()} lbs
                     </span>
                   </div>
@@ -1300,7 +1300,7 @@ function HistoryDetailModal({ entry, onClose }) {
                     <div style={{ display: "flex", gap: 8, marginTop: 6, flexWrap: "wrap" }}>
                       {ex.setDetails.map((s, si) => (
                         <div key={si} style={{
-                          background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.06)",
+                          background: "rgba(255,253,248,0.8)", border: "1px solid rgba(120,96,60,0.12)",
                           borderRadius: 6, padding: "4px 10px",
                           fontFamily: "'Inter', sans-serif", fontSize: 11, color: "#999"
                         }}>
@@ -1310,7 +1310,7 @@ function HistoryDetailModal({ entry, onClose }) {
                       ))}
                     </div>
                   ) : (
-                    <div style={{ fontFamily: "'Inter', sans-serif", fontSize: 11, color: "#444", marginTop: 3 }}>
+                    <div style={{ fontFamily: "'Inter', sans-serif", fontSize: 11, color: "#A89D8B", marginTop: 3 }}>
                       {ex.weight} lbs × {ex.reps} × {ex.completedCount} sets
                     </div>
                   )}
@@ -1320,7 +1320,7 @@ function HistoryDetailModal({ entry, onClose }) {
           </div>
         ))}
 
-        <div style={{ textAlign: "center", marginTop: 10, fontFamily: "'Inter', sans-serif", fontSize: 11, color: "#333" }}>Click outside or press ESC to close</div>
+        <div style={{ textAlign: "center", marginTop: 10, fontFamily: "'Inter', sans-serif", fontSize: 11, color: "#B9AE9C" }}>Click outside or press ESC to close</div>
       </div>
     </div>
   );
@@ -1369,41 +1369,41 @@ function CalendarView({ history, onSelectDate }) {
     <div style={{ maxWidth: 760, margin: "0 auto", padding: "28px 24px" }}>
       <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 24 }}>
         <div>
-          <div style={{ fontFamily: "'Inter', sans-serif", fontSize: 10, fontWeight: 700, letterSpacing: "0.25em", color: "#888", textTransform: "uppercase", marginBottom: 4 }}>WORKOUT HISTORY</div>
-          <div style={{ fontFamily: "'Inter', sans-serif", fontSize: 42, letterSpacing: "0.04em", color: "#f0ede6", lineHeight: 1 }}>HISTORY</div>
+          <div style={{ fontFamily: "'Inter', sans-serif", fontSize: 10, fontWeight: 700, letterSpacing: "0.25em", color: "#7A6F61", textTransform: "uppercase", marginBottom: 4 }}>WORKOUT HISTORY</div>
+          <div style={{ fontFamily: "'Inter', sans-serif", fontSize: 42, letterSpacing: "0.04em", color: "#2B251E", lineHeight: 1 }}>HISTORY</div>
         </div>
       </div>
 
       <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: 12, marginBottom: 24 }}>
-        <div style={{ background: "rgba(255,255,255,0.03)", border: "1px solid #222", borderRadius: 10, padding: "16px" }}>
-          <div style={{ fontFamily: "'Inter', sans-serif", fontSize: 10, fontWeight: 700, letterSpacing: "0.15em", textTransform: "uppercase", color: "#555", marginBottom: 6 }}>THIS MONTH</div>
-          <div style={{ fontFamily: "'Inter', sans-serif", fontSize: 36, color: "#2ECC71", lineHeight: 1 }}>{monthSessions}</div>
-          <div style={{ fontFamily: "'Inter', sans-serif", fontSize: 11, color: "#666", marginTop: 2 }}>workouts</div>
+        <div style={{ background: "rgba(255,253,248,0.8)", border: "1px solid #E8E0D2", borderRadius: 10, padding: "16px" }}>
+          <div style={{ fontFamily: "'Inter', sans-serif", fontSize: 10, fontWeight: 700, letterSpacing: "0.15em", textTransform: "uppercase", color: "#8C8172", marginBottom: 6 }}>THIS MONTH</div>
+          <div style={{ fontFamily: "'Inter', sans-serif", fontSize: 36, color: "#5E7B5C", lineHeight: 1 }}>{monthSessions}</div>
+          <div style={{ fontFamily: "'Inter', sans-serif", fontSize: 11, color: "#7F7466", marginTop: 2 }}>workouts</div>
         </div>
-        <div style={{ background: "rgba(255,255,255,0.03)", border: "1px solid #222", borderRadius: 10, padding: "16px" }}>
-          <div style={{ fontFamily: "'Inter', sans-serif", fontSize: 10, fontWeight: 700, letterSpacing: "0.15em", textTransform: "uppercase", color: "#555", marginBottom: 6 }}>MONTH VOLUME</div>
-          <div style={{ fontFamily: "'Inter', sans-serif", fontSize: 36, color: "#2E7BE8", lineHeight: 1 }}>{monthVolume.toLocaleString()}</div>
-          <div style={{ fontFamily: "'Inter', sans-serif", fontSize: 11, color: "#666", marginTop: 2 }}>lbs lifted</div>
+        <div style={{ background: "rgba(255,253,248,0.8)", border: "1px solid #E8E0D2", borderRadius: 10, padding: "16px" }}>
+          <div style={{ fontFamily: "'Inter', sans-serif", fontSize: 10, fontWeight: 700, letterSpacing: "0.15em", textTransform: "uppercase", color: "#8C8172", marginBottom: 6 }}>MONTH VOLUME</div>
+          <div style={{ fontFamily: "'Inter', sans-serif", fontSize: 36, color: "#3F5B7A", lineHeight: 1 }}>{monthVolume.toLocaleString()}</div>
+          <div style={{ fontFamily: "'Inter', sans-serif", fontSize: 11, color: "#7F7466", marginTop: 2 }}>lbs lifted</div>
         </div>
-        <div style={{ background: "rgba(255,255,255,0.03)", border: "1px solid #222", borderRadius: 10, padding: "16px" }}>
-          <div style={{ fontFamily: "'Inter', sans-serif", fontSize: 10, fontWeight: 700, letterSpacing: "0.15em", textTransform: "uppercase", color: "#555", marginBottom: 6 }}>STREAK</div>
-          <div style={{ fontFamily: "'Inter', sans-serif", fontSize: 36, color: "#E8A02E", lineHeight: 1 }}>{streak}</div>
-          <div style={{ fontFamily: "'Inter', sans-serif", fontSize: 11, color: "#666", marginTop: 2 }}>{streak === 1 ? "day" : "days"}</div>
+        <div style={{ background: "rgba(255,253,248,0.8)", border: "1px solid #E8E0D2", borderRadius: 10, padding: "16px" }}>
+          <div style={{ fontFamily: "'Inter', sans-serif", fontSize: 10, fontWeight: 700, letterSpacing: "0.15em", textTransform: "uppercase", color: "#8C8172", marginBottom: 6 }}>STREAK</div>
+          <div style={{ fontFamily: "'Inter', sans-serif", fontSize: 36, color: "#B08A4E", lineHeight: 1 }}>{streak}</div>
+          <div style={{ fontFamily: "'Inter', sans-serif", fontSize: 11, color: "#7F7466", marginTop: 2 }}>{streak === 1 ? "day" : "days"}</div>
         </div>
       </div>
 
-      <div style={{ background: "rgba(255,255,255,0.025)", border: "1px solid #1e1e1e", borderRadius: 12, padding: "20px 24px" }}>
+      <div style={{ background: "rgba(255,253,248,0.8)", border: "1px solid #E8E0D2", borderRadius: 12, padding: "20px 24px" }}>
         <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 20 }}>
-          <button className="cal-nav" onClick={prevMonth} style={{ background: "rgba(255,255,255,0.04)", border: "1px solid #2a2a2a", color: "#888", borderRadius: 6, width: 36, height: 36, cursor: "pointer", fontSize: 16, display: "flex", alignItems: "center", justifyContent: "center" }}>‹</button>
-          <div style={{ fontFamily: "'Inter', sans-serif", fontSize: 28, letterSpacing: "0.06em", color: "#f0ede6" }}>
+          <button className="cal-nav" onClick={prevMonth} style={{ background: "rgba(255,253,248,0.8)", border: "1px solid #DDD3C3", color: "#7A6F61", borderRadius: 6, width: 36, height: 36, cursor: "pointer", fontSize: 16, display: "flex", alignItems: "center", justifyContent: "center" }}>‹</button>
+          <div style={{ fontFamily: "'Inter', sans-serif", fontSize: 28, letterSpacing: "0.06em", color: "#2B251E" }}>
             {MONTH_NAMES[viewMonth]} {viewYear}
           </div>
-          <button className="cal-nav" onClick={nextMonth} style={{ background: "rgba(255,255,255,0.04)", border: "1px solid #2a2a2a", color: "#888", borderRadius: 6, width: 36, height: 36, cursor: "pointer", fontSize: 16, display: "flex", alignItems: "center", justifyContent: "center" }}>›</button>
+          <button className="cal-nav" onClick={nextMonth} style={{ background: "rgba(255,253,248,0.8)", border: "1px solid #DDD3C3", color: "#7A6F61", borderRadius: 6, width: 36, height: 36, cursor: "pointer", fontSize: 16, display: "flex", alignItems: "center", justifyContent: "center" }}>›</button>
         </div>
 
         <div style={{ display: "grid", gridTemplateColumns: "repeat(7, 1fr)", gap: 4, marginBottom: 8 }}>
           {["SUN", "MON", "TUE", "WED", "THU", "FRI", "SAT"].map(d => (
-            <div key={d} style={{ fontFamily: "'Inter', sans-serif", fontSize: 10, fontWeight: 700, letterSpacing: "0.1em", color: "#444", textAlign: "center", padding: "6px 0" }}>{d}</div>
+            <div key={d} style={{ fontFamily: "'Inter', sans-serif", fontSize: 10, fontWeight: 700, letterSpacing: "0.1em", color: "#A89D8B", textAlign: "center", padding: "6px 0" }}>{d}</div>
           ))}
         </div>
 
@@ -1422,8 +1422,8 @@ function CalendarView({ history, onSelectDate }) {
                 key={dateKey}
                 onClick={() => hasWorkout && onSelectDate(entry)}
                 style={{
-                  background: isToday ? "rgba(255,255,255,0.06)" : hasWorkout ? "rgba(255,255,255,0.03)" : "transparent",
-                  border: isToday ? "1px solid #444" : "1px solid transparent",
+                  background: isToday ? "rgba(120,96,60,0.12)" : hasWorkout ? "rgba(255,253,248,0.8)" : "transparent",
+                  border: isToday ? "1px solid #A89D8B" : "1px solid transparent",
                   borderRadius: 8,
                   padding: "8px 4px",
                   cursor: hasWorkout ? "pointer" : "default",
@@ -1435,7 +1435,7 @@ function CalendarView({ history, onSelectDate }) {
               >
                 <div style={{
                   fontFamily: "'Inter', sans-serif", fontSize: 13, fontWeight: isToday ? 700 : 400,
-                  color: isToday ? "#f0ede6" : hasWorkout ? "#ccc" : "#444",
+                  color: isToday ? "#2B251E" : hasWorkout ? "#4A4238" : "#A89D8B",
                   marginBottom: 4
                 }}>
                   {d}
@@ -1457,7 +1457,7 @@ function CalendarView({ history, onSelectDate }) {
         const sortedDates = Object.keys(history).sort().reverse().slice(0, 7);
         return (
           <div style={{ marginTop: 24 }}>
-            <div style={{ fontFamily: "'Inter', sans-serif", fontSize: 10, fontWeight: 700, letterSpacing: "0.15em", textTransform: "uppercase", color: "#555", marginBottom: 12 }}>RECENT SESSIONS</div>
+            <div style={{ fontFamily: "'Inter', sans-serif", fontSize: 10, fontWeight: 700, letterSpacing: "0.15em", textTransform: "uppercase", color: "#8C8172", marginBottom: 12 }}>RECENT SESSIONS</div>
             <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
               {sortedDates.map(dateKey => {
                 const entry = history[dateKey];
@@ -1470,7 +1470,7 @@ function CalendarView({ history, onSelectDate }) {
                     key={dateKey}
                     onClick={() => onSelectDate(entry)}
                     style={{
-                      background: "rgba(255,255,255,0.025)", border: "1px solid #1e1e1e", borderRadius: 10,
+                      background: "rgba(255,253,248,0.8)", border: "1px solid #E8E0D2", borderRadius: 10,
                       padding: "14px 18px", cursor: "pointer", textAlign: "left",
                       display: "flex", justifyContent: "space-between", alignItems: "center",
                       transition: "all 0.2s"
@@ -1483,15 +1483,15 @@ function CalendarView({ history, onSelectDate }) {
                         ))}
                       </div>
                       <div>
-                        <div style={{ fontFamily: "'Inter', sans-serif", fontSize: 13, fontWeight: 700, color: "#f0ede6" }}>{dateLabel}</div>
-                        <div style={{ fontFamily: "'Inter', sans-serif", fontSize: 11, color: "#555", marginTop: 2 }}>
+                        <div style={{ fontFamily: "'Inter', sans-serif", fontSize: 13, fontWeight: 700, color: "#2B251E" }}>{dateLabel}</div>
+                        <div style={{ fontFamily: "'Inter', sans-serif", fontSize: 11, color: "#8C8172", marginTop: 2 }}>
                           {entry.sessions.map(s => s.dayTitle).join(" + ")}
                         </div>
                       </div>
                     </div>
                     <div style={{ textAlign: "right" }}>
                       <div style={{ fontFamily: "'Inter', sans-serif", fontSize: 20, color: entry.sessions[0].color, lineHeight: 1 }}>{totalVol.toLocaleString()} lbs</div>
-                      <div style={{ fontFamily: "'Inter', sans-serif", fontSize: 10, color: "#444", marginTop: 2 }}>
+                      <div style={{ fontFamily: "'Inter', sans-serif", fontSize: 10, color: "#A89D8B", marginTop: 2 }}>
                         {entry.sessions.reduce((s, sess) => s + sess.completedSets, 0)} sets
                       </div>
                     </div>
@@ -1507,14 +1507,14 @@ function CalendarView({ history, onSelectDate }) {
 }
 
 const MUSCLE_GROUP_COLORS = {
-  "Chest": "#E84A2E", "Upper Chest": "#E84A2E", "Inner Chest": "#E84A2E", "Lower Chest": "#E84A2E",
-  "Shoulders": "#9B59B6", "Front Delt": "#9B59B6", "Side Delts": "#9B59B6", "Rear Delts": "#9B59B6",
-  "Triceps": "#E8A02E", "Triceps Long Head": "#E8A02E",
-  "Biceps": "#2E7BE8",
-  "Back": "#2E7BE8", "Lats": "#2E7BE8", "Mid Back": "#2E7BE8", "Rhomboids": "#2E7BE8",
-  "Quads": "#2ECC71", "Glutes": "#2ECC71", "Hamstrings": "#2ECC71",
-  "Core": "#E8A02E", "Obliques": "#E8A02E",
-  "Cardio": "#E84A2E",
+  "Chest": "#9C4F3C", "Upper Chest": "#9C4F3C", "Inner Chest": "#9C4F3C", "Lower Chest": "#9C4F3C",
+  "Shoulders": "#7B5D80", "Front Delt": "#7B5D80", "Side Delts": "#7B5D80", "Rear Delts": "#7B5D80",
+  "Triceps": "#B08A4E", "Triceps Long Head": "#B08A4E",
+  "Biceps": "#3F5B7A",
+  "Back": "#3F5B7A", "Lats": "#3F5B7A", "Mid Back": "#3F5B7A", "Rhomboids": "#3F5B7A",
+  "Quads": "#5E7B5C", "Glutes": "#5E7B5C", "Hamstrings": "#5E7B5C",
+  "Core": "#B08A4E", "Obliques": "#B08A4E",
+  "Cardio": "#9C4F3C",
 };
 
 function getWeekRange() {
@@ -1618,70 +1618,70 @@ function StatsView({ history }) {
   return (
     <div style={{ maxWidth: 760, margin: "0 auto", padding: "28px 24px" }}>
       <div style={{ marginBottom: 24 }}>
-        <div style={{ fontFamily: "'Inter', sans-serif", fontSize: 10, fontWeight: 700, letterSpacing: "0.25em", color: "#888", textTransform: "uppercase", marginBottom: 4 }}>ANALYTICS</div>
-        <div style={{ fontFamily: "'Inter', sans-serif", fontSize: 42, letterSpacing: "0.04em", color: "#f0ede6", lineHeight: 1 }}>STATS</div>
+        <div style={{ fontFamily: "'Inter', sans-serif", fontSize: 10, fontWeight: 700, letterSpacing: "0.25em", color: "#7A6F61", textTransform: "uppercase", marginBottom: 4 }}>ANALYTICS</div>
+        <div style={{ fontFamily: "'Inter', sans-serif", fontSize: 42, letterSpacing: "0.04em", color: "#2B251E", lineHeight: 1 }}>STATS</div>
       </div>
 
       <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: 12, marginBottom: 24 }}>
-        <div style={{ background: "rgba(255,255,255,0.03)", border: "1px solid #222", borderRadius: 10, padding: "16px" }}>
-          <div style={{ fontFamily: "'Inter', sans-serif", fontSize: 10, fontWeight: 700, letterSpacing: "0.15em", textTransform: "uppercase", color: "#555", marginBottom: 6 }}>THIS MONTH</div>
-          <div style={{ fontFamily: "'Inter', sans-serif", fontSize: 36, color: "#2ECC71", lineHeight: 1 }}>{monthVolume.toLocaleString()}</div>
-          <div style={{ fontFamily: "'Inter', sans-serif", fontSize: 11, color: "#666", marginTop: 2 }}>lbs lifted</div>
+        <div style={{ background: "rgba(255,253,248,0.8)", border: "1px solid #E8E0D2", borderRadius: 10, padding: "16px" }}>
+          <div style={{ fontFamily: "'Inter', sans-serif", fontSize: 10, fontWeight: 700, letterSpacing: "0.15em", textTransform: "uppercase", color: "#8C8172", marginBottom: 6 }}>THIS MONTH</div>
+          <div style={{ fontFamily: "'Inter', sans-serif", fontSize: 36, color: "#5E7B5C", lineHeight: 1 }}>{monthVolume.toLocaleString()}</div>
+          <div style={{ fontFamily: "'Inter', sans-serif", fontSize: 11, color: "#7F7466", marginTop: 2 }}>lbs lifted</div>
         </div>
-        <div style={{ background: "rgba(255,255,255,0.03)", border: "1px solid #222", borderRadius: 10, padding: "16px" }}>
-          <div style={{ fontFamily: "'Inter', sans-serif", fontSize: 10, fontWeight: 700, letterSpacing: "0.15em", textTransform: "uppercase", color: "#555", marginBottom: 6 }}>SESSIONS</div>
-          <div style={{ fontFamily: "'Inter', sans-serif", fontSize: 36, color: "#2E7BE8", lineHeight: 1 }}>{monthSessions}</div>
-          <div style={{ fontFamily: "'Inter', sans-serif", fontSize: 11, color: "#666", marginTop: 2 }}>this month</div>
+        <div style={{ background: "rgba(255,253,248,0.8)", border: "1px solid #E8E0D2", borderRadius: 10, padding: "16px" }}>
+          <div style={{ fontFamily: "'Inter', sans-serif", fontSize: 10, fontWeight: 700, letterSpacing: "0.15em", textTransform: "uppercase", color: "#8C8172", marginBottom: 6 }}>SESSIONS</div>
+          <div style={{ fontFamily: "'Inter', sans-serif", fontSize: 36, color: "#3F5B7A", lineHeight: 1 }}>{monthSessions}</div>
+          <div style={{ fontFamily: "'Inter', sans-serif", fontSize: 11, color: "#7F7466", marginTop: 2 }}>this month</div>
         </div>
-        <div style={{ background: "rgba(255,255,255,0.03)", border: "1px solid #222", borderRadius: 10, padding: "16px" }}>
-          <div style={{ fontFamily: "'Inter', sans-serif", fontSize: 10, fontWeight: 700, letterSpacing: "0.15em", textTransform: "uppercase", color: "#555", marginBottom: 6 }}>STREAK</div>
+        <div style={{ background: "rgba(255,253,248,0.8)", border: "1px solid #E8E0D2", borderRadius: 10, padding: "16px" }}>
+          <div style={{ fontFamily: "'Inter', sans-serif", fontSize: 10, fontWeight: 700, letterSpacing: "0.15em", textTransform: "uppercase", color: "#8C8172", marginBottom: 6 }}>STREAK</div>
           <div style={{ display: "flex", alignItems: "baseline", gap: 4 }}>
-            <div style={{ fontFamily: "'Inter', sans-serif", fontSize: 36, color: "#E8A02E", lineHeight: 1 }}>{streak}</div>
+            <div style={{ fontFamily: "'Inter', sans-serif", fontSize: 36, color: "#B08A4E", lineHeight: 1 }}>{streak}</div>
           </div>
-          <div style={{ fontFamily: "'Inter', sans-serif", fontSize: 11, color: "#666", marginTop: 2 }}>{streak === 1 ? "day" : "days"} in a row</div>
+          <div style={{ fontFamily: "'Inter', sans-serif", fontSize: 11, color: "#7F7466", marginTop: 2 }}>{streak === 1 ? "day" : "days"} in a row</div>
         </div>
       </div>
 
       {mostImproved && (
         <div style={{
-          background: "linear-gradient(135deg, rgba(46,204,113,0.08) 0%, rgba(255,255,255,0.02) 100%)",
-          border: "1px solid rgba(46,204,113,0.2)", borderRadius: 12,
+          background: "linear-gradient(135deg, rgba(94,123,92,0.08) 0%, rgba(255,253,248,0.8) 100%)",
+          border: "1px solid rgba(94,123,92,0.2)", borderRadius: 12,
           padding: "18px 20px", marginBottom: 24,
           display: "flex", justifyContent: "space-between", alignItems: "center"
         }}>
           <div>
-            <div style={{ fontFamily: "'Inter', sans-serif", fontSize: 10, fontWeight: 700, letterSpacing: "0.15em", textTransform: "uppercase", color: "#2ECC71", marginBottom: 6 }}>MOST IMPROVED LIFT</div>
-            <div style={{ fontFamily: "'Inter', sans-serif", fontSize: 18, fontWeight: 700, color: "#f0ede6", lineHeight: 1.2 }}>{mostImproved.name}</div>
-            <div style={{ fontFamily: "'Inter', sans-serif", fontSize: 12, color: "rgba(255,255,255,0.4)", marginTop: 4 }}>
+            <div style={{ fontFamily: "'Inter', sans-serif", fontSize: 10, fontWeight: 700, letterSpacing: "0.15em", textTransform: "uppercase", color: "#5E7B5C", marginBottom: 6 }}>MOST IMPROVED LIFT</div>
+            <div style={{ fontFamily: "'Cormorant Garamond', Georgia, serif", fontSize: 22, fontWeight: 600, color: "#2B251E", lineHeight: 1.2 }}>{mostImproved.name}</div>
+            <div style={{ fontFamily: "'Inter', sans-serif", fontSize: 12, color: "rgba(43,37,30,0.52)", marginTop: 4 }}>
               {mostImproved.from} lbs → {mostImproved.to} lbs
             </div>
           </div>
           <div style={{ textAlign: "right" }}>
-            <div style={{ fontFamily: "'Inter', sans-serif", fontSize: 32, fontWeight: 700, color: "#2ECC71", lineHeight: 1 }}>+{mostImproved.pct}%</div>
-            <div style={{ fontFamily: "'Inter', sans-serif", fontSize: 10, color: "rgba(255,255,255,0.25)", marginTop: 2 }}>improvement</div>
+            <div style={{ fontFamily: "'Cormorant Garamond', Georgia, serif", fontSize: 36, fontWeight: 600, color: "#5E7B5C", lineHeight: 1 }}>+{mostImproved.pct}%</div>
+            <div style={{ fontFamily: "'Inter', sans-serif", fontSize: 10, color: "rgba(43,37,30,0.325)", marginTop: 2 }}>improvement</div>
           </div>
         </div>
       )}
 
-      <div style={{ background: "rgba(255,255,255,0.025)", border: "1px solid #1e1e1e", borderRadius: 12, padding: "20px 24px" }}>
-        <div style={{ fontFamily: "'Inter', sans-serif", fontSize: 10, fontWeight: 700, letterSpacing: "0.15em", textTransform: "uppercase", color: "#555", marginBottom: 18 }}>WEEKLY VOLUME BY MUSCLE GROUP</div>
+      <div style={{ background: "rgba(255,253,248,0.8)", border: "1px solid #E8E0D2", borderRadius: 12, padding: "20px 24px" }}>
+        <div style={{ fontFamily: "'Inter', sans-serif", fontSize: 10, fontWeight: 700, letterSpacing: "0.15em", textTransform: "uppercase", color: "#8C8172", marginBottom: 18 }}>WEEKLY VOLUME BY MUSCLE GROUP</div>
         {muscleEntries.length === 0 ? (
           <div style={{ textAlign: "center", padding: "32px 0" }}>
-            <div style={{ fontFamily: "'Inter', sans-serif", fontSize: 13, color: "rgba(255,255,255,0.2)" }}>No workouts logged this week yet.</div>
-            <div style={{ fontFamily: "'Inter', sans-serif", fontSize: 11, color: "rgba(255,255,255,0.12)", marginTop: 6 }}>Log sets to see your muscle volume breakdown.</div>
+            <div style={{ fontFamily: "'Inter', sans-serif", fontSize: 13, color: "rgba(43,37,30,0.26)" }}>No workouts logged this week yet.</div>
+            <div style={{ fontFamily: "'Inter', sans-serif", fontSize: 11, color: "rgba(43,37,30,0.156)", marginTop: 6 }}>Log sets to see your muscle volume breakdown.</div>
           </div>
         ) : (
           <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
             {muscleEntries.map(([muscle, vol]) => {
-              const barColor = MUSCLE_GROUP_COLORS[muscle] || "#888";
+              const barColor = MUSCLE_GROUP_COLORS[muscle] || "#7A6F61";
               const pct = (vol / maxMuscleVol) * 100;
               return (
                 <div key={muscle}>
                   <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 4 }}>
-                    <span style={{ fontFamily: "'Inter', sans-serif", fontSize: 12, fontWeight: 600, color: "rgba(255,255,255,0.6)" }}>{muscle}</span>
+                    <span style={{ fontFamily: "'Inter', sans-serif", fontSize: 12, fontWeight: 600, color: "rgba(43,37,30,0.78)" }}>{muscle}</span>
                     <span style={{ fontFamily: "'Inter', sans-serif", fontSize: 11, fontWeight: 700, color: barColor }}>{Math.round(vol).toLocaleString()} lbs</span>
                   </div>
-                  <div style={{ height: 8, borderRadius: 4, background: "rgba(255,255,255,0.04)", overflow: "hidden" }}>
+                  <div style={{ height: 8, borderRadius: 4, background: "rgba(255,253,248,0.8)", overflow: "hidden" }}>
                     <div style={{
                       height: "100%", borderRadius: 4,
                       background: `linear-gradient(90deg, ${barColor}, rgba(${hexToRgb(barColor)},0.6))`,
@@ -1698,7 +1698,7 @@ function StatsView({ history }) {
 
       {!mostImproved && Object.keys(history).length === 0 && (
         <div style={{ textAlign: "center", padding: "40px 0 20px" }}>
-          <div style={{ fontFamily: "'Inter', sans-serif", fontSize: 14, color: "rgba(255,255,255,0.2)" }}>Start logging workouts to see your stats here.</div>
+          <div style={{ fontFamily: "'Inter', sans-serif", fontSize: 14, color: "rgba(43,37,30,0.26)" }}>Start logging workouts to see your stats here.</div>
         </div>
       )}
     </div>
@@ -1949,59 +1949,60 @@ export default function WorkoutPlan() {
   const volume = getDayVolume(day, tracking, weights);
 
   return (
-    <div style={{ minHeight: "100vh", background: "#08080a", color: "#f0ede6", padding: 0 }}>
+    <div style={{ minHeight: "100vh", background: "radial-gradient(120% 60% at 50% 0%, #FFFDF8 0%, #F6F1E7 60%, #F1EADD 100%)", color: "#2B251E", padding: 0 }}>
       <style>{`
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;0,700;1,500&family=Inter:wght@300;400;500;600;700&display=swap');
         @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
         @keyframes slideUp { from { opacity: 0; transform: translateY(24px); } to { opacity: 1; transform: translateY(0); } }
         @keyframes prPulse { 0% { transform: scale(0.5); opacity: 0; } 50% { transform: scale(1.3); } 100% { transform: scale(1); opacity: 1; } }
-        @keyframes prGlow { 0%, 100% { box-shadow: 0 0 4px rgba(255,215,0,0.3); } 50% { box-shadow: 0 0 12px rgba(255,215,0,0.6); } }
+        @keyframes prGlow { 0%, 100% { box-shadow: 0 0 4px rgba(176,138,78,0.3); } 50% { box-shadow: 0 0 12px rgba(176,138,78,0.6); } }
         @keyframes drawerSlideUp { from { transform: translateY(100%); } to { transform: translateY(0); } }
         @keyframes confettiFade { 0% { opacity: 0; transform: scale(0) translateY(0); } 30% { opacity: 1; transform: scale(1.5) translateY(-20px); } 100% { opacity: 0; transform: scale(0.8) translateY(30px); } }
         * { box-sizing: border-box; margin: 0; padding: 0; }
-        body { background: #08080a; }
+        body { background: #F6F1E7; -webkit-font-smoothing: antialiased; }
+        .ex-card { box-shadow: 0 1px 2px rgba(80,60,30,0.04), 0 10px 30px -12px rgba(80,60,30,0.12); }
         .day-tab { cursor: pointer; transition: all 0.25s ease; border: none; }
-        .day-tab:hover { background: rgba(255,255,255,0.04) !important; }
+        .day-tab:hover { background: rgba(255,253,248,0.8) !important; }
         .ex-card { transition: all 0.3s ease; border-left: 3px solid transparent; backdrop-filter: blur(8px); }
-        .ex-card:hover { background: rgba(255,255,255,0.04) !important; transform: translateX(2px); }
+        .ex-card:hover { background: rgba(255,253,248,0.8) !important; transform: translateX(2px); }
         .ex-card.open { border-left-color: var(--day-color); }
         .ex-card.done-card { opacity: 0.5; }
         .ex-card.done-card:hover { opacity: 0.7; }
-        .pill { display: inline-block; padding: 3px 10px; border-radius: 6px; font-size: 10px; font-family: 'Inter', sans-serif; font-weight: 600; letter-spacing: 0.04em; text-transform: uppercase; background: rgba(255,255,255,0.06); color: rgba(255,255,255,0.45); border: 1px solid rgba(255,255,255,0.06); }
+        .pill { display: inline-block; padding: 3px 10px; border-radius: 6px; font-size: 10px; font-family: 'Inter', sans-serif; font-weight: 600; letter-spacing: 0.04em; text-transform: uppercase; background: rgba(120,96,60,0.12); color: rgba(43,37,30,0.585); border: 1px solid rgba(120,96,60,0.12); }
         .expand-detail { overflow: hidden; transition: max-height 0.35s cubic-bezier(0.4, 0, 0.2, 1); }
-        .form-btn { background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.08); color: rgba(255,255,255,0.4); font-family: 'Inter', sans-serif; font-size: 10px; font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase; padding: 8px 16px; border-radius: 8px; cursor: pointer; transition: all 0.25s; display: flex; align-items: center; gap: 6px; white-space: nowrap; }
-        .form-btn:hover { border-color: var(--day-color) !important; color: var(--day-color) !important; background: rgba(255,255,255,0.05); }
-        .reset-btn { background: transparent; border: 1px solid rgba(255,255,255,0.08); color: rgba(255,255,255,0.3); font-family: 'Inter', sans-serif; font-size: 10px; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; padding: 6px 14px; border-radius: 8px; cursor: pointer; transition: all 0.25s; }
-        .reset-btn:hover { border-color: #E84A2E; color: #E84A2E; }
-        .weight-input { background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.08); border-radius: 10px; padding: 8px 12px; font-family: 'Inter', sans-serif; font-size: 14px; font-weight: 600; color: var(--day-color); width: 100%; outline: none; transition: all 0.25s; }
-        .weight-input:focus { border-color: var(--day-color); background: rgba(255,255,255,0.06); box-shadow: 0 0 0 3px rgba(var(--day-color-rgb), 0.1); }
-        .weight-input::placeholder { color: rgba(255,255,255,0.2); font-weight: 400; }
-        .cal-day:hover { background: rgba(255,255,255,0.06) !important; }
-        .cal-nav:hover { background: rgba(255,255,255,0.08) !important; border-color: rgba(255,255,255,0.15) !important; }
-        .history-row:hover { background: rgba(255,255,255,0.04) !important; border-color: rgba(255,255,255,0.1) !important; }
-        .view-toggle:hover { background: rgba(255,255,255,0.06) !important; border-color: rgba(255,255,255,0.15) !important; color: #ccc !important; }
+        .form-btn { background: rgba(255,253,248,0.8); border: 1px solid rgba(120,96,60,0.16); color: rgba(43,37,30,0.52); font-family: 'Inter', sans-serif; font-size: 10px; font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase; padding: 8px 16px; border-radius: 8px; cursor: pointer; transition: all 0.25s; display: flex; align-items: center; gap: 6px; white-space: nowrap; }
+        .form-btn:hover { border-color: var(--day-color) !important; color: var(--day-color) !important; background: rgba(120,96,60,0.1); }
+        .reset-btn { background: transparent; border: 1px solid rgba(120,96,60,0.16); color: rgba(43,37,30,0.39); font-family: 'Inter', sans-serif; font-size: 10px; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; padding: 6px 14px; border-radius: 8px; cursor: pointer; transition: all 0.25s; }
+        .reset-btn:hover { border-color: #9C4F3C; color: #9C4F3C; }
+        .weight-input { background: rgba(255,253,248,0.8); border: 1px solid rgba(120,96,60,0.16); border-radius: 10px; padding: 8px 12px; font-family: 'Inter', sans-serif; font-size: 14px; font-weight: 600; color: var(--day-color); width: 100%; outline: none; transition: all 0.25s; }
+        .weight-input:focus { border-color: var(--day-color); background: rgba(120,96,60,0.12); box-shadow: 0 0 0 3px rgba(var(--day-color-rgb), 0.1); }
+        .weight-input::placeholder { color: rgba(43,37,30,0.26); font-weight: 400; }
+        .cal-day:hover { background: rgba(120,96,60,0.12) !important; }
+        .cal-nav:hover { background: rgba(120,96,60,0.16) !important; border-color: rgba(43,37,30,0.195) !important; }
+        .history-row:hover { background: rgba(255,253,248,0.8) !important; border-color: rgba(43,37,30,0.13) !important; }
+        .view-toggle:hover { background: rgba(120,96,60,0.12) !important; border-color: rgba(43,37,30,0.195) !important; color: #4A4238 !important; }
         ::-webkit-scrollbar { width: 6px; }
         ::-webkit-scrollbar-track { background: transparent; }
-        ::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.1); border-radius: 3px; }
-        ::-webkit-scrollbar-thumb:hover { background: rgba(255,255,255,0.2); }
+        ::-webkit-scrollbar-thumb { background: rgba(43,37,30,0.13); border-radius: 3px; }
+        ::-webkit-scrollbar-thumb:hover { background: rgba(43,37,30,0.26); }
       `}</style>
 
-      <div style={{ background: "linear-gradient(180deg, rgba(255,255,255,0.03) 0%, transparent 100%)", borderBottom: "1px solid rgba(255,255,255,0.06)", padding: "32px 24px 0" }}>
+      <div style={{ background: "linear-gradient(180deg, rgba(255,253,248,0.8) 0%, transparent 100%)", borderBottom: "1px solid rgba(120,96,60,0.12)", padding: "32px 24px 0" }}>
         <div style={{ maxWidth: 720, margin: "0 auto" }}>
-          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: 24 }}>
+          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", flexWrap: "wrap-reverse", gap: 16, marginBottom: 24 }}>
             <div>
-              <div style={{ fontFamily: "'Inter', sans-serif", fontWeight: 500, fontSize: 11, letterSpacing: "0.2em", color: "rgba(255,255,255,0.35)", marginBottom: 8, textTransform: "uppercase" }}>Your Program</div>
-              <h1 style={{ fontFamily: "'Inter', sans-serif", fontSize: 32, fontWeight: 700, letterSpacing: "-0.02em", lineHeight: 1.1, color: "#fff", marginBottom: 6 }}>5-Day Build</h1>
+              <div style={{ fontFamily: "'Inter', sans-serif", fontWeight: 500, fontSize: 11, letterSpacing: "0.2em", color: "rgba(43,37,30,0.455)", marginBottom: 8, textTransform: "uppercase" }}>Your Program</div>
+              <h1 style={{ fontFamily: "'Cormorant Garamond', Georgia, serif", fontSize: 44, fontWeight: 500, letterSpacing: "0.01em", lineHeight: 1, color: "#2B251E", marginBottom: 6 }}><span style={{ fontStyle: "italic", color: "#B08A4E" }}>The</span> Abadie</h1>
             </div>
-            <div style={{ display: "flex", gap: 6 }}>
+            <div style={{ display: "flex", gap: 6, flexWrap: "wrap", marginLeft: "auto" }}>
               {view !== "workout" && (
                 <button
                   className="view-toggle"
                   onClick={() => setView("workout")}
                   style={{
-                    background: "rgba(255,255,255,0.04)",
-                    border: "1px solid rgba(255,255,255,0.08)",
-                    color: "rgba(255,255,255,0.5)",
+                    background: "rgba(255,253,248,0.8)",
+                    border: "1px solid rgba(120,96,60,0.16)",
+                    color: "rgba(43,37,30,0.65)",
                     fontFamily: "'Inter', sans-serif", fontSize: 11, fontWeight: 600,
                     letterSpacing: "0.05em", textTransform: "uppercase",
                     padding: "10px 14px", borderRadius: 10, cursor: "pointer",
@@ -2017,9 +2018,9 @@ export default function WorkoutPlan() {
                     className="view-toggle"
                     onClick={() => setView("calendar")}
                     style={{
-                      background: "rgba(255,255,255,0.04)",
-                      border: "1px solid rgba(255,255,255,0.08)",
-                      color: "rgba(255,255,255,0.5)",
+                      background: "rgba(255,253,248,0.8)",
+                      border: "1px solid rgba(120,96,60,0.16)",
+                      color: "rgba(43,37,30,0.65)",
                       fontFamily: "'Inter', sans-serif", fontSize: 11, fontWeight: 600,
                       letterSpacing: "0.05em", textTransform: "uppercase",
                       padding: "10px 14px", borderRadius: 10, cursor: "pointer",
@@ -2032,9 +2033,9 @@ export default function WorkoutPlan() {
                     className="view-toggle"
                     onClick={() => setView("stats")}
                     style={{
-                      background: "rgba(255,255,255,0.04)",
-                      border: "1px solid rgba(255,255,255,0.08)",
-                      color: "rgba(255,255,255,0.5)",
+                      background: "rgba(255,253,248,0.8)",
+                      border: "1px solid rgba(120,96,60,0.16)",
+                      color: "rgba(43,37,30,0.65)",
                       fontFamily: "'Inter', sans-serif", fontSize: 11, fontWeight: 600,
                       letterSpacing: "0.05em", textTransform: "uppercase",
                       padding: "10px 14px", borderRadius: 10, cursor: "pointer",
@@ -2047,9 +2048,9 @@ export default function WorkoutPlan() {
                     className="view-toggle"
                     onClick={() => setView("body")}
                     style={{
-                      background: "rgba(255,255,255,0.04)",
-                      border: "1px solid rgba(255,255,255,0.08)",
-                      color: "rgba(255,255,255,0.5)",
+                      background: "rgba(255,253,248,0.8)",
+                      border: "1px solid rgba(120,96,60,0.16)",
+                      color: "rgba(43,37,30,0.65)",
                       fontFamily: "'Inter', sans-serif", fontSize: 11, fontWeight: 600,
                       letterSpacing: "0.05em", textTransform: "uppercase",
                       padding: "10px 14px", borderRadius: 10, cursor: "pointer",
@@ -2062,9 +2063,9 @@ export default function WorkoutPlan() {
                     className="view-toggle"
                     onClick={() => setShowNotifSettings(true)}
                     style={{
-                      background: "rgba(255,255,255,0.04)",
-                      border: "1px solid rgba(255,255,255,0.08)",
-                      color: "rgba(255,255,255,0.5)",
+                      background: "rgba(255,253,248,0.8)",
+                      border: "1px solid rgba(120,96,60,0.16)",
+                      color: "rgba(43,37,30,0.65)",
                       fontFamily: "'Inter', sans-serif", fontSize: 14, fontWeight: 500,
                       padding: "8px 11px", borderRadius: 10, cursor: "pointer",
                       transition: "all 0.25s", whiteSpace: "nowrap",
@@ -2090,7 +2091,7 @@ export default function WorkoutPlan() {
                   borderBottom: isActive ? `2px solid ${d.color}` : "2px solid transparent",
                   borderRadius: isActive ? "8px 8px 0 0" : "8px 8px 0 0",
                   padding: "12px 4px 14px", cursor: "pointer",
-                  color: isActive ? d.color : "rgba(255,255,255,0.3)",
+                  color: isActive ? d.color : "rgba(43,37,30,0.39)",
                   position: "relative"
                 }}>
                   <div style={{ fontFamily: "'Inter', sans-serif", fontSize: 16, fontWeight: 700, lineHeight: 1 }}>
@@ -2125,8 +2126,8 @@ export default function WorkoutPlan() {
         <div style={{ display: "flex", alignItems: "flex-start", justifyContent: "space-between", marginBottom: 20, flexWrap: "wrap", gap: 12 }}>
           <div>
             <div style={{ fontFamily: "'Inter', sans-serif", fontSize: 11, fontWeight: 600, letterSpacing: "0.15em", color: day.color, textTransform: "uppercase", marginBottom: 6, opacity: 0.9 }}>{day.label} · {day.focus}</div>
-            <h2 style={{ fontFamily: "'Inter', sans-serif", fontSize: 28, fontWeight: 700, letterSpacing: "-0.02em", lineHeight: 1.1, color: "#fff" }}>{day.title}</h2>
-            <div style={{ fontFamily: "'Inter', sans-serif", fontSize: 12, color: "rgba(255,255,255,0.25)", marginTop: 6, fontWeight: 400 }}>{day.equipment}</div>
+            <h2 style={{ fontFamily: "'Cormorant Garamond', Georgia, serif", fontSize: 32, fontWeight: 600, letterSpacing: "-0.02em", lineHeight: 1.1, color: "#2B251E" }}>{day.title}</h2>
+            <div style={{ fontFamily: "'Inter', sans-serif", fontSize: 12, color: "rgba(43,37,30,0.325)", marginTop: 6, fontWeight: 400 }}>{day.equipment}</div>
           </div>
           {(() => {
             const warmupDone = tracking.warmup && tracking.warmup[day.day];
@@ -2134,8 +2135,8 @@ export default function WorkoutPlan() {
               <button
                 onClick={toggleWarmup}
                 style={{
-                  background: warmupDone ? `rgba(${hexToRgb(day.color)},0.1)` : "rgba(255,255,255,0.03)",
-                  border: warmupDone ? `1px solid rgba(${hexToRgb(day.color)},0.25)` : "1px solid rgba(255,255,255,0.06)",
+                  background: warmupDone ? `rgba(${hexToRgb(day.color)},0.1)` : "rgba(255,253,248,0.8)",
+                  border: warmupDone ? `1px solid rgba(${hexToRgb(day.color)},0.25)` : "1px solid rgba(120,96,60,0.12)",
                   borderRadius: 12, padding: "12px 16px", minWidth: 140,
                   backdropFilter: "blur(8px)", cursor: "pointer",
                   transition: "all 0.25s", textAlign: "left",
@@ -2144,7 +2145,7 @@ export default function WorkoutPlan() {
               >
                 <div style={{
                   width: 22, height: 22, borderRadius: "50%",
-                  border: `1.5px solid ${warmupDone ? day.color : "rgba(255,255,255,0.15)"}`,
+                  border: `1.5px solid ${warmupDone ? day.color : "rgba(43,37,30,0.195)"}`,
                   background: warmupDone ? `rgba(${hexToRgb(day.color)},0.2)` : "transparent",
                   display: "flex", alignItems: "center", justifyContent: "center",
                   transition: "all 0.25s", flexShrink: 0,
@@ -2154,18 +2155,18 @@ export default function WorkoutPlan() {
                   {warmupDone ? "✓" : ""}
                 </div>
                 <div>
-                  <div style={{ fontFamily: "'Inter', sans-serif", fontSize: 10, color: warmupDone ? day.color : "rgba(255,255,255,0.3)", letterSpacing: "0.1em", textTransform: "uppercase", marginBottom: 3, fontWeight: 500, transition: "color 0.25s" }}>Walk/Jog</div>
-                  <div style={{ fontFamily: "'Inter', sans-serif", fontSize: 12, color: warmupDone ? "rgba(255,255,255,0.4)" : "rgba(255,255,255,0.6)", lineHeight: 1.4, fontWeight: 400, textDecoration: warmupDone ? "line-through" : "none", textDecorationColor: `rgba(${hexToRgb(day.color)},0.5)`, transition: "all 0.25s" }}>10 minutes</div>
+                  <div style={{ fontFamily: "'Inter', sans-serif", fontSize: 10, color: warmupDone ? day.color : "rgba(43,37,30,0.39)", letterSpacing: "0.1em", textTransform: "uppercase", marginBottom: 3, fontWeight: 500, transition: "color 0.25s" }}>Walk/Jog</div>
+                  <div style={{ fontFamily: "'Inter', sans-serif", fontSize: 12, color: warmupDone ? "rgba(43,37,30,0.52)" : "rgba(43,37,30,0.78)", lineHeight: 1.4, fontWeight: 400, textDecoration: warmupDone ? "line-through" : "none", textDecorationColor: `rgba(${hexToRgb(day.color)},0.5)`, transition: "all 0.25s" }}>10 minutes</div>
                 </div>
               </button>
             );
           })()}
         </div>
 
-        <div style={{ marginBottom: 20, padding: "16px 20px", background: "rgba(255,255,255,0.02)", border: "1px solid rgba(255,255,255,0.06)", borderRadius: 14 }}>
+        <div style={{ marginBottom: 20, padding: "16px 20px", background: "rgba(255,253,248,0.8)", border: "1px solid rgba(120,96,60,0.12)", borderRadius: 14 }}>
           <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 10 }}>
             <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
-              <span style={{ fontFamily: "'Inter', sans-serif", fontSize: 11, fontWeight: 600, letterSpacing: "0.08em", textTransform: "uppercase", color: allComplete ? day.color : "rgba(255,255,255,0.3)" }}>
+              <span style={{ fontFamily: "'Inter', sans-serif", fontSize: 11, fontWeight: 600, letterSpacing: "0.08em", textTransform: "uppercase", color: allComplete ? day.color : "rgba(43,37,30,0.39)" }}>
                 {allComplete ? "Complete" : "Progress"}
               </span>
             </div>
@@ -2182,20 +2183,20 @@ export default function WorkoutPlan() {
         {dayProgress.done > 0 && (
           <div style={{ marginBottom: 20, padding: "16px 20px", background: `rgba(${hexToRgb(day.color)},0.04)`, border: `1px solid rgba(${hexToRgb(day.color)},0.1)`, borderRadius: 14 }}>
             <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 12 }}>
-              <span style={{ fontFamily: "'Inter', sans-serif", fontSize: 11, fontWeight: 600, letterSpacing: "0.08em", textTransform: "uppercase", color: "rgba(255,255,255,0.3)" }}>Volume</span>
-              <span style={{ fontFamily: "'Inter', sans-serif", fontSize: 28, fontWeight: 700, color: day.color, lineHeight: 1, letterSpacing: "-0.02em" }}>{volume.totalVolume.toLocaleString()} <span style={{ fontSize: 14, fontWeight: 500, opacity: 0.7 }}>lbs</span></span>
+              <span style={{ fontFamily: "'Inter', sans-serif", fontSize: 11, fontWeight: 600, letterSpacing: "0.08em", textTransform: "uppercase", color: "rgba(43,37,30,0.39)" }}>Volume</span>
+              <span style={{ fontFamily: "'Cormorant Garamond', Georgia, serif", fontSize: 32, fontWeight: 600, color: day.color, lineHeight: 1, letterSpacing: "-0.02em" }}>{volume.totalVolume.toLocaleString()} <span style={{ fontSize: 14, fontWeight: 500, opacity: 0.7 }}>lbs</span></span>
             </div>
             <div style={{ display: "flex", flexDirection: "column", gap: 6 }}>
               {volume.perExercise.map((ve, vi) => (
                 ve.completedCount > 0 && (
                   <div key={vi} style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
                     <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
-                      <span style={{ fontFamily: "'Inter', sans-serif", fontSize: 12, color: "rgba(255,255,255,0.5)", fontWeight: 400 }}>{ve.name}</span>
-                      <span style={{ fontFamily: "'Inter', sans-serif", fontSize: 10, color: "rgba(255,255,255,0.2)" }}>
+                      <span style={{ fontFamily: "'Inter', sans-serif", fontSize: 12, color: "rgba(43,37,30,0.65)", fontWeight: 400 }}>{ve.name}</span>
+                      <span style={{ fontFamily: "'Inter', sans-serif", fontSize: 10, color: "rgba(43,37,30,0.26)" }}>
                         {ve.weight} × {ve.reps} × {ve.completedCount}
                       </span>
                     </div>
-                    <span style={{ fontFamily: "'Inter', sans-serif", fontSize: 12, fontWeight: 600, color: ve.completedCount === ve.totalSets ? day.color : "rgba(255,255,255,0.35)" }}>{ve.volume.toLocaleString()}</span>
+                    <span style={{ fontFamily: "'Inter', sans-serif", fontSize: 12, fontWeight: 600, color: ve.completedCount === ve.totalSets ? day.color : "rgba(43,37,30,0.455)" }}>{ve.volume.toLocaleString()}</span>
                   </div>
                 )
               ))}
@@ -2217,14 +2218,14 @@ export default function WorkoutPlan() {
             const originalName = ex._swapped ? ex._originalName : ex.name;
             const swapAlts = SWAP_ALTERNATIVES[originalName];
             return (
-              <div key={i} className={`ex-card ${isOpen ? "open" : ""} ${exDone ? "done-card" : ""}`} style={{ background: "rgba(255,255,255,0.02)", border: hasPR ? "1px solid rgba(255,215,0,0.15)" : "1px solid rgba(255,255,255,0.06)", borderRadius: 14, overflow: "hidden", "--day-color": day.color }}>
+              <div key={i} className={`ex-card ${isOpen ? "open" : ""} ${exDone ? "done-card" : ""}`} style={{ background: "rgba(255,253,248,0.8)", border: hasPR ? "1px solid rgba(176,138,78,0.15)" : "1px solid rgba(120,96,60,0.12)", borderRadius: 14, overflow: "hidden", "--day-color": day.color }}>
                 <div onClick={() => setExpandedEx(isOpen ? null : i)} style={{ display: "flex", alignItems: "center", gap: 14, padding: "16px 18px", cursor: "pointer" }}>
-                  <div style={{ fontFamily: "'Inter', sans-serif", fontSize: 20, fontWeight: 700, color: exDone ? day.color : (isOpen ? day.color : "rgba(255,255,255,0.12)"), minWidth: 28, transition: "color 0.25s", lineHeight: 1, textAlign: "center" }}>
+                  <div style={{ fontFamily: "'Cormorant Garamond', Georgia, serif", fontSize: 24, fontWeight: 600, color: exDone ? day.color : (isOpen ? day.color : "rgba(43,37,30,0.156)"), minWidth: 28, transition: "color 0.25s", lineHeight: 1, textAlign: "center" }}>
                     {exDone ? "✓" : String(i + 1).padStart(2, "0")}
                   </div>
                   <div style={{ flex: 1 }}>
                     <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 5 }}>
-                      <span style={{ fontFamily: "'Inter', sans-serif", fontSize: 14, fontWeight: 600, color: exDone ? "rgba(255,255,255,0.4)" : "#fff", textDecoration: exDone ? "line-through" : "none", textDecorationColor: `rgba(${hexToRgb(day.color)},0.5)` }}>{ex.name}</span>
+                      <span style={{ fontFamily: "'Inter', sans-serif", fontSize: 14, fontWeight: 600, color: exDone ? "rgba(43,37,30,0.52)" : "#2B251E", textDecoration: exDone ? "line-through" : "none", textDecorationColor: `rgba(${hexToRgb(day.color)},0.5)` }}>{ex.name}</span>
                       {ex._swapped && (
                         <span style={{ fontFamily: "'Inter', sans-serif", fontSize: 9, fontWeight: 600, letterSpacing: "0.05em", background: `rgba(${hexToRgb(day.color)},0.1)`, color: day.color, padding: "2px 6px", borderRadius: 4, border: `1px solid rgba(${hexToRgb(day.color)},0.2)` }}>SWAPPED</span>
                       )}
@@ -2232,9 +2233,9 @@ export default function WorkoutPlan() {
                         <span style={{
                           fontFamily: "'Inter', sans-serif", fontSize: 9, fontWeight: 700,
                           letterSpacing: "0.06em", textTransform: "uppercase",
-                          background: "rgba(255,215,0,0.15)", color: "#FFD700",
+                          background: "rgba(176,138,78,0.15)", color: "#B08A4E",
                           padding: "2px 7px", borderRadius: 5,
-                          border: "1px solid rgba(255,215,0,0.25)",
+                          border: "1px solid rgba(176,138,78,0.25)",
                           animation: isNewPR ? "prPulse 0.5s ease, prGlow 2s ease infinite" : "prGlow 3s ease infinite",
                           display: "inline-flex", alignItems: "center", gap: 3
                         }}>
@@ -2250,12 +2251,12 @@ export default function WorkoutPlan() {
                   <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
                     <SetCircles count={ex.sets} completed={setsCompleted} color={day.color} onTap={(s) => handleSetTap(i, s)} />
                     <div style={{ textAlign: "right", minWidth: 54 }}>
-                      <div style={{ fontFamily: "'Inter', sans-serif", fontSize: 18, fontWeight: 700, color: day.color, lineHeight: 1, letterSpacing: "-0.01em" }}>{ex.sets}×{ex.reps}</div>
-                      <div style={{ fontFamily: "'Inter', sans-serif", fontSize: 9, color: "rgba(255,255,255,0.2)", letterSpacing: "0.06em", textTransform: "uppercase", marginTop: 2, fontWeight: 500 }}>sets × reps</div>
+                      <div style={{ fontFamily: "'Cormorant Garamond', Georgia, serif", fontSize: 22, fontWeight: 600, color: day.color, lineHeight: 1, letterSpacing: "-0.01em" }}>{ex.sets}×{ex.reps}</div>
+                      <div style={{ fontFamily: "'Inter', sans-serif", fontSize: 9, color: "rgba(43,37,30,0.26)", letterSpacing: "0.06em", textTransform: "uppercase", marginTop: 2, fontWeight: 500 }}>sets × reps</div>
                     </div>
                   </div>
                   <button onClick={(e) => { e.stopPropagation(); setDetailDrawerEx(ex); }} style={{
-                    background: "none", border: "none", color: "rgba(255,255,255,0.2)", fontSize: 16, cursor: "pointer",
+                    background: "none", border: "none", color: "rgba(43,37,30,0.26)", fontSize: 16, cursor: "pointer",
                     padding: "6px 2px", marginLeft: 2, transition: "color 0.2s",
                     display: "flex", alignItems: "center", justifyContent: "center"
                   }} title="Exercise details">›</button>
@@ -2273,10 +2274,10 @@ export default function WorkoutPlan() {
                 )}
 
                 <div className="expand-detail" style={{ maxHeight: isOpen ? 400 : 0 }}>
-                  <div style={{ borderTop: "1px solid rgba(255,255,255,0.05)", padding: "14px 18px 16px" }}>
+                  <div style={{ borderTop: "1px solid rgba(120,96,60,0.1)", padding: "14px 18px 16px" }}>
                     <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr auto", gap: 16, alignItems: "center" }}>
                       <div style={{ "--day-color": day.color }}>
-                        <div style={{ fontFamily: "'Inter', sans-serif", fontSize: 10, color: "rgba(255,255,255,0.25)", letterSpacing: "0.1em", textTransform: "uppercase", marginBottom: 6, fontWeight: 500 }}>Default Weight</div>
+                        <div style={{ fontFamily: "'Inter', sans-serif", fontSize: 10, color: "rgba(43,37,30,0.325)", letterSpacing: "0.1em", textTransform: "uppercase", marginBottom: 6, fontWeight: 500 }}>Default Weight</div>
                         <input
                           className="weight-input"
                           type="text"
@@ -2287,8 +2288,8 @@ export default function WorkoutPlan() {
                         />
                       </div>
                       <div>
-                        <div style={{ fontFamily: "'Inter', sans-serif", fontSize: 10, color: "rgba(255,255,255,0.25)", letterSpacing: "0.1em", textTransform: "uppercase", marginBottom: 6, fontWeight: 500 }}>Tip</div>
-                        <div style={{ fontFamily: "'Inter', sans-serif", fontSize: 12, color: "rgba(255,255,255,0.5)", lineHeight: 1.5, fontWeight: 400 }}>{ex.tip}</div>
+                        <div style={{ fontFamily: "'Inter', sans-serif", fontSize: 10, color: "rgba(43,37,30,0.325)", letterSpacing: "0.1em", textTransform: "uppercase", marginBottom: 6, fontWeight: 500 }}>Tip</div>
+                        <div style={{ fontFamily: "'Inter', sans-serif", fontSize: 12, color: "rgba(43,37,30,0.65)", lineHeight: 1.5, fontWeight: 400 }}>{ex.tip}</div>
                       </div>
                       <button
                         className="form-btn"
@@ -2298,16 +2299,16 @@ export default function WorkoutPlan() {
                         Form Guide
                       </button>
                     </div>
-                    <div style={{ display: "flex", alignItems: "center", gap: 8, marginTop: 12, paddingTop: 10, borderTop: "1px solid rgba(255,255,255,0.04)" }} onClick={(e) => e.stopPropagation()}>
-                      <div style={{ fontFamily: "'Inter', sans-serif", fontSize: 10, color: "rgba(255,255,255,0.25)", letterSpacing: "0.08em", textTransform: "uppercase", fontWeight: 500 }}>Rest</div>
+                    <div style={{ display: "flex", alignItems: "center", gap: 8, marginTop: 12, paddingTop: 10, borderTop: "1px solid rgba(255,253,248,0.8)" }} onClick={(e) => e.stopPropagation()}>
+                      <div style={{ fontFamily: "'Inter', sans-serif", fontSize: 10, color: "rgba(43,37,30,0.325)", letterSpacing: "0.08em", textTransform: "uppercase", fontWeight: 500 }}>Rest</div>
                       {[60, 90, 120].map(sec => {
                         const current = getRestTime(restTimes, day.day, i);
                         const isActive = current === sec;
                         return (
                           <button key={sec} onClick={() => updateRestTime(i, sec)} style={{
-                            background: isActive ? `rgba(${hexToRgb(day.color)},0.12)` : "rgba(255,255,255,0.03)",
-                            border: isActive ? `1px solid rgba(${hexToRgb(day.color)},0.25)` : "1px solid rgba(255,255,255,0.06)",
-                            color: isActive ? day.color : "rgba(255,255,255,0.3)",
+                            background: isActive ? `rgba(${hexToRgb(day.color)},0.12)` : "rgba(255,253,248,0.8)",
+                            border: isActive ? `1px solid rgba(${hexToRgb(day.color)},0.25)` : "1px solid rgba(120,96,60,0.12)",
+                            color: isActive ? day.color : "rgba(43,37,30,0.39)",
                             fontFamily: "'Inter', sans-serif", fontSize: 10, fontWeight: 600,
                             padding: "4px 10px", borderRadius: 6, cursor: "pointer",
                             transition: "all 0.2s"
@@ -2317,11 +2318,11 @@ export default function WorkoutPlan() {
                         );
                       })}
                     </div>
-                    <div style={{ display: "flex", alignItems: "center", gap: 8, marginTop: 12, paddingTop: 10, borderTop: "1px solid rgba(255,255,255,0.04)" }} onClick={e => e.stopPropagation()}>
+                    <div style={{ display: "flex", alignItems: "center", gap: 8, marginTop: 12, paddingTop: 10, borderTop: "1px solid rgba(255,253,248,0.8)" }} onClick={e => e.stopPropagation()}>
                       {swapAlts && (
                         <button onClick={() => setSwapModal({ exIndex: i, exercise: originalEx, alternatives: swapAlts })} style={{
-                          background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.08)",
-                          color: "rgba(255,255,255,0.4)", fontFamily: "'Inter', sans-serif", fontSize: 10, fontWeight: 600,
+                          background: "rgba(255,253,248,0.8)", border: "1px solid rgba(120,96,60,0.16)",
+                          color: "rgba(43,37,30,0.52)", fontFamily: "'Inter', sans-serif", fontSize: 10, fontWeight: 600,
                           padding: "5px 12px", borderRadius: 6, cursor: "pointer", transition: "all 0.2s",
                           display: "flex", alignItems: "center", gap: 5, letterSpacing: "0.04em"
                         }}>
@@ -2330,8 +2331,8 @@ export default function WorkoutPlan() {
                       )}
                       {ex._swapped && (
                         <button onClick={() => revertSwap(day.day, i)} style={{
-                          background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.08)",
-                          color: "rgba(255,255,255,0.3)", fontFamily: "'Inter', sans-serif", fontSize: 10, fontWeight: 600,
+                          background: "rgba(255,253,248,0.8)", border: "1px solid rgba(120,96,60,0.16)",
+                          color: "rgba(43,37,30,0.39)", fontFamily: "'Inter', sans-serif", fontSize: 10, fontWeight: 600,
                           padding: "5px 12px", borderRadius: 6, cursor: "pointer", transition: "all 0.2s",
                           letterSpacing: "0.04em"
                         }}>
@@ -2340,12 +2341,12 @@ export default function WorkoutPlan() {
                       )}
                     </div>
                     {prs[ex.name] && (
-                      <div style={{ display: "flex", alignItems: "center", gap: 8, marginTop: 10, paddingTop: 8, borderTop: "1px solid rgba(255,255,255,0.04)" }}>
-                        <span style={{ fontFamily: "'Inter', sans-serif", fontSize: 9, fontWeight: 700, letterSpacing: "0.06em", textTransform: "uppercase", background: "rgba(255,215,0,0.12)", color: "#FFD700", padding: "2px 6px", borderRadius: 4, border: "1px solid rgba(255,215,0,0.2)" }}>PR</span>
-                        <span style={{ fontFamily: "'Inter', sans-serif", fontSize: 11, color: "rgba(255,255,255,0.4)", fontWeight: 500 }}>
+                      <div style={{ display: "flex", alignItems: "center", gap: 8, marginTop: 10, paddingTop: 8, borderTop: "1px solid rgba(255,253,248,0.8)" }}>
+                        <span style={{ fontFamily: "'Inter', sans-serif", fontSize: 9, fontWeight: 700, letterSpacing: "0.06em", textTransform: "uppercase", background: "rgba(176,138,78,0.12)", color: "#B08A4E", padding: "2px 6px", borderRadius: 4, border: "1px solid rgba(176,138,78,0.2)" }}>PR</span>
+                        <span style={{ fontFamily: "'Inter', sans-serif", fontSize: 11, color: "rgba(43,37,30,0.52)", fontWeight: 500 }}>
                           {prs[ex.name].weight} lbs × {prs[ex.name].reps} reps
                         </span>
-                        <span style={{ fontFamily: "'Inter', sans-serif", fontSize: 10, color: "rgba(255,255,255,0.2)", fontWeight: 400 }}>
+                        <span style={{ fontFamily: "'Inter', sans-serif", fontSize: 10, color: "rgba(43,37,30,0.26)", fontWeight: 400 }}>
                           ({prs[ex.name].date})
                         </span>
                       </div>

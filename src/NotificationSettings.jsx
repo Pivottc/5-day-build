@@ -65,24 +65,24 @@ export default function NotificationSettings({ color, onClose }) {
   return (
     <div onClick={onClose} style={{
       position: "fixed", inset: 0, zIndex: 1500,
-      background: "rgba(0,0,0,0.85)", backdropFilter: "blur(10px)",
+      background: "rgba(52,42,30,0.32)", backdropFilter: "blur(10px)",
       display: "flex", alignItems: "center", justifyContent: "center",
       padding: 24, animation: "fadeIn 0.2s ease"
     }}>
       <div onClick={e => e.stopPropagation()} style={{
         width: "100%", maxWidth: 440,
-        background: "linear-gradient(180deg, #141416 0%, #0c0c0e 100%)",
-        borderRadius: 16, border: "1px solid rgba(255,255,255,0.06)",
+        background: "linear-gradient(180deg, #FCFAF5 0%, #F6F1E7 100%)",
+        borderRadius: 16, border: "1px solid rgba(120,96,60,0.12)",
         overflow: "hidden", animation: "slideUp 0.25s ease"
       }}>
-        <div style={{ padding: "20px 24px", borderBottom: "1px solid rgba(255,255,255,0.06)" }}>
+        <div style={{ padding: "20px 24px", borderBottom: "1px solid rgba(120,96,60,0.12)" }}>
           <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
             <div>
               <div style={{ fontFamily: "'Inter', sans-serif", fontSize: 10, fontWeight: 700, letterSpacing: "0.15em", color, textTransform: "uppercase", marginBottom: 4 }}>SETTINGS</div>
-              <div style={{ fontFamily: "'Inter', sans-serif", fontSize: 18, fontWeight: 700, color: "#f0ede6" }}>Notifications</div>
+              <div style={{ fontFamily: "'Cormorant Garamond', Georgia, serif", fontSize: 22, fontWeight: 600, color: "#2B251E" }}>Notifications</div>
             </div>
             <button onClick={onClose} style={{
-              background: "rgba(255,255,255,0.06)", border: "1px solid rgba(255,255,255,0.1)", color: "#888",
+              background: "rgba(120,96,60,0.12)", border: "1px solid rgba(43,37,30,0.13)", color: "#7A6F61",
               borderRadius: 8, width: 32, height: 32, cursor: "pointer", fontSize: 16,
               display: "flex", alignItems: "center", justifyContent: "center"
             }}>×</button>
@@ -93,9 +93,9 @@ export default function NotificationSettings({ color, onClose }) {
 
           {permission === "unsupported" && (
             <div style={{
-              background: "rgba(255,100,100,0.08)", border: "1px solid rgba(255,100,100,0.15)",
+              background: "rgba(156,79,60,0.08)", border: "1px solid rgba(156,79,60,0.15)",
               borderRadius: 10, padding: "14px 16px",
-              fontFamily: "'Inter', sans-serif", fontSize: 12, color: "rgba(255,255,255,0.5)", lineHeight: 1.5
+              fontFamily: "'Inter', sans-serif", fontSize: 12, color: "rgba(43,37,30,0.65)", lineHeight: 1.5
             }}>
               Notifications are not supported in this browser.
             </div>
@@ -103,9 +103,9 @@ export default function NotificationSettings({ color, onClose }) {
 
           {permission === "denied" && (
             <div style={{
-              background: "rgba(255,100,100,0.08)", border: "1px solid rgba(255,100,100,0.15)",
+              background: "rgba(156,79,60,0.08)", border: "1px solid rgba(156,79,60,0.15)",
               borderRadius: 10, padding: "14px 16px",
-              fontFamily: "'Inter', sans-serif", fontSize: 12, color: "rgba(255,255,255,0.5)", lineHeight: 1.5
+              fontFamily: "'Inter', sans-serif", fontSize: 12, color: "rgba(43,37,30,0.65)", lineHeight: 1.5
             }}>
               Notification permission was denied. Please enable notifications in your browser settings to use this feature.
             </div>
@@ -113,18 +113,18 @@ export default function NotificationSettings({ color, onClose }) {
 
           <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
             <div>
-              <div style={{ fontFamily: "'Inter', sans-serif", fontSize: 14, fontWeight: 600, color: "#f0ede6", marginBottom: 3 }}>Workout Reminders</div>
-              <div style={{ fontFamily: "'Inter', sans-serif", fontSize: 11, color: "rgba(255,255,255,0.3)" }}>Get notified when it's time to train</div>
+              <div style={{ fontFamily: "'Inter', sans-serif", fontSize: 14, fontWeight: 600, color: "#2B251E", marginBottom: 3 }}>Workout Reminders</div>
+              <div style={{ fontFamily: "'Inter', sans-serif", fontSize: 11, color: "rgba(43,37,30,0.39)" }}>Get notified when it's time to train</div>
             </div>
             <button onClick={toggleEnabled} style={{
               width: 48, height: 28, borderRadius: 14, border: "none", cursor: "pointer",
-              background: settings.enabled ? `rgba(${rgb},0.3)` : "rgba(255,255,255,0.08)",
+              background: settings.enabled ? `rgba(${rgb},0.3)` : "rgba(120,96,60,0.16)",
               position: "relative", transition: "background 0.25s",
               padding: 0
             }}>
               <div style={{
                 width: 22, height: 22, borderRadius: "50%",
-                background: settings.enabled ? color : "rgba(255,255,255,0.2)",
+                background: settings.enabled ? color : "rgba(43,37,30,0.26)",
                 position: "absolute", top: 3,
                 left: settings.enabled ? 23 : 3,
                 transition: "all 0.25s"
@@ -135,16 +135,16 @@ export default function NotificationSettings({ color, onClose }) {
           {settings.enabled && (
             <>
               <div>
-                <div style={{ fontFamily: "'Inter', sans-serif", fontSize: 10, fontWeight: 600, letterSpacing: "0.12em", color: "rgba(255,255,255,0.25)", textTransform: "uppercase", marginBottom: 10 }}>TRAINING DAYS</div>
+                <div style={{ fontFamily: "'Inter', sans-serif", fontSize: 10, fontWeight: 600, letterSpacing: "0.12em", color: "rgba(43,37,30,0.325)", textTransform: "uppercase", marginBottom: 10 }}>TRAINING DAYS</div>
                 <div style={{ display: "flex", gap: 6 }}>
                   {DAY_LABELS.map((label, i) => {
                     const active = settings.days.includes(i);
                     return (
                       <button key={i} onClick={() => toggleDay(i)} style={{
                         flex: 1, padding: "10px 0", borderRadius: 8, cursor: "pointer",
-                        background: active ? `rgba(${rgb},0.12)` : "rgba(255,255,255,0.03)",
-                        border: active ? `1px solid rgba(${rgb},0.3)` : "1px solid rgba(255,255,255,0.06)",
-                        color: active ? color : "rgba(255,255,255,0.3)",
+                        background: active ? `rgba(${rgb},0.12)` : "rgba(255,253,248,0.8)",
+                        border: active ? `1px solid rgba(${rgb},0.3)` : "1px solid rgba(120,96,60,0.12)",
+                        color: active ? color : "rgba(43,37,30,0.39)",
                         fontFamily: "'Inter', sans-serif", fontSize: 11, fontWeight: 600,
                         transition: "all 0.2s"
                       }}>
@@ -156,28 +156,28 @@ export default function NotificationSettings({ color, onClose }) {
               </div>
 
               <div>
-                <div style={{ fontFamily: "'Inter', sans-serif", fontSize: 10, fontWeight: 600, letterSpacing: "0.12em", color: "rgba(255,255,255,0.25)", textTransform: "uppercase", marginBottom: 10 }}>REMINDER TIME</div>
+                <div style={{ fontFamily: "'Inter', sans-serif", fontSize: 10, fontWeight: 600, letterSpacing: "0.12em", color: "rgba(43,37,30,0.325)", textTransform: "uppercase", marginBottom: 10 }}>REMINDER TIME</div>
                 <input
                   type="time"
                   value={settings.time}
                   onChange={(e) => updateTime(e.target.value)}
                   style={{
-                    background: "rgba(255,255,255,0.04)", border: `1px solid rgba(${rgb},0.2)`,
+                    background: "rgba(255,253,248,0.8)", border: `1px solid rgba(${rgb},0.2)`,
                     borderRadius: 10, padding: "12px 16px", width: "100%",
-                    color: "#f0ede6", fontFamily: "'Inter', sans-serif", fontSize: 14, fontWeight: 500,
+                    color: "#2B251E", fontFamily: "'Inter', sans-serif", fontSize: 14, fontWeight: 500,
                     outline: "none", cursor: "pointer",
-                    colorScheme: "dark"
+                    colorScheme: "light"
                   }}
                 />
               </div>
 
               <div style={{
-                background: "rgba(255,255,255,0.02)", border: "1px solid rgba(255,255,255,0.04)",
+                background: "rgba(255,253,248,0.8)", border: "1px solid rgba(255,253,248,0.8)",
                 borderRadius: 10, padding: "12px 16px"
               }}>
-                <div style={{ fontFamily: "'Inter', sans-serif", fontSize: 11, color: "rgba(255,255,255,0.3)", lineHeight: 1.5 }}>
-                  You'll receive a reminder at <span style={{ color: "rgba(255,255,255,0.6)", fontWeight: 600 }}>{formatTime12(settings.time)}</span> on{" "}
-                  <span style={{ color: "rgba(255,255,255,0.6)", fontWeight: 600 }}>
+                <div style={{ fontFamily: "'Inter', sans-serif", fontSize: 11, color: "rgba(43,37,30,0.39)", lineHeight: 1.5 }}>
+                  You'll receive a reminder at <span style={{ color: "rgba(43,37,30,0.78)", fontWeight: 600 }}>{formatTime12(settings.time)}</span> on{" "}
+                  <span style={{ color: "rgba(43,37,30,0.78)", fontWeight: 600 }}>
                     {settings.days.length === 0 ? "no days" : settings.days.map(d => DAY_LABELS[d]).join(", ")}
                   </span>.
                 </div>
@@ -185,15 +185,15 @@ export default function NotificationSettings({ color, onClose }) {
             </>
           )}
 
-          <div style={{ borderTop: "1px solid rgba(255,255,255,0.04)", paddingTop: 16 }}>
+          <div style={{ borderTop: "1px solid rgba(255,253,248,0.8)", paddingTop: 16 }}>
             <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
               <div>
-                <div style={{ fontFamily: "'Inter', sans-serif", fontSize: 14, fontWeight: 600, color: "#f0ede6", marginBottom: 3 }}>Rest Timer Alerts</div>
-                <div style={{ fontFamily: "'Inter', sans-serif", fontSize: 11, color: "rgba(255,255,255,0.3)" }}>Notifies when rest period ends (if app is in background)</div>
+                <div style={{ fontFamily: "'Inter', sans-serif", fontSize: 14, fontWeight: 600, color: "#2B251E", marginBottom: 3 }}>Rest Timer Alerts</div>
+                <div style={{ fontFamily: "'Inter', sans-serif", fontSize: 11, color: "rgba(43,37,30,0.39)" }}>Notifies when rest period ends (if app is in background)</div>
               </div>
               <div style={{
                 fontFamily: "'Inter', sans-serif", fontSize: 10, fontWeight: 600,
-                color: permission === "granted" ? "rgba(46,204,113,0.7)" : "rgba(255,255,255,0.2)",
+                color: permission === "granted" ? "rgba(94,123,92,0.7)" : "rgba(43,37,30,0.26)",
                 letterSpacing: "0.08em", textTransform: "uppercase"
               }}>
                 {permission === "granted" ? "Active" : permission === "denied" ? "Blocked" : "Pending"}

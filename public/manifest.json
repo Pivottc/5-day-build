@@ -1,12 +1,12 @@
 {
-  "name": "5-Day Build Program",
-  "short_name": "5-Day Build",
+  "name": "The Abadie",
+  "short_name": "The Abadie",
   "description": "Personalized 5-day workout plan with set logging, rest timers, and progress tracking",
   "start_url": "/",
   "display": "standalone",
   "orientation": "portrait",
-  "theme_color": "#000000",
-  "background_color": "#000000",
+  "theme_color": "#F6F1E7",
+  "background_color": "#F6F1E7",
   "icons": [
     {
       "src": "/icons/icon-192.png",
