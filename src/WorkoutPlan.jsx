@@ -9,7 +9,7 @@ const PHASE_LABELS = ["Starting Position", "Movement", "Finish Position"];
 
 const workoutData = [
   {
-    day: 1, label: "DAY 01", title: "Chest + Triceps", focus: "Push Day",
+    day: 1, label: "DAY 01", tab: "Push", title: "Chest + Triceps", focus: "Push Day",
     equipment: "Rogue Cage + Functional Trainer + Dumbbells", color: "#9C4F3C",
     warmup: "5 min Peloton Tread easy walk/light jog",
     exercises: [
@@ -22,7 +22,7 @@ const workoutData = [
     notes: "Rest 60–90 sec between sets. Total time ~38 min."
   },
   {
-    day: 2, label: "DAY 02", title: "Back + Biceps", focus: "Pull Day",
+    day: 2, label: "DAY 02", tab: "Pull", title: "Back + Biceps", focus: "Pull Day",
     equipment: "Rogue Cage + Functional Trainer + Dumbbells", color: "#3F5B7A",
     warmup: "5 min Peloton Tread moderate walk",
     exercises: [
@@ -35,7 +35,7 @@ const workoutData = [
     notes: "Rest 60–90 sec between sets. Total time ~40 min."
   },
   {
-    day: 3, label: "DAY 03", title: "Legs + Glutes", focus: "Lower Body",
+    day: 3, label: "DAY 03", tab: "Legs", title: "Legs + Glutes", focus: "Lower Body",
     equipment: "Rogue Cage + Functional Trainer + Kettlebell", color: "#5E7B5C",
     warmup: "5 min Peloton Tread incline walk",
     exercises: [
@@ -48,7 +48,7 @@ const workoutData = [
     notes: "Rest 90 sec between sets. Legs need it. Total time ~42 min."
   },
   {
-    day: 4, label: "DAY 04", title: "Shoulders + Core", focus: "Press & Stability",
+    day: 4, label: "DAY 04", tab: "Shoulders", title: "Shoulders + Core", focus: "Press & Stability",
     equipment: "Rogue Cage + Functional Trainer + Dumbbells", color: "#7B5D80",
     warmup: "5 min Peloton easy ride or walk",
     exercises: [
@@ -61,7 +61,7 @@ const workoutData = [
     notes: "Rest 60 sec between sets. Total time ~35 min."
   },
   {
-    day: 5, label: "DAY 05", title: "Full Body + Cardio Burn", focus: "Fat Loss Finisher",
+    day: 5, label: "DAY 05", tab: "Fat Loss", title: "Full Body + Cardio Burn", focus: "Fat Loss Finisher",
     equipment: "Peloton Tread + Functional Trainer + Dumbbells + Kettlebell", color: "#B08A4E",
     warmup: "None — first exercise is the warm-up",
     exercises: [
@@ -74,7 +74,7 @@ const workoutData = [
     notes: "Minimal rest (45 sec). Circuit-style. Total time ~40 min."
   },
   {
-    day: 6, label: "DAY 06", title: "Chest Sculpt", focus: "Chest Focus",
+    day: 6, label: "DAY 06", tab: "Chest", title: "Chest Sculpt", focus: "Chest Focus",
     equipment: "Rogue Cage + Functional Trainer + Dumbbells", color: "#A35D6A",
     warmup: "5 min Peloton Tread brisk walk + 15 slow push-ups",
     exercises: [
@@ -87,7 +87,7 @@ const workoutData = [
     notes: "Rest 75 sec between sets. Total time ~38 min."
   },
   {
-    day: 7, label: "DAY 07", title: "Core Strength", focus: "Core Focus",
+    day: 7, label: "DAY 07", tab: "Core", title: "Core Strength", focus: "Core Focus",
     equipment: "Rogue Cage + Functional Trainer + Kettlebell", color: "#6E7F8C",
     warmup: "5 min Peloton easy jog",
     exercises: [
@@ -100,7 +100,7 @@ const workoutData = [
     notes: "Rest 45 sec between sets. Total time ~30 min."
   },
   {
-    day: 8, label: "DAY 08", title: "Back Builder", focus: "Back Focus",
+    day: 8, label: "DAY 08", tab: "Back", title: "Back Builder", focus: "Back Focus",
     equipment: "Rogue Cage + Functional Trainer + Dumbbells", color: "#4E6E6A",
     warmup: "5 min Peloton Tread incline walk + 10 band pull-aparts",
     exercises: [
@@ -113,7 +113,7 @@ const workoutData = [
     notes: "Rest 75–90 sec between sets. Total time ~40 min."
   },
   {
-    day: 9, label: "DAY 09", title: "Rear Delts + Posture", focus: "Rear Delt Focus",
+    day: 9, label: "DAY 09", tab: "Rear Delts", title: "Rear Delts + Posture", focus: "Rear Delt Focus",
     equipment: "Functional Trainer + Dumbbells + Bench", color: "#8A7350",
     warmup: "5 min Peloton easy ride + arm circles",
     exercises: [
@@ -2148,20 +2148,34 @@ export default function WorkoutPlan() {
               const isActive = activeDay === i;
               return (
                 <button key={i} className="day-tab" data-active={isActive ? "true" : undefined} onClick={() => { setActiveDay(i); localStorage.setItem("workout_active_day", String(i)); setExpandedEx(null); setShowCompletion(false); if (completionTimeoutRef.current) { clearTimeout(completionTimeoutRef.current); completionTimeoutRef.current = null; } }} style={{
-                  flex: "1 0 62px", scrollSnapAlign: "start", background: isActive ? `rgba(${hexToRgb(d.color)},0.08)` : "transparent",
+                  flex: "1 0 auto", scrollSnapAlign: "start", background: isActive ? `rgba(${hexToRgb(d.color)},0.08)` : "transparent",
                   borderBottom: isActive ? `2px solid ${d.color}` : "2px solid transparent",
-                  borderRadius: isActive ? "8px 8px 0 0" : "8px 8px 0 0",
-                  padding: "12px 4px 14px", cursor: "pointer",
-                  color: isActive ? d.color : "rgba(43,37,30,0.39)",
+                  borderRadius: "10px 10px 0 0",
+                  padding: "12px 14px 13px", cursor: "pointer",
+                  color: isActive ? d.color : (tabComplete ? "rgba(43,37,30,0.7)" : "rgba(43,37,30,0.45)"),
+                  display: "flex", flexDirection: "column", alignItems: "center", gap: 7,
                   position: "relative"
-                }}>
-                  <div style={{ fontFamily: "'Inter', sans-serif", fontSize: 16, fontWeight: 700, lineHeight: 1 }}>
-                    {tabComplete ? "✓" : `D${d.day}`}
-                  </div>
-                  <div style={{ fontFamily: "'Inter', sans-serif", fontSize: 9, fontWeight: 600, letterSpacing: "0.08em", textTransform: "uppercase", marginTop: 4, opacity: isActive ? 1 : 0.7 }}>{d.focus.split(" ")[0]}</div>
-                  {prog.done > 0 && !tabComplete && (
-                    <div style={{ position: "absolute", top: 6, right: 6, width: 5, height: 5, borderRadius: "50%", background: d.color }} />
-                  )}
+                }}
+                  aria-label={`${d.tab}${tabComplete ? ", completed" : prog.done > 0 ? `, ${prog.done} of ${prog.total} sets done` : ""}`}
+                >
+                  <span aria-hidden="true" style={{
+                    width: 20, height: 20, borderRadius: "50%", flexShrink: 0,
+                    display: "flex", alignItems: "center", justifyContent: "center",
+                    background: tabComplete
+                      ? d.color
+                      : `conic-gradient(${d.color} ${prog.total ? (prog.done / prog.total) * 360 : 0}deg, rgba(120,96,60,0.16) 0deg)`,
+                    transition: "background 0.4s ease"
+                  }}>
+                    {tabComplete ? (
+                      <svg width="11" height="11" viewBox="0 0 12 12" fill="none" stroke="#FFFDF8" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M2.5 6.3 5 8.6l4.5-5" /></svg>
+                    ) : (
+                      <span style={{ width: 15, height: 15, borderRadius: "50%", background: "#F8F4EC" }} />
+                    )}
+                  </span>
+                  <span style={{
+                    fontFamily: "'Inter', sans-serif", fontSize: 10, fontWeight: 600, letterSpacing: "0.1em",
+                    textTransform: "uppercase", whiteSpace: "nowrap", lineHeight: 1
+                  }}>{d.tab}</span>
                 </button>
               );
             })}
