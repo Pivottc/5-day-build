@@ -35,7 +35,7 @@ export default function NotificationPrompt({ color }) {
 
   return (
     <div style={{
-      position: "fixed", bottom: 20, left: 16, right: 16, zIndex: 900,
+      position: "fixed", bottom: "calc(var(--nav-h, 64px) + env(safe-area-inset-bottom) + 12px)", left: 16, right: 16, zIndex: 900,
       maxWidth: 420, margin: "0 auto",
       background: "linear-gradient(135deg, #1a1a1e 0%, #111113 100%)",
       border: `1px solid rgba(${rgb},0.2)`,

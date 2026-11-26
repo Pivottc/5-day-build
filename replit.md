@@ -1,11 +1,12 @@
 # The Abadie
 
 ## Overview
-A React-based interactive workout plan application showing a personalized 5-day training program. Built with Vite + React. Installable as a Progressive Web App (PWA).
+A React-based interactive workout plan application: a personalized 5-day core training program plus four focus days (Chest, Core, Back, Rear Delts). Built with Vite + React. Installable as a Progressive Web App (PWA).
 
 ## Structure
 - `src/App.jsx` - Root app component
-- `src/WorkoutPlan.jsx` - Main workout plan component with all workout data, exercise cards, and form guide modal
+- `src/WorkoutPlan.jsx` - Main workout plan component with all workout data, exercise cards, form guide modal, wheel picker and bottom navigation
+- `src/exerciseGuides.js` - YouTube video IDs and 3-step form cues for every exercise
 - `src/NotificationSettings.jsx` - Notification settings modal (workout reminders, rest timer alerts)
 - `src/NotificationPrompt.jsx` - First-launch notification permission prompt
 - `src/BodyMetrics.jsx` - Body metrics tracker (weight chart, measurements, log sheet)
@@ -13,11 +14,16 @@ A React-based interactive workout plan application showing a personalized 5-day 
 - `public/manifest.json` - PWA manifest (app name, icons, theme/background colors)
 - `public/sw.js` - Service worker (rest timer notifications, scheduled workout reminders)
 - `public/icons/` - PWA icons (192px and 512px)
-- `public/exercises/` - 75 AI-generated exercise form guide illustrations (3 frames per exercise)
+- `public/exercises/` - 75 exercise form guide illustrations (3 frames per exercise, warm-toned WebP)
 - `src/index.jsx` - Entry point (registers service worker)
 - `vite.config.js` - Vite config (port 5000)
 
 ## Features
+- Light, luxe theme (ivory, warm ink, champagne gold, Cormorant Garamond display type)
+- Bottom icon navigation bar: Train, History, Stats, Body, Settings
+- 9 workout days: D1–D5 core program plus D6 Chest Sculpt, D7 Core Strength, D8 Back Builder, D9 Rear Delts + Posture (scrollable day tabs)
+- Form guide with two tabs: Illustrated (crossfading frames with a written cue per step) and Video (embedded YouTube guide, or a YouTube search link when no video is set)
+- Scroll-wheel picker for logging weight (2.5 lb steps) and reps/seconds per set
 - 5-day tabbed workout navigation (Push, Pull, Lower, Press, Fat Loss)
 - Expandable exercise cards with starting weight, coaching tips
 - Form guide modal with auto-cycling 3-frame slideshow per exercise (start, movement, finish positions)

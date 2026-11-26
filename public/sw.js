@@ -1,4 +1,4 @@
-const CACHE_NAME = "5day-build-v1";
+const CACHE_NAME = "abadie-v2";
 
 self.addEventListener("install", (event) => {
   self.skipWaiting();

@@ -1,8 +1,9 @@
-import { useState, useEffect, useCallback, useRef, useMemo } from "react";
+import { useState, useEffect, useLayoutEffect, useCallback, useRef, useMemo } from "react";
 import { sendSWMessage, getNotificationPermission } from "./pwaRegister";
 import NotificationPrompt from "./NotificationPrompt";
 import NotificationSettings from "./NotificationSettings";
 import BodyMetrics from "./BodyMetrics";
+import { VIDEO_IDS, FORM_CUES, youtubeSearchUrl } from "./exerciseGuides";
 
 const PHASE_LABELS = ["Starting Position", "Movement", "Finish Position"];
 
@@ -12,11 +13,11 @@ const workoutData = [
     equipment: "Rogue Cage + Functional Trainer + Dumbbells", color: "#9C4F3C",
     warmup: "5 min Peloton Tread easy walk/light jog",
     exercises: [
-      { name: "Barbell Bench Press", equipment: "Rogue Cage", sets: 3, reps: "10", startWeight: "65 lbs (bar + 10s each side)", tip: "Control the descent — 2 seconds down, press up. Key for chest development.", muscles: "Chest, Front Delt, Triceps", images: ["/exercises/barbell-bench-press-1.png", "/exercises/barbell-bench-press-2.png", "/exercises/barbell-bench-press-3.png"] },
-      { name: "Incline DB Press", equipment: "Dumbbells + Centr 2 Bench", sets: 3, reps: "12", startWeight: "20 lbs each hand", tip: "Upper chest targets the 'shelf' look and helps reduce chest fat appearance.", muscles: "Upper Chest, Shoulders", images: ["/exercises/incline-db-press-1.png", "/exercises/incline-db-press-2.png", "/exercises/incline-db-press-3.png"] },
-      { name: "Cable Chest Fly (Low to High)", equipment: "Centr 2 Functional Trainer", sets: 3, reps: "12", startWeight: "15 lbs per side", tip: "Squeeze at the top. This targets inner and lower chest — great for your goal.", muscles: "Inner Chest, Lower Chest", images: ["/exercises/cable-chest-fly-1.png", "/exercises/cable-chest-fly-2.png", "/exercises/cable-chest-fly-3.png"] },
-      { name: "Tricep Rope Pushdown", equipment: "Centr 2 Functional Trainer", sets: 3, reps: "12", startWeight: "20 lbs per side", tip: "Keep elbows glued to sides. Spread the rope at the bottom.", muscles: "Triceps", images: ["/exercises/tricep-pushdown-1.png", "/exercises/tricep-pushdown-2.png", "/exercises/tricep-pushdown-3.png"] },
-      { name: "DB Skull Crushers", equipment: "Dumbbells + Bench", sets: 3, reps: "10", startWeight: "15 lbs each hand", tip: "Lower slowly to forehead, press straight up.", muscles: "Triceps Long Head", images: ["/exercises/db-skull-crushers-1.png", "/exercises/db-skull-crushers-2.png", "/exercises/db-skull-crushers-3.png"] }
+      { name: "Barbell Bench Press", equipment: "Rogue Cage", sets: 3, reps: "10", startWeight: "65 lbs (bar + 10s each side)", tip: "Control the descent — 2 seconds down, press up. Key for chest development.", muscles: "Chest, Front Delt, Triceps", images: ["/exercises/barbell-bench-press-1.webp", "/exercises/barbell-bench-press-2.webp", "/exercises/barbell-bench-press-3.webp"] },
+      { name: "Incline DB Press", equipment: "Dumbbells + Centr 2 Bench", sets: 3, reps: "12", startWeight: "20 lbs each hand", tip: "Upper chest targets the 'shelf' look and helps reduce chest fat appearance.", muscles: "Upper Chest, Shoulders", images: ["/exercises/incline-db-press-1.webp", "/exercises/incline-db-press-2.webp", "/exercises/incline-db-press-3.webp"] },
+      { name: "Cable Chest Fly (Low to High)", equipment: "Centr 2 Functional Trainer", sets: 3, reps: "12", startWeight: "15 lbs per side", tip: "Squeeze at the top. This targets inner and lower chest — great for your goal.", muscles: "Inner Chest, Lower Chest", images: ["/exercises/cable-chest-fly-1.webp", "/exercises/cable-chest-fly-2.webp", "/exercises/cable-chest-fly-3.webp"] },
+      { name: "Tricep Rope Pushdown", equipment: "Centr 2 Functional Trainer", sets: 3, reps: "12", startWeight: "20 lbs per side", tip: "Keep elbows glued to sides. Spread the rope at the bottom.", muscles: "Triceps", images: ["/exercises/tricep-pushdown-1.webp", "/exercises/tricep-pushdown-2.webp", "/exercises/tricep-pushdown-3.webp"] },
+      { name: "DB Skull Crushers", equipment: "Dumbbells + Bench", sets: 3, reps: "10", startWeight: "15 lbs each hand", tip: "Lower slowly to forehead, press straight up.", muscles: "Triceps Long Head", images: ["/exercises/db-skull-crushers-1.webp", "/exercises/db-skull-crushers-2.webp", "/exercises/db-skull-crushers-3.webp"] }
     ],
     notes: "Rest 60–90 sec between sets. Total time ~38 min."
   },
@@ -25,11 +26,11 @@ const workoutData = [
     equipment: "Rogue Cage + Functional Trainer + Dumbbells", color: "#3F5B7A",
     warmup: "5 min Peloton Tread moderate walk",
     exercises: [
-      { name: "Barbell Bent-Over Row", equipment: "Rogue Cage", sets: 3, reps: "10", startWeight: "65 lbs", tip: "Hinge at hips, chest up, pull bar to belly button. Back is your biggest fat-burning muscle.", muscles: "Lats, Rhomboids, Rear Delts", images: ["/exercises/barbell-bent-row-1.png", "/exercises/barbell-bent-row-2.png", "/exercises/barbell-bent-row-3.png"] },
-      { name: "Single-Arm DB Row", equipment: "Dumbbells + Bench", sets: 3, reps: "10 each side", startWeight: "25 lbs", tip: "Drive your elbow back and up. Full stretch at the bottom.", muscles: "Lats, Mid Back", images: ["/exercises/single-arm-db-row-1.png", "/exercises/single-arm-db-row-2.png", "/exercises/single-arm-db-row-3.png"] },
-      { name: "Cable Straight-Arm Pulldown", equipment: "Centr 2 Functional Trainer", sets: 3, reps: "12", startWeight: "20 lbs per side", tip: "Arms straight, pull bar to thighs. Incredible lat isolation.", muscles: "Lats, Serratus", images: ["/exercises/cable-pulldown-1.png", "/exercises/cable-pulldown-2.png", "/exercises/cable-pulldown-3.png"] },
-      { name: "Cable Seated Row", equipment: "Centr 2 Functional Trainer", sets: 3, reps: "12", startWeight: "20 lbs per side", tip: "Tall posture, pull to navel, squeeze shoulder blades for 1 second.", muscles: "Mid Back, Biceps", images: ["/exercises/cable-seated-row-1.png", "/exercises/cable-seated-row-2.png", "/exercises/cable-seated-row-3.png"] },
-      { name: "DB Alternating Curl", equipment: "Dumbbells", sets: 3, reps: "10 each arm", startWeight: "20 lbs each hand", tip: "Supinate (twist) at the top. Slow negative.", muscles: "Biceps", images: ["/exercises/db-curl-1.png", "/exercises/db-curl-2.png", "/exercises/db-curl-3.png"] }
+      { name: "Barbell Bent-Over Row", equipment: "Rogue Cage", sets: 3, reps: "10", startWeight: "65 lbs", tip: "Hinge at hips, chest up, pull bar to belly button. Back is your biggest fat-burning muscle.", muscles: "Lats, Rhomboids, Rear Delts", images: ["/exercises/barbell-bent-row-1.webp", "/exercises/barbell-bent-row-2.webp", "/exercises/barbell-bent-row-3.webp"] },
+      { name: "Single-Arm DB Row", equipment: "Dumbbells + Bench", sets: 3, reps: "10 each side", startWeight: "25 lbs", tip: "Drive your elbow back and up. Full stretch at the bottom.", muscles: "Lats, Mid Back", images: ["/exercises/single-arm-db-row-1.webp", "/exercises/single-arm-db-row-2.webp", "/exercises/single-arm-db-row-3.webp"] },
+      { name: "Cable Straight-Arm Pulldown", equipment: "Centr 2 Functional Trainer", sets: 3, reps: "12", startWeight: "20 lbs per side", tip: "Arms straight, pull bar to thighs. Incredible lat isolation.", muscles: "Lats, Serratus", images: ["/exercises/cable-pulldown-1.webp", "/exercises/cable-pulldown-2.webp", "/exercises/cable-pulldown-3.webp"] },
+      { name: "Cable Seated Row", equipment: "Centr 2 Functional Trainer", sets: 3, reps: "12", startWeight: "20 lbs per side", tip: "Tall posture, pull to navel, squeeze shoulder blades for 1 second.", muscles: "Mid Back, Biceps", images: ["/exercises/cable-seated-row-1.webp", "/exercises/cable-seated-row-2.webp", "/exercises/cable-seated-row-3.webp"] },
+      { name: "DB Alternating Curl", equipment: "Dumbbells", sets: 3, reps: "10 each arm", startWeight: "20 lbs each hand", tip: "Supinate (twist) at the top. Slow negative.", muscles: "Biceps", images: ["/exercises/db-curl-1.webp", "/exercises/db-curl-2.webp", "/exercises/db-curl-3.webp"] }
     ],
     notes: "Rest 60–90 sec between sets. Total time ~40 min."
   },
@@ -38,11 +39,11 @@ const workoutData = [
     equipment: "Rogue Cage + Functional Trainer + Kettlebell", color: "#5E7B5C",
     warmup: "5 min Peloton Tread incline walk",
     exercises: [
-      { name: "Barbell Back Squat", equipment: "Rogue Cage", sets: 3, reps: "10", startWeight: "75 lbs (bar + 15s each side)", tip: "Depth to parallel. Biggest compound move — burns the most calories.", muscles: "Quads, Glutes, Hamstrings, Core", images: ["/exercises/barbell-squat-1.png", "/exercises/barbell-squat-2.png", "/exercises/barbell-squat-3.png"] },
-      { name: "Romanian Deadlift (RDL)", equipment: "Barbell", sets: 3, reps: "10", startWeight: "65 lbs", tip: "Hinge, not squat. Feel the hamstring stretch, drive hips forward to stand.", muscles: "Hamstrings, Glutes, Lower Back", images: ["/exercises/romanian-deadlift-1.png", "/exercises/romanian-deadlift-2.png", "/exercises/romanian-deadlift-3.png"] },
-      { name: "Walking DB Lunges", equipment: "Dumbbells", sets: 3, reps: "10 each leg", startWeight: "20 lbs each hand", tip: "Keep front knee over ankle. Great for quad definition.", muscles: "Quads, Glutes", images: ["/exercises/walking-lunges-1.png", "/exercises/walking-lunges-2.png", "/exercises/walking-lunges-3.png"] },
-      { name: "Kettlebell Swing", equipment: "Kettlebell", sets: 3, reps: "15", startWeight: "Start with lightest KB available", tip: "Hip hinge power, not arm lift. One of the best full-body fat-burners.", muscles: "Glutes, Hamstrings, Core, Shoulders", images: ["/exercises/kettlebell-swing-1.png", "/exercises/kettlebell-swing-2.png", "/exercises/kettlebell-swing-3.png"] },
-      { name: "Cable Pull-Through", equipment: "Centr 2 Functional Trainer", sets: 3, reps: "12", startWeight: "20 lbs per side", tip: "Face away from cable, hinge and drive hips forward. Glute burnout.", muscles: "Glutes, Hamstrings", images: ["/exercises/cable-pull-through-1.png", "/exercises/cable-pull-through-2.png", "/exercises/cable-pull-through-3.png"] }
+      { name: "Barbell Back Squat", equipment: "Rogue Cage", sets: 3, reps: "10", startWeight: "75 lbs (bar + 15s each side)", tip: "Depth to parallel. Biggest compound move — burns the most calories.", muscles: "Quads, Glutes, Hamstrings, Core", images: ["/exercises/barbell-squat-1.webp", "/exercises/barbell-squat-2.webp", "/exercises/barbell-squat-3.webp"] },
+      { name: "Romanian Deadlift (RDL)", equipment: "Barbell", sets: 3, reps: "10", startWeight: "65 lbs", tip: "Hinge, not squat. Feel the hamstring stretch, drive hips forward to stand.", muscles: "Hamstrings, Glutes, Lower Back", images: ["/exercises/romanian-deadlift-1.webp", "/exercises/romanian-deadlift-2.webp", "/exercises/romanian-deadlift-3.webp"] },
+      { name: "Walking DB Lunges", equipment: "Dumbbells", sets: 3, reps: "10 each leg", startWeight: "20 lbs each hand", tip: "Keep front knee over ankle. Great for quad definition.", muscles: "Quads, Glutes", images: ["/exercises/walking-lunges-1.webp", "/exercises/walking-lunges-2.webp", "/exercises/walking-lunges-3.webp"] },
+      { name: "Kettlebell Swing", equipment: "Kettlebell", sets: 3, reps: "15", startWeight: "Start with lightest KB available", tip: "Hip hinge power, not arm lift. One of the best full-body fat-burners.", muscles: "Glutes, Hamstrings, Core, Shoulders", images: ["/exercises/kettlebell-swing-1.webp", "/exercises/kettlebell-swing-2.webp", "/exercises/kettlebell-swing-3.webp"] },
+      { name: "Cable Pull-Through", equipment: "Centr 2 Functional Trainer", sets: 3, reps: "12", startWeight: "20 lbs per side", tip: "Face away from cable, hinge and drive hips forward. Glute burnout.", muscles: "Glutes, Hamstrings", images: ["/exercises/cable-pull-through-1.webp", "/exercises/cable-pull-through-2.webp", "/exercises/cable-pull-through-3.webp"] }
     ],
     notes: "Rest 90 sec between sets. Legs need it. Total time ~42 min."
   },
@@ -51,11 +52,11 @@ const workoutData = [
     equipment: "Rogue Cage + Functional Trainer + Dumbbells", color: "#7B5D80",
     warmup: "5 min Peloton easy ride or walk",
     exercises: [
-      { name: "Barbell Overhead Press", equipment: "Rogue Cage", sets: 3, reps: "10", startWeight: "45 lbs (just the bar to start)", tip: "Core tight, press straight up. Builds the boulder shoulder look.", muscles: "Front & Side Delts, Triceps, Core", images: ["/exercises/overhead-press-1.png", "/exercises/overhead-press-2.png", "/exercises/overhead-press-3.png"] },
-      { name: "DB Lateral Raise", equipment: "Dumbbells", sets: 3, reps: "12", startWeight: "10 lbs each hand", tip: "Slight bend in elbow, raise to shoulder height. Slow and controlled.", muscles: "Side Delts — creates width", images: ["/exercises/lateral-raise-1.png", "/exercises/lateral-raise-2.png", "/exercises/lateral-raise-3.png"] },
-      { name: "Cable Face Pull", equipment: "Centr 2 Functional Trainer", sets: 3, reps: "15", startWeight: "15 lbs per side", tip: "Pull rope to face, elbows high. Protects shoulders and builds rear delts.", muscles: "Rear Delts, Rotator Cuff", images: ["/exercises/face-pull-1.png", "/exercises/face-pull-2.png", "/exercises/face-pull-3.png"] },
-      { name: "Plank", equipment: "Bodyweight", sets: 3, reps: "30–45 sec hold", startWeight: "Bodyweight", tip: "Squeeze glutes and abs together. Don't let hips sag.", muscles: "Core, Obliques", images: ["/exercises/plank-1.png", "/exercises/plank-2.png", "/exercises/plank-3.png"] },
-      { name: "Cable Woodchop (High to Low)", equipment: "Centr 2 Functional Trainer", sets: 3, reps: "12 each side", startWeight: "15 lbs per side", tip: "Rotational movement targets the obliques — directly attacks belly fat zones.", muscles: "Obliques, Transverse Abs, Core", images: ["/exercises/cable-woodchop-1.png", "/exercises/cable-woodchop-2.png", "/exercises/cable-woodchop-3.png"] }
+      { name: "Barbell Overhead Press", equipment: "Rogue Cage", sets: 3, reps: "10", startWeight: "45 lbs (just the bar to start)", tip: "Core tight, press straight up. Builds the boulder shoulder look.", muscles: "Front & Side Delts, Triceps, Core", images: ["/exercises/overhead-press-1.webp", "/exercises/overhead-press-2.webp", "/exercises/overhead-press-3.webp"] },
+      { name: "DB Lateral Raise", equipment: "Dumbbells", sets: 3, reps: "12", startWeight: "10 lbs each hand", tip: "Slight bend in elbow, raise to shoulder height. Slow and controlled.", muscles: "Side Delts — creates width", images: ["/exercises/lateral-raise-1.webp", "/exercises/lateral-raise-2.webp", "/exercises/lateral-raise-3.webp"] },
+      { name: "Cable Face Pull", equipment: "Centr 2 Functional Trainer", sets: 3, reps: "15", startWeight: "15 lbs per side", tip: "Pull rope to face, elbows high. Protects shoulders and builds rear delts.", muscles: "Rear Delts, Rotator Cuff", images: ["/exercises/face-pull-1.webp", "/exercises/face-pull-2.webp", "/exercises/face-pull-3.webp"] },
+      { name: "Plank", equipment: "Bodyweight", sets: 3, reps: "30–45 sec hold", startWeight: "Bodyweight", tip: "Squeeze glutes and abs together. Don't let hips sag.", muscles: "Core, Obliques", images: ["/exercises/plank-1.webp", "/exercises/plank-2.webp", "/exercises/plank-3.webp"] },
+      { name: "Cable Woodchop (High to Low)", equipment: "Centr 2 Functional Trainer", sets: 3, reps: "12 each side", startWeight: "15 lbs per side", tip: "Rotational movement targets the obliques — directly attacks belly fat zones.", muscles: "Obliques, Transverse Abs, Core", images: ["/exercises/cable-woodchop-1.webp", "/exercises/cable-woodchop-2.webp", "/exercises/cable-woodchop-3.webp"] }
     ],
     notes: "Rest 60 sec between sets. Total time ~35 min."
   },
@@ -64,13 +65,65 @@ const workoutData = [
     equipment: "Peloton Tread + Functional Trainer + Dumbbells + Kettlebell", color: "#B08A4E",
     warmup: "None — first exercise is the warm-up",
     exercises: [
-      { name: "Peloton Tread Intervals", equipment: "Peloton Tread", sets: 1, reps: "10 min", startWeight: "Walk 3 min → Jog 2 min → Walk 2 min → Jog 3 min", tip: "This is your metabolic primer. Gets heart rate up before lifting.", muscles: "Cardio, Legs, Core", images: ["/exercises/tread-intervals-1.png", "/exercises/tread-intervals-2.png", "/exercises/tread-intervals-3.png"] },
-      { name: "DB Goblet Squat", equipment: "Dumbbell", sets: 3, reps: "12", startWeight: "25 lbs", tip: "Hold DB at chest, squat deep. Full body + posture reset.", muscles: "Quads, Glutes, Core", images: ["/exercises/goblet-squat-1.png", "/exercises/goblet-squat-2.png", "/exercises/goblet-squat-3.png"] },
-      { name: "Cable Anti-Rotation Press", equipment: "Centr 2 Functional Trainer", sets: 3, reps: "10 each side", startWeight: "10 lbs per side", tip: "Fight rotation. This destroys your obliques and deep core — belly flattener.", muscles: "Core, Obliques, Shoulder Stability", images: ["/exercises/anti-rotation-press-1.png", "/exercises/anti-rotation-press-2.png", "/exercises/anti-rotation-press-3.png"] },
-      { name: "Kettlebell Deadlift", equipment: "Kettlebell", sets: 3, reps: "12", startWeight: "Moderate KB", tip: "Hip hinge, flat back. Sets up your technique for heavier barbell work.", muscles: "Glutes, Hamstrings, Back", images: ["/exercises/kettlebell-deadlift-1.png", "/exercises/kettlebell-deadlift-2.png", "/exercises/kettlebell-deadlift-3.png"] },
-      { name: "DB Renegade Row", equipment: "Dumbbells", sets: 3, reps: "8 each arm", startWeight: "15 lbs each hand", tip: "Plank position, row one DB. Best full-body integration move.", muscles: "Back, Core, Chest, Triceps", images: ["/exercises/renegade-row-1.png", "/exercises/renegade-row-2.png", "/exercises/renegade-row-3.png"] }
+      { name: "Peloton Tread Intervals", equipment: "Peloton Tread", sets: 1, reps: "10 min", startWeight: "Walk 3 min → Jog 2 min → Walk 2 min → Jog 3 min", tip: "This is your metabolic primer. Gets heart rate up before lifting.", muscles: "Cardio, Legs, Core", images: ["/exercises/tread-intervals-1.webp", "/exercises/tread-intervals-2.webp", "/exercises/tread-intervals-3.webp"] },
+      { name: "DB Goblet Squat", equipment: "Dumbbell", sets: 3, reps: "12", startWeight: "25 lbs", tip: "Hold DB at chest, squat deep. Full body + posture reset.", muscles: "Quads, Glutes, Core", images: ["/exercises/goblet-squat-1.webp", "/exercises/goblet-squat-2.webp", "/exercises/goblet-squat-3.webp"] },
+      { name: "Cable Anti-Rotation Press", equipment: "Centr 2 Functional Trainer", sets: 3, reps: "10 each side", startWeight: "10 lbs per side", tip: "Fight rotation. This destroys your obliques and deep core — belly flattener.", muscles: "Core, Obliques, Shoulder Stability", images: ["/exercises/anti-rotation-press-1.webp", "/exercises/anti-rotation-press-2.webp", "/exercises/anti-rotation-press-3.webp"] },
+      { name: "Kettlebell Deadlift", equipment: "Kettlebell", sets: 3, reps: "12", startWeight: "Moderate KB", tip: "Hip hinge, flat back. Sets up your technique for heavier barbell work.", muscles: "Glutes, Hamstrings, Back", images: ["/exercises/kettlebell-deadlift-1.webp", "/exercises/kettlebell-deadlift-2.webp", "/exercises/kettlebell-deadlift-3.webp"] },
+      { name: "DB Renegade Row", equipment: "Dumbbells", sets: 3, reps: "8 each arm", startWeight: "15 lbs each hand", tip: "Plank position, row one DB. Best full-body integration move.", muscles: "Back, Core, Chest, Triceps", images: ["/exercises/renegade-row-1.webp", "/exercises/renegade-row-2.webp", "/exercises/renegade-row-3.webp"] }
     ],
     notes: "Minimal rest (45 sec). Circuit-style. Total time ~40 min."
+  },
+  {
+    day: 6, label: "DAY 06", title: "Chest Sculpt", focus: "Chest Focus",
+    equipment: "Rogue Cage + Functional Trainer + Dumbbells", color: "#A35D6A",
+    warmup: "5 min Peloton Tread brisk walk + 15 slow push-ups",
+    exercises: [
+      { name: "Incline Barbell Press", equipment: "Rogue Cage + Centr 2 Bench", sets: 4, reps: "8", startWeight: "55 lbs (bar + 5s each side)", tip: "Upper chest is the priority. Pause 1 second at the bottom.", muscles: "Upper Chest, Front Delt, Triceps", images: [] },
+      { name: "DB Flat Press", equipment: "Dumbbells + Bench", sets: 3, reps: "10", startWeight: "25 lbs each hand", tip: "Deeper stretch than a barbell. Lower slowly, press up and in.", muscles: "Chest, Triceps", images: [] },
+      { name: "Cable Crossover (High to Low)", equipment: "Centr 2 Functional Trainer", sets: 3, reps: "12", startWeight: "15 lbs per side", tip: "Cross your hands at the bottom. Targets the lower chest line.", muscles: "Lower Chest, Inner Chest", images: [] },
+      { name: "DB Pullover", equipment: "Dumbbell + Bench", sets: 3, reps: "12", startWeight: "20 lbs", tip: "Long arc behind the head. Stretches chest and ribcage.", muscles: "Chest, Lats, Serratus", images: [] },
+      { name: "Deficit Push-Up", equipment: "Dumbbells (as handles)", sets: 3, reps: "To failure", startWeight: "Bodyweight", tip: "Hands on dumbbells for extra depth. Finisher — go until form breaks.", muscles: "Chest, Triceps, Core", images: [] }
+    ],
+    notes: "Rest 75 sec between sets. Total time ~38 min."
+  },
+  {
+    day: 7, label: "DAY 07", title: "Core Strength", focus: "Core Focus",
+    equipment: "Rogue Cage + Functional Trainer + Kettlebell", color: "#6E7F8C",
+    warmup: "5 min Peloton easy jog",
+    exercises: [
+      { name: "Hanging Knee Raise", equipment: "Rogue Cage (pull-up bar)", sets: 3, reps: "12", startWeight: "Bodyweight", tip: "Curl the pelvis up — don't just lift the knees. No swinging.", muscles: "Core, Obliques", images: [] },
+      { name: "Kneeling Cable Crunch", equipment: "Centr 2 Functional Trainer", sets: 3, reps: "15", startWeight: "30 lbs per side", tip: "Round the spine down. Hips stay still.", muscles: "Core", images: [] },
+      { name: "Dead Bug", equipment: "Bodyweight", sets: 3, reps: "10 each side", startWeight: "Bodyweight", tip: "Low back glued to the floor the whole time. Slow is the point.", muscles: "Core, Transverse Abs", images: [] },
+      { name: "KB Russian Twist", equipment: "Kettlebell", sets: 3, reps: "12 each side", startWeight: "Light KB", tip: "Rotate the ribcage, not just the arms. Feet down if needed.", muscles: "Obliques, Core", images: [] },
+      { name: "Side Plank", equipment: "Bodyweight", sets: 3, reps: "30 sec each side", startWeight: "Bodyweight", tip: "Hips high, body straight. Builds the obliques and waistline.", muscles: "Obliques, Core, Shoulder Stability", images: [] }
+    ],
+    notes: "Rest 45 sec between sets. Total time ~30 min."
+  },
+  {
+    day: 8, label: "DAY 08", title: "Back Builder", focus: "Back Focus",
+    equipment: "Rogue Cage + Functional Trainer + Dumbbells", color: "#4E6E6A",
+    warmup: "5 min Peloton Tread incline walk + 10 band pull-aparts",
+    exercises: [
+      { name: "Pull-Up", equipment: "Rogue Cage (pull-up bar)", sets: 4, reps: "6–8", startWeight: "Bodyweight (use a band if needed)", tip: "Full hang at the bottom, chest to bar. King of back width.", muscles: "Lats, Biceps, Mid Back", images: [] },
+      { name: "Kneeling Cable Lat Pulldown", equipment: "Centr 2 Functional Trainer", sets: 3, reps: "12", startWeight: "25 lbs per side", tip: "Pull elbows to your back pockets. Stretch fully at the top.", muscles: "Lats, Biceps", images: [] },
+      { name: "Chest-Supported DB Row", equipment: "Dumbbells + Centr 2 Bench", sets: 3, reps: "10", startWeight: "25 lbs each hand", tip: "Bench takes the lower back out. Pure upper-back work.", muscles: "Mid Back, Rhomboids, Rear Delts", images: [] },
+      { name: "Single-Arm Cable Row", equipment: "Centr 2 Functional Trainer", sets: 3, reps: "12 each side", startWeight: "20 lbs", tip: "Big reach forward, big pull back. Great lat stretch.", muscles: "Lats, Mid Back", images: [] },
+      { name: "Superman Hold", equipment: "Bodyweight", sets: 3, reps: "30 sec hold", startWeight: "Bodyweight", tip: "Lift everything at once and hold. Strengthens the lower back.", muscles: "Lower Back, Glutes", images: [] }
+    ],
+    notes: "Rest 75–90 sec between sets. Total time ~40 min."
+  },
+  {
+    day: 9, label: "DAY 09", title: "Rear Delts + Posture", focus: "Rear Delt Focus",
+    equipment: "Functional Trainer + Dumbbells + Bench", color: "#8A7350",
+    warmup: "5 min Peloton easy ride + arm circles",
+    exercises: [
+      { name: "Bent-Over Rear Delt Fly", equipment: "Dumbbells", sets: 3, reps: "15", startWeight: "8 lbs each hand", tip: "Go light. Lead with the pinkies, no swinging.", muscles: "Rear Delts, Rhomboids", images: [] },
+      { name: "Cable Reverse Fly", equipment: "Centr 2 Functional Trainer", sets: 3, reps: "15", startWeight: "7.5 lbs per side", tip: "Cross the cables, pull wide. Constant tension on the rear delts.", muscles: "Rear Delts, Mid Back", images: [] },
+      { name: "Incline Y-T-W Raise", equipment: "Dumbbells + Centr 2 Bench", sets: 3, reps: "8 each letter", startWeight: "5 lbs each hand", tip: "Tiny weights, strict form. Fixes rounded shoulders.", muscles: "Rear Delts, Rotator Cuff, Mid Back", images: [] },
+      { name: "Cable Rear Delt Row", equipment: "Centr 2 Functional Trainer", sets: 3, reps: "12", startWeight: "20 lbs per side", tip: "Elbows high and wide, pull to the neck.", muscles: "Rear Delts, Rhomboids", images: [] },
+      { name: "DB Shrug", equipment: "Dumbbells", sets: 3, reps: "15", startWeight: "35 lbs each hand", tip: "Straight up and down — no rolling. Pause at the top.", muscles: "Shoulders, Mid Back", images: [] }
+    ],
+    notes: "Rest 45–60 sec between sets. Total time ~30 min."
   }
 ];
 
@@ -641,95 +694,137 @@ function SetCircles({ count, completed, color, onTap }) {
   );
 }
 
-function SetLogInput({ setIndex, defaultWeight, defaultReps, color, onLog, onCancel }) {
-  const [weight, setWeight] = useState(String(defaultWeight));
-  const [reps, setReps] = useState(String(defaultReps));
-  const weightRef = useRef(null);
+const WHEEL_ITEM_H = 40;
+const WHEEL_VISIBLE = 5;
+const WEIGHT_VALUES = Array.from({ length: 201 }, (_, i) => i * 2.5);
+const REP_VALUES = Array.from({ length: 61 }, (_, i) => i);
 
-  useEffect(() => {
-    if (weightRef.current) {
-      weightRef.current.focus();
-      weightRef.current.select();
-    }
+function formatWheelValue(v) {
+  return Number.isInteger(v) ? String(v) : v.toFixed(1);
+}
+
+function nearestIndex(values, target) {
+  let best = 0;
+  values.forEach((v, i) => { if (Math.abs(v - target) < Math.abs(values[best] - target)) best = i; });
+  return best;
+}
+
+function WheelPicker({ values, value, onChange, color, unit, label }) {
+  const ref = useRef(null);
+  const frame = useRef(null);
+  const lastIdx = useRef(nearestIndex(values, value));
+  const pad = WHEEL_ITEM_H * Math.floor(WHEEL_VISIBLE / 2);
+
+  useLayoutEffect(() => {
+    if (ref.current) ref.current.scrollTop = lastIdx.current * WHEEL_ITEM_H;
   }, []);
 
-  const handleSubmit = (e) => {
-    if (e) e.preventDefault();
-    onLog(weight, reps);
+  const handleScroll = () => {
+    if (frame.current) cancelAnimationFrame(frame.current);
+    frame.current = requestAnimationFrame(() => {
+      const el = ref.current;
+      if (!el) return;
+      const idx = Math.max(0, Math.min(values.length - 1, Math.round(el.scrollTop / WHEEL_ITEM_H)));
+      if (idx !== lastIdx.current) {
+        lastIdx.current = idx;
+        onChange(values[idx]);
+        try { navigator.vibrate && navigator.vibrate(4); } catch {}
+      }
+    });
   };
+
+  const scrollToIdx = (idx) => {
+    if (ref.current) ref.current.scrollTo({ top: idx * WHEEL_ITEM_H, behavior: "smooth" });
+  };
+
+  const selected = nearestIndex(values, value);
+
+  return (
+    <div style={{ flex: 1, minWidth: 0 }}>
+      <div style={{ fontFamily: "'Inter', sans-serif", fontSize: 9, fontWeight: 600, letterSpacing: "0.14em", textTransform: "uppercase", color: "rgba(43,37,30,0.45)", textAlign: "center", marginBottom: 6 }}>{label}</div>
+      <div style={{ position: "relative", height: WHEEL_ITEM_H * WHEEL_VISIBLE }}>
+        <div style={{
+          position: "absolute", left: 4, right: 4, top: pad, height: WHEEL_ITEM_H, borderRadius: 10,
+          background: `rgba(${hexToRgb(color)},0.09)`, border: `1px solid rgba(${hexToRgb(color)},0.28)`, pointerEvents: "none"
+        }} />
+        <div style={{
+          position: "absolute", right: 14, top: pad, height: WHEEL_ITEM_H, display: "flex", alignItems: "center",
+          fontFamily: "'Inter', sans-serif", fontSize: 10, fontWeight: 600, letterSpacing: "0.08em", textTransform: "uppercase", color, pointerEvents: "none"
+        }}>{unit}</div>
+        <div
+          ref={ref}
+          className="wheel"
+          onScroll={handleScroll}
+          role="listbox"
+          aria-label={label}
+          tabIndex={0}
+          onKeyDown={(e) => {
+            if (e.key === "ArrowDown") { e.preventDefault(); scrollToIdx(Math.min(values.length - 1, selected + 1)); }
+            if (e.key === "ArrowUp") { e.preventDefault(); scrollToIdx(Math.max(0, selected - 1)); }
+          }}
+          style={{
+            height: "100%", overflowY: "scroll", scrollSnapType: "y mandatory", outline: "none",
+            WebkitMaskImage: "linear-gradient(to bottom, transparent, #000 32%, #000 68%, transparent)",
+            maskImage: "linear-gradient(to bottom, transparent, #000 32%, #000 68%, transparent)",
+            overscrollBehavior: "contain", touchAction: "pan-y"
+          }}
+        >
+          <div style={{ height: pad }} />
+          {values.map((v, i) => {
+            const dist = Math.abs(i - selected);
+            return (
+              <div key={i} role="option" aria-selected={i === selected} onClick={() => scrollToIdx(i)} style={{
+                height: WHEEL_ITEM_H, scrollSnapAlign: "center", display: "flex", alignItems: "center", justifyContent: "center",
+                fontFamily: "'Cormorant Garamond', Georgia, serif", fontWeight: 600,
+                fontSize: i === selected ? 26 : 20, color: i === selected ? "#2B251E" : `rgba(43,37,30,${dist === 1 ? 0.45 : 0.25})`,
+                transition: "font-size 0.15s ease, color 0.15s ease", cursor: "pointer", userSelect: "none"
+              }}>{formatWheelValue(v)}</div>
+            );
+          })}
+          <div style={{ height: pad }} />
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function SetLogInput({ setIndex, defaultWeight, defaultReps, color, onLog, onCancel }) {
+  const repsText = String(defaultReps || "");
+  const isTimed = /sec|min/i.test(repsText);
+  const startWeight = WEIGHT_VALUES[nearestIndex(WEIGHT_VALUES, parseNumericWeight(defaultWeight))];
+  const parsedReps = parseNumericReps(repsText);
+  const [weight, setWeight] = useState(startWeight);
+  const [reps, setReps] = useState(parsedReps > 0 ? Math.min(parsedReps, 60) : 10);
 
   return (
     <div onClick={(e) => e.stopPropagation()} style={{
       borderTop: "1px solid rgba(120,96,60,0.1)",
-      padding: "12px 18px",
+      padding: "14px 18px 16px",
       background: `rgba(${hexToRgb(color)},0.04)`,
       animation: "fadeIn 0.15s ease"
     }}>
-      <form onSubmit={handleSubmit} style={{ display: "flex", alignItems: "center", gap: 12 }}>
-        <div style={{
-          fontFamily: "'Inter', sans-serif", fontSize: 11, fontWeight: 600,
-          color: color, minWidth: 42, textAlign: "center"
-        }}>
-          Set {setIndex + 1}
+      <div style={{ display: "flex", alignItems: "baseline", justifyContent: "space-between", marginBottom: 10 }}>
+        <div style={{ fontFamily: "'Inter', sans-serif", fontSize: 10, fontWeight: 600, letterSpacing: "0.16em", textTransform: "uppercase", color }}>Log set {setIndex + 1}</div>
+        <div style={{ fontFamily: "'Cormorant Garamond', Georgia, serif", fontSize: 18, color: "rgba(43,37,30,0.6)" }}>
+          {formatWheelValue(weight)} lbs × {reps}{isTimed ? " sec" : ""}
         </div>
-        <div style={{ display: "flex", alignItems: "center", gap: 6, flex: 1 }}>
-          <div style={{ flex: 1 }}>
-            <div style={{ fontFamily: "'Inter', sans-serif", fontSize: 9, color: "rgba(43,37,30,0.325)", letterSpacing: "0.08em", textTransform: "uppercase", marginBottom: 3, fontWeight: 500 }}>Weight</div>
-            <input
-              ref={weightRef}
-              type="text"
-              inputMode="decimal"
-              value={weight}
-              onChange={(e) => setWeight(e.target.value)}
-              style={{
-                background: "rgba(120,96,60,0.12)", border: `1px solid rgba(${hexToRgb(color)},0.25)`,
-                borderRadius: 8, padding: "7px 10px", fontFamily: "'Inter', sans-serif",
-                fontSize: 14, fontWeight: 600, color: color, width: "100%", outline: "none",
-                transition: "all 0.2s"
-              }}
-            />
-          </div>
-          <div style={{ fontFamily: "'Inter', sans-serif", fontSize: 14, color: "rgba(43,37,30,0.195)", paddingTop: 14 }}>×</div>
-          <div style={{ flex: 1 }}>
-            <div style={{ fontFamily: "'Inter', sans-serif", fontSize: 9, color: "rgba(43,37,30,0.325)", letterSpacing: "0.08em", textTransform: "uppercase", marginBottom: 3, fontWeight: 500 }}>Reps</div>
-            <input
-              type="text"
-              inputMode="numeric"
-              value={reps}
-              onChange={(e) => setReps(e.target.value)}
-              style={{
-                background: "rgba(120,96,60,0.12)", border: `1px solid rgba(${hexToRgb(color)},0.25)`,
-                borderRadius: 8, padding: "7px 10px", fontFamily: "'Inter', sans-serif",
-                fontSize: 14, fontWeight: 600, color: color, width: "100%", outline: "none",
-                transition: "all 0.2s"
-              }}
-            />
-          </div>
-        </div>
-        <button
-          type="submit"
-          style={{
-            background: `rgba(${hexToRgb(color)},0.15)`, border: `1px solid rgba(${hexToRgb(color)},0.3)`,
-            color: color, fontFamily: "'Inter', sans-serif", fontSize: 11, fontWeight: 600,
-            padding: "8px 16px", borderRadius: 8, cursor: "pointer", transition: "all 0.2s",
-            letterSpacing: "0.04em", marginTop: 12
-          }}
-        >
-          Log
-        </button>
-        <button
-          type="button"
-          onClick={onCancel}
-          style={{
-            background: "transparent", border: "1px solid rgba(120,96,60,0.16)",
-            color: "rgba(43,37,30,0.39)", fontFamily: "'Inter', sans-serif", fontSize: 11, fontWeight: 500,
-            padding: "8px 12px", borderRadius: 8, cursor: "pointer", transition: "all 0.2s",
-            marginTop: 12
-          }}
-        >
-          ×
-        </button>
-      </form>
+      </div>
+      <div style={{ display: "flex", gap: 10 }}>
+        <WheelPicker values={WEIGHT_VALUES} value={weight} onChange={setWeight} color={color} unit="lbs" label="Weight" />
+        <WheelPicker values={REP_VALUES} value={reps} onChange={setReps} color={color} unit={isTimed ? "sec" : "reps"} label={isTimed ? "Seconds" : "Reps"} />
+      </div>
+      <div style={{ display: "flex", gap: 8, marginTop: 14 }}>
+        <button type="button" onClick={onCancel} style={{
+          flex: "0 0 auto", background: "transparent", border: "1px solid rgba(120,96,60,0.18)",
+          color: "rgba(43,37,30,0.55)", fontFamily: "'Inter', sans-serif", fontSize: 12, fontWeight: 500,
+          padding: "12px 18px", borderRadius: 12, cursor: "pointer"
+        }}>Cancel</button>
+        <button type="button" onClick={() => onLog(formatWheelValue(weight), String(reps))} style={{
+          flex: 1, background: color, border: "none", color: "#FFFDF8",
+          fontFamily: "'Inter', sans-serif", fontSize: 12, fontWeight: 600, letterSpacing: "0.1em", textTransform: "uppercase",
+          padding: "12px 18px", borderRadius: 12, cursor: "pointer", boxShadow: `0 6px 16px -6px rgba(${hexToRgb(color)},0.6)`
+        }}>Log set</button>
+      </div>
     </div>
   );
 }
@@ -758,8 +853,8 @@ function RestTimer({ seconds, exerciseName, color, onDismiss, onAddTime }) {
 
   return (
     <div style={{
-      position: "fixed", bottom: 0, left: 0, right: 0, zIndex: 900,
-      background: "rgba(10,10,12,0.95)", backdropFilter: "blur(16px)",
+      position: "fixed", bottom: "calc(var(--nav-h) + env(safe-area-inset-bottom))", left: 0, right: 0, zIndex: 900,
+      background: "rgba(252,250,245,0.97)", backdropFilter: "blur(16px)", boxShadow: "0 -8px 24px -12px rgba(80,60,30,0.2)",
       borderTop: `1px solid rgba(${hexToRgb(color)},0.2)`,
       padding: "0", animation: "slideUp 0.3s ease"
     }}>
@@ -837,10 +932,14 @@ function ProgressBar({ done, total, color }) {
 }
 
 function FormGuideModal({ exercise, color, onClose }) {
+  const images = (exercise.images || []).filter(Boolean);
+  const cues = FORM_CUES[exercise.name] || [];
+  const videoId = VIDEO_IDS[exercise.name];
+  const rgb = hexToRgb(color);
+  const [tab, setTab] = useState(images.length ? "illustrated" : "video");
   const [activeFrame, setActiveFrame] = useState(0);
   const [isPlaying, setIsPlaying] = useState(true);
-  const timerRef = useRef(null);
-  const images = exercise.images || [exercise.image];
+  const steps = Math.max(images.length, cues.length);
 
   useEffect(() => {
     const handler = (e) => { if (e.key === "Escape") onClose(); };
@@ -849,108 +948,160 @@ function FormGuideModal({ exercise, color, onClose }) {
   }, [onClose]);
 
   useEffect(() => {
-    if (isPlaying && images.length > 1) {
-      timerRef.current = setInterval(() => {
-        setActiveFrame(prev => (prev + 1) % images.length);
-      }, 1500);
-    }
-    return () => { if (timerRef.current) clearInterval(timerRef.current); };
-  }, [isPlaying, images.length]);
+    if (tab !== "illustrated" || !isPlaying || steps < 2) return;
+    const t = setInterval(() => setActiveFrame(prev => (prev + 1) % steps), 2400);
+    return () => clearInterval(t);
+  }, [tab, isPlaying, steps]);
 
   const goTo = (idx) => { setActiveFrame(idx); setIsPlaying(false); };
+
+  const tabBtn = (id, label) => (
+    <button key={id} onClick={() => setTab(id)} style={{
+      flex: 1, padding: "9px 0", borderRadius: 999, border: "none", cursor: "pointer",
+      background: tab === id ? "#FFFDF8" : "transparent",
+      boxShadow: tab === id ? "0 1px 3px rgba(80,60,30,0.15)" : "none",
+      color: tab === id ? "#2B251E" : "rgba(43,37,30,0.5)",
+      fontFamily: "'Inter', sans-serif", fontSize: 11, fontWeight: 600, letterSpacing: "0.1em", textTransform: "uppercase",
+      transition: "all 0.25s ease"
+    }}>{label}</button>
+  );
 
   return (
     <div onClick={onClose} style={{
       position: "fixed", inset: 0, zIndex: 1000,
-      background: "rgba(52,42,30,0.32)",
+      background: "rgba(52,42,30,0.38)", backdropFilter: "blur(10px)", WebkitBackdropFilter: "blur(10px)",
       display: "flex", alignItems: "center", justifyContent: "center",
-      padding: 24, backdropFilter: "blur(10px)",
-      animation: "fadeIn 0.2s ease"
+      padding: 16, animation: "fadeIn 0.2s ease"
     }}>
-      <div onClick={e => e.stopPropagation()} style={{ width: "100%", maxWidth: 720, animation: "slideUp 0.25s ease" }}>
-        <div style={{ display: "flex", alignItems: "flex-start", justifyContent: "space-between", marginBottom: 14 }}>
+      <div onClick={e => e.stopPropagation()} style={{
+        width: "100%", maxWidth: 640, maxHeight: "92vh", overflowY: "auto",
+        background: "#FCFAF5", borderRadius: 22, border: "1px solid rgba(176,138,78,0.25)",
+        boxShadow: "0 30px 80px -20px rgba(52,42,30,0.45)", padding: 20,
+        animation: "slideUp 0.28s ease"
+      }}>
+        <div style={{ display: "flex", alignItems: "flex-start", justifyContent: "space-between", marginBottom: 16 }}>
           <div>
-            <div style={{ fontFamily: "'Inter', sans-serif", fontSize: 10, fontWeight: 600, letterSpacing: "0.15em", textTransform: "uppercase", color: color, marginBottom: 6 }}>Form Guide</div>
-            <div style={{ fontFamily: "'Cormorant Garamond', Georgia, serif", fontSize: 28, fontWeight: 600, letterSpacing: "-0.02em", color: "#2B251E", lineHeight: 1.1 }}>{exercise.name}</div>
-            <div style={{ fontFamily: "'Inter', sans-serif", fontSize: 12, color: "rgba(43,37,30,0.455)", marginTop: 4, fontWeight: 400 }}>{exercise.muscles}</div>
+            <div style={{ fontFamily: "'Inter', sans-serif", fontSize: 10, fontWeight: 600, letterSpacing: "0.2em", textTransform: "uppercase", color, marginBottom: 6 }}>Form Guide</div>
+            <div style={{ fontFamily: "'Cormorant Garamond', Georgia, serif", fontSize: 28, fontWeight: 600, color: "#2B251E", lineHeight: 1.05 }}>{exercise.name}</div>
+            <div style={{ fontFamily: "'Inter', sans-serif", fontSize: 12, color: "rgba(43,37,30,0.5)", marginTop: 6 }}>{exercise.muscles}</div>
           </div>
-          <button onClick={onClose} style={{
-            background: "rgba(255,253,248,0.8)", border: "1px solid rgba(43,37,30,0.13)", color: "rgba(43,37,30,0.65)",
-            borderRadius: 10, width: 36, height: 36, cursor: "pointer", fontSize: 18,
-            display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0, marginLeft: 16,
-            transition: "all 0.2s"
+          <button onClick={onClose} aria-label="Close" style={{
+            background: "rgba(120,96,60,0.08)", border: "1px solid rgba(120,96,60,0.14)", color: "rgba(43,37,30,0.6)",
+            borderRadius: "50%", width: 36, height: 36, cursor: "pointer", fontSize: 18, flexShrink: 0, marginLeft: 16,
+            display: "flex", alignItems: "center", justifyContent: "center"
           }}>×</button>
         </div>
 
-        <div style={{
-          borderRadius: 10, overflow: "hidden",
-          border: `1px solid rgba(${hexToRgb(color)},0.2)`,
-          boxShadow: `0 0 40px rgba(${hexToRgb(color)},0.1)`,
-          position: "relative"
-        }}>
-          {images.map((src, idx) => (
-            <img
-              key={idx}
-              src={src}
-              alt={`${exercise.name} - ${PHASE_LABELS[idx] || `Step ${idx + 1}`}`}
-              style={{
-                width: "100%", height: "auto", display: idx === activeFrame ? "block" : "none",
-                transition: "opacity 0.3s ease"
-              }}
-            />
-          ))}
-          {images.length > 1 && (
-            <div style={{
-              position: "absolute", bottom: 0, left: 0, right: 0,
-              background: "linear-gradient(transparent, rgba(0,0,0,0.7))",
-              padding: "20px 16px 12px",
-              display: "flex", justifyContent: "space-between", alignItems: "center"
-            }}>
-              <div style={{ fontFamily: "'Inter', sans-serif", fontSize: 11, fontWeight: 600, color: color, letterSpacing: "0.08em", textTransform: "uppercase" }}>
-                {PHASE_LABELS[activeFrame] || `Step ${activeFrame + 1}`}
-              </div>
-              <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
-                <div style={{ display: "flex", gap: 6 }}>
-                  {images.map((_, idx) => (
-                    <button
-                      key={idx}
-                      onClick={() => goTo(idx)}
-                      style={{
-                        width: idx === activeFrame ? 24 : 8, height: 8,
-                        borderRadius: 4,
-                        background: idx === activeFrame ? color : "rgba(43,37,30,0.39)",
-                        border: "none", cursor: "pointer",
-                        transition: "all 0.3s ease"
-                      }}
-                    />
-                  ))}
-                </div>
-                <button
-                  onClick={() => setIsPlaying(!isPlaying)}
-                  style={{
-                    background: "rgba(43,37,30,0.13)", border: "1px solid rgba(43,37,30,0.26)",
-                    color: "#2B251E", borderRadius: 4, width: 28, height: 28,
-                    cursor: "pointer", fontSize: 12,
-                    display: "flex", alignItems: "center", justifyContent: "center"
-                  }}
-                >
-                  {isPlaying ? "⏸" : "▶"}
-                </button>
-              </div>
-            </div>
-          )}
+        <div style={{ display: "flex", gap: 4, padding: 4, borderRadius: 999, background: "rgba(120,96,60,0.09)", marginBottom: 16 }}>
+          {tabBtn("illustrated", images.length ? "Illustrated" : "Steps")}
+          {tabBtn("video", "Video")}
         </div>
 
-        <div style={{
-          marginTop: 14, padding: "12px 16px",
-          background: `rgba(${hexToRgb(color)},0.07)`,
-          border: `1px solid rgba(${hexToRgb(color)},0.18)`,
-          borderRadius: 8, display: "flex", gap: 10, alignItems: "flex-start"
-        }}>
-          <span style={{ fontSize: 16, marginTop: 1 }}>💡</span>
-          <span style={{ fontFamily: "'Inter', sans-serif", fontSize: 13, color: "#6B6155", lineHeight: 1.5, fontStyle: "italic" }}>{exercise.tip}</span>
-        </div>
-        <div style={{ textAlign: "center", marginTop: 10, fontFamily: "'Inter', sans-serif", fontSize: 11, color: "#B9AE9C" }}>Click outside or press ESC to close</div>
+        {tab === "illustrated" && (
+          <>
+            {images.length > 0 && (
+              <div style={{
+                position: "relative", borderRadius: 16, overflow: "hidden", aspectRatio: "1024 / 717",
+                background: "#33291F", border: "1px solid rgba(176,138,78,0.35)",
+                boxShadow: `inset 0 0 0 4px rgba(255,253,248,0.04), 0 12px 30px -14px rgba(${rgb},0.5)`
+              }}>
+                {images.map((src, idx) => (
+                  <img key={src} src={src} alt={`${exercise.name}, step ${idx + 1}`} loading="lazy" style={{
+                    position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "cover",
+                    opacity: idx === activeFrame ? 1 : 0,
+                    transform: idx === activeFrame ? "scale(1.02)" : "scale(1)",
+                    transition: "opacity 0.7s ease, transform 2.4s ease"
+                  }} />
+                ))}
+                <div style={{
+                  position: "absolute", left: 12, top: 12, padding: "5px 10px", borderRadius: 999,
+                  background: "rgba(252,250,245,0.92)", color: "#2B251E",
+                  fontFamily: "'Inter', sans-serif", fontSize: 10, fontWeight: 600, letterSpacing: "0.1em", textTransform: "uppercase"
+                }}>
+                  <span style={{ color }}>{activeFrame + 1}/{images.length}</span> · {PHASE_LABELS[activeFrame] || `Step ${activeFrame + 1}`}
+                </div>
+                <button onClick={() => setIsPlaying(!isPlaying)} aria-label={isPlaying ? "Pause" : "Play"} style={{
+                  position: "absolute", right: 12, bottom: 12, width: 34, height: 34, borderRadius: "50%",
+                  border: "none", background: "rgba(252,250,245,0.92)", color: "#2B251E", cursor: "pointer", fontSize: 11,
+                  display: "flex", alignItems: "center", justifyContent: "center"
+                }}>{isPlaying ? "❚❚" : "▶"}</button>
+              </div>
+            )}
+
+            {cues.length > 0 && (
+              <ol style={{ listStyle: "none", margin: images.length ? "14px 0 0" : 0, padding: 0, display: "flex", flexDirection: "column", gap: 8 }}>
+                {cues.map((cue, idx) => {
+                  const active = idx === activeFrame;
+                  return (
+                    <li key={idx} onClick={() => goTo(idx)} style={{
+                      display: "flex", gap: 12, alignItems: "flex-start", cursor: "pointer",
+                      padding: "12px 14px", borderRadius: 12,
+                      background: active ? `rgba(${rgb},0.08)` : "rgba(255,253,248,0.8)",
+                      border: `1px solid ${active ? `rgba(${rgb},0.3)` : "rgba(120,96,60,0.1)"}`,
+                      transition: "all 0.3s ease"
+                    }}>
+                      <span style={{
+                        fontFamily: "'Cormorant Garamond', Georgia, serif", fontSize: 22, fontWeight: 600, lineHeight: 1,
+                        color: active ? color : "rgba(43,37,30,0.3)", minWidth: 18
+                      }}>{idx + 1}</span>
+                      <span>
+                        <span style={{ display: "block", fontFamily: "'Inter', sans-serif", fontSize: 9, fontWeight: 600, letterSpacing: "0.12em", textTransform: "uppercase", color: active ? color : "rgba(43,37,30,0.4)", marginBottom: 3 }}>{PHASE_LABELS[idx] || `Step ${idx + 1}`}</span>
+                        <span style={{ fontFamily: "'Inter', sans-serif", fontSize: 13, color: "rgba(43,37,30,0.8)", lineHeight: 1.45 }}>{cue}</span>
+                      </span>
+                    </li>
+                  );
+                })}
+              </ol>
+            )}
+
+            {!images.length && !cues.length && (
+              <div style={{ padding: 24, textAlign: "center", fontFamily: "'Inter', sans-serif", fontSize: 13, color: "rgba(43,37,30,0.5)" }}>No step guide for this exercise yet — try the Video tab.</div>
+            )}
+          </>
+        )}
+
+        {tab === "video" && (
+          <div>
+            {videoId ? (
+              <div style={{ position: "relative", borderRadius: 16, overflow: "hidden", aspectRatio: "16 / 9", background: "#33291F", border: "1px solid rgba(176,138,78,0.35)" }}>
+                <iframe
+                  src={`https://www.youtube-nocookie.com/embed/${videoId}?rel=0&modestbranding=1&playsinline=1`}
+                  title={`${exercise.name} form video`}
+                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                  allowFullScreen
+                  style={{ position: "absolute", inset: 0, width: "100%", height: "100%", border: 0 }}
+                />
+              </div>
+            ) : (
+              <div style={{
+                borderRadius: 16, padding: "36px 20px", textAlign: "center",
+                background: "linear-gradient(160deg, #3A2F24, #2A221A)", border: "1px solid rgba(176,138,78,0.35)"
+              }}>
+                <div style={{ width: 56, height: 56, borderRadius: "50%", margin: "0 auto 14px", background: "rgba(176,138,78,0.18)", border: "1px solid rgba(176,138,78,0.5)", display: "flex", alignItems: "center", justifyContent: "center", color: "#D9BF8C", fontSize: 18 }}>▶</div>
+                <div style={{ fontFamily: "'Cormorant Garamond', Georgia, serif", fontSize: 22, color: "#F6F1E7", marginBottom: 6 }}>Watch a form demo</div>
+                <div style={{ fontFamily: "'Inter', sans-serif", fontSize: 12, color: "rgba(246,241,231,0.6)", marginBottom: 18 }}>Opens YouTube with demos of {exercise.name}.</div>
+                <a href={youtubeSearchUrl(exercise.name)} target="_blank" rel="noopener noreferrer" style={{
+                  display: "inline-block", padding: "11px 20px", borderRadius: 999, textDecoration: "none",
+                  background: "#B08A4E", color: "#FFFDF8", fontFamily: "'Inter', sans-serif", fontSize: 12, fontWeight: 600, letterSpacing: "0.06em"
+                }}>Find videos on YouTube</a>
+              </div>
+            )}
+            {videoId && (
+              <div style={{ display: "flex", justifyContent: "space-between", marginTop: 10, fontFamily: "'Inter', sans-serif", fontSize: 12 }}>
+                <a href={`https://www.youtube.com/watch?v=${videoId}`} target="_blank" rel="noopener noreferrer" style={{ color, textDecoration: "none", fontWeight: 600 }}>Open in YouTube ↗</a>
+                <a href={youtubeSearchUrl(exercise.name)} target="_blank" rel="noopener noreferrer" style={{ color: "rgba(43,37,30,0.5)", textDecoration: "none" }}>More videos</a>
+              </div>
+            )}
+          </div>
+        )}
+
+        {exercise.tip && (
+          <div style={{
+            marginTop: 14, padding: "12px 16px", borderRadius: 12,
+            background: "rgba(176,138,78,0.08)", border: "1px solid rgba(176,138,78,0.22)",
+            fontFamily: "'Cormorant Garamond', Georgia, serif", fontSize: 17, fontStyle: "italic", color: "#5A4E40", lineHeight: 1.35
+          }}>“{exercise.tip}”</div>
+        )}
       </div>
     </div>
   );
@@ -1132,7 +1283,7 @@ function ExerciseDetailDrawer({ exercise, color, history, prs, onClose }) {
   return (
     <div onClick={onClose} style={{
       position: "fixed", inset: 0, zIndex: 1000,
-      background: "rgba(0,0,0,0.7)", backdropFilter: "blur(8px)",
+      background: "rgba(52,42,30,0.32)", backdropFilter: "blur(8px)",
       display: "flex", alignItems: "flex-end", justifyContent: "center",
       animation: "fadeIn 0.2s ease"
     }}>
@@ -1515,6 +1666,7 @@ const MUSCLE_GROUP_COLORS = {
   "Quads": "#5E7B5C", "Glutes": "#5E7B5C", "Hamstrings": "#5E7B5C",
   "Core": "#B08A4E", "Obliques": "#B08A4E",
   "Cardio": "#9C4F3C",
+  "Transverse Abs": "#6E7F8C", "Serratus": "#A35D6A", "Lower Back": "#4E6E6A", "Rotator Cuff": "#8A7350", "Shoulder Stability": "#8A7350",
 };
 
 function getWeekRange() {
@@ -1705,6 +1857,45 @@ function StatsView({ history }) {
   );
 }
 
+const NAV_ITEMS = [
+  { id: "workout", label: "Train", icon: <><path d="M6.5 6.5v11M17.5 6.5v11M3.5 9v6M20.5 9v6M6.5 12h11" /></> },
+  { id: "calendar", label: "History", icon: <><rect x="3.5" y="5" width="17" height="15.5" rx="2.5" /><path d="M3.5 10h17M8 3v4M16 3v4" /></> },
+  { id: "stats", label: "Stats", icon: <><path d="M4 20h16" /><path d="M7 16v-5M12 16V6M17 16v-8" /></> },
+  { id: "body", label: "Body", icon: <><circle cx="12" cy="5" r="2.2" /><path d="M5 9.5c2.3.9 4.6 1.3 7 1.3s4.7-.4 7-1.3M12 10.8V15M12 15l-3 6M12 15l3 6" /></> },
+  { id: "settings", label: "Settings", icon: <><circle cx="12" cy="12" r="3" /><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1.1-1.5 1.7 1.7 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.8 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.5-1.1 1.7 1.7 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.8.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.8V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1Z" /></> },
+];
+
+function BottomNav({ active, color, onSelect }) {
+  return (
+    <nav aria-label="Main" style={{
+      position: "fixed", left: 0, right: 0, bottom: 0, zIndex: 950,
+      paddingBottom: "env(safe-area-inset-bottom)",
+      background: "rgba(252,250,245,0.92)", backdropFilter: "blur(18px)", WebkitBackdropFilter: "blur(18px)",
+      borderTop: "1px solid rgba(176,138,78,0.22)", boxShadow: "0 -10px 30px -18px rgba(80,60,30,0.35)"
+    }}>
+      <div style={{ maxWidth: 720, margin: "0 auto", height: "var(--nav-h)", display: "flex", alignItems: "stretch", padding: "0 8px" }}>
+        {NAV_ITEMS.map(item => {
+          const isActive = active === item.id;
+          return (
+            <button key={item.id} onClick={() => onSelect(item.id)} aria-current={isActive ? "page" : undefined} style={{
+              flex: 1, background: "none", border: "none", cursor: "pointer", position: "relative",
+              display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", gap: 4,
+              color: isActive ? color : "rgba(43,37,30,0.42)", transition: "color 0.25s ease"
+            }}>
+              <span style={{
+                position: "absolute", top: 0, width: isActive ? 26 : 0, height: 2, borderRadius: 2, background: color,
+                transition: "width 0.3s ease"
+              }} />
+              <svg width="23" height="23" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={isActive ? 1.9 : 1.5} strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">{item.icon}</svg>
+              <span style={{ fontFamily: "'Inter', sans-serif", fontSize: 10, fontWeight: isActive ? 600 : 500, letterSpacing: "0.06em" }}>{item.label}</span>
+            </button>
+          );
+        })}
+      </div>
+    </nav>
+  );
+}
+
 export default function WorkoutPlan() {
   const [activeDay, setActiveDay] = useState(() => {
     try { const v = localStorage.getItem("workout_active_day"); return v ? parseInt(v, 10) : 0; } catch { return 0; }
@@ -1748,6 +1939,11 @@ export default function WorkoutPlan() {
   const completionTimeoutRef = useRef(null);
   const restTimerRef = useRef(null);
   const day = workoutData[activeDay];
+
+  useEffect(() => {
+    const el = document.querySelector('.day-tab[data-active="true"]');
+    if (el) el.scrollIntoView({ block: "nearest", inline: "center", behavior: "smooth" });
+  }, [activeDay, view]);
 
   useEffect(() => {
     if (restTimer && restTimer.remaining > 0) {
@@ -1949,7 +2145,7 @@ export default function WorkoutPlan() {
   const volume = getDayVolume(day, tracking, weights);
 
   return (
-    <div style={{ minHeight: "100vh", background: "radial-gradient(120% 60% at 50% 0%, #FFFDF8 0%, #F6F1E7 60%, #F1EADD 100%)", color: "#2B251E", padding: 0 }}>
+    <div style={{ minHeight: "100vh", paddingBottom: "calc(var(--nav-h) + env(safe-area-inset-bottom) + 24px)", background: "radial-gradient(120% 60% at 50% 0%, #FFFDF8 0%, #F6F1E7 60%, #F1EADD 100%)", color: "#2B251E" }}>
       <style>{`
         @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;0,700;1,500&family=Inter:wght@300;400;500;600;700&display=swap');
         @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
@@ -1959,8 +2155,12 @@ export default function WorkoutPlan() {
         @keyframes drawerSlideUp { from { transform: translateY(100%); } to { transform: translateY(0); } }
         @keyframes confettiFade { 0% { opacity: 0; transform: scale(0) translateY(0); } 30% { opacity: 1; transform: scale(1.5) translateY(-20px); } 100% { opacity: 0; transform: scale(0.8) translateY(30px); } }
         * { box-sizing: border-box; margin: 0; padding: 0; }
+        :root { --nav-h: 64px; }
+        body, button, input { font-variant-numeric: lining-nums; }
         body { background: #F6F1E7; -webkit-font-smoothing: antialiased; }
         .ex-card { box-shadow: 0 1px 2px rgba(80,60,30,0.04), 0 10px 30px -12px rgba(80,60,30,0.12); }
+        .wheel { scrollbar-width: none; } .wheel::-webkit-scrollbar { display: none; }
+        .day-tabs { scrollbar-width: none; } .day-tabs::-webkit-scrollbar { display: none; }
         .day-tab { cursor: pointer; transition: all 0.25s ease; border: none; }
         .day-tab:hover { background: rgba(255,253,248,0.8) !important; }
         .ex-card { transition: all 0.3s ease; border-left: 3px solid transparent; backdrop-filter: blur(8px); }
@@ -1994,100 +2194,16 @@ export default function WorkoutPlan() {
               <div style={{ fontFamily: "'Inter', sans-serif", fontWeight: 500, fontSize: 11, letterSpacing: "0.2em", color: "rgba(43,37,30,0.455)", marginBottom: 8, textTransform: "uppercase" }}>Your Program</div>
               <h1 style={{ fontFamily: "'Cormorant Garamond', Georgia, serif", fontSize: 44, fontWeight: 500, letterSpacing: "0.01em", lineHeight: 1, color: "#2B251E", marginBottom: 6 }}><span style={{ fontStyle: "italic", color: "#B08A4E" }}>The</span> Abadie</h1>
             </div>
-            <div style={{ display: "flex", gap: 6, flexWrap: "wrap", marginLeft: "auto" }}>
-              {view !== "workout" && (
-                <button
-                  className="view-toggle"
-                  onClick={() => setView("workout")}
-                  style={{
-                    background: "rgba(255,253,248,0.8)",
-                    border: "1px solid rgba(120,96,60,0.16)",
-                    color: "rgba(43,37,30,0.65)",
-                    fontFamily: "'Inter', sans-serif", fontSize: 11, fontWeight: 600,
-                    letterSpacing: "0.05em", textTransform: "uppercase",
-                    padding: "10px 14px", borderRadius: 10, cursor: "pointer",
-                    transition: "all 0.25s", whiteSpace: "nowrap"
-                  }}
-                >
-                  ← Back
-                </button>
-              )}
-              {view === "workout" && (
-                <>
-                  <button
-                    className="view-toggle"
-                    onClick={() => setView("calendar")}
-                    style={{
-                      background: "rgba(255,253,248,0.8)",
-                      border: "1px solid rgba(120,96,60,0.16)",
-                      color: "rgba(43,37,30,0.65)",
-                      fontFamily: "'Inter', sans-serif", fontSize: 11, fontWeight: 600,
-                      letterSpacing: "0.05em", textTransform: "uppercase",
-                      padding: "10px 14px", borderRadius: 10, cursor: "pointer",
-                      transition: "all 0.25s", whiteSpace: "nowrap"
-                    }}
-                  >
-                    History
-                  </button>
-                  <button
-                    className="view-toggle"
-                    onClick={() => setView("stats")}
-                    style={{
-                      background: "rgba(255,253,248,0.8)",
-                      border: "1px solid rgba(120,96,60,0.16)",
-                      color: "rgba(43,37,30,0.65)",
-                      fontFamily: "'Inter', sans-serif", fontSize: 11, fontWeight: 600,
-                      letterSpacing: "0.05em", textTransform: "uppercase",
-                      padding: "10px 14px", borderRadius: 10, cursor: "pointer",
-                      transition: "all 0.25s", whiteSpace: "nowrap"
-                    }}
-                  >
-                    Stats
-                  </button>
-                  <button
-                    className="view-toggle"
-                    onClick={() => setView("body")}
-                    style={{
-                      background: "rgba(255,253,248,0.8)",
-                      border: "1px solid rgba(120,96,60,0.16)",
-                      color: "rgba(43,37,30,0.65)",
-                      fontFamily: "'Inter', sans-serif", fontSize: 11, fontWeight: 600,
-                      letterSpacing: "0.05em", textTransform: "uppercase",
-                      padding: "10px 14px", borderRadius: 10, cursor: "pointer",
-                      transition: "all 0.25s", whiteSpace: "nowrap"
-                    }}
-                  >
-                    Body
-                  </button>
-                  <button
-                    className="view-toggle"
-                    onClick={() => setShowNotifSettings(true)}
-                    style={{
-                      background: "rgba(255,253,248,0.8)",
-                      border: "1px solid rgba(120,96,60,0.16)",
-                      color: "rgba(43,37,30,0.65)",
-                      fontFamily: "'Inter', sans-serif", fontSize: 14, fontWeight: 500,
-                      padding: "8px 11px", borderRadius: 10, cursor: "pointer",
-                      transition: "all 0.25s", whiteSpace: "nowrap",
-                      display: "flex", alignItems: "center", justifyContent: "center"
-                    }}
-                    title="Notification Settings"
-                  >
-                    ⚙
-                  </button>
-                </>
-              )}
-            </div>
           </div>
           {view === "workout" && (
-          <div style={{ display: "flex", gap: 4 }}>
+          <div className="day-tabs" style={{ display: "flex", gap: 4, overflowX: "auto", scrollSnapType: "x proximity", margin: "0 -24px", padding: "0 24px" }}>
             {workoutData.map((d, i) => {
               const prog = getDayProgress(tracking, d.day);
               const tabComplete = prog.total > 0 && prog.done === prog.total;
               const isActive = activeDay === i;
               return (
-                <button key={i} className="day-tab" onClick={() => { setActiveDay(i); localStorage.setItem("workout_active_day", String(i)); setExpandedEx(null); setShowCompletion(false); if (completionTimeoutRef.current) { clearTimeout(completionTimeoutRef.current); completionTimeoutRef.current = null; } }} style={{
-                  flex: 1, background: isActive ? `rgba(${hexToRgb(d.color)},0.08)` : "transparent",
+                <button key={i} className="day-tab" data-active={isActive ? "true" : undefined} onClick={() => { setActiveDay(i); localStorage.setItem("workout_active_day", String(i)); setExpandedEx(null); setShowCompletion(false); if (completionTimeoutRef.current) { clearTimeout(completionTimeoutRef.current); completionTimeoutRef.current = null; } }} style={{
+                  flex: "1 0 62px", scrollSnapAlign: "start", background: isActive ? `rgba(${hexToRgb(d.color)},0.08)` : "transparent",
                   borderBottom: isActive ? `2px solid ${d.color}` : "2px solid transparent",
                   borderRadius: isActive ? "8px 8px 0 0" : "8px 8px 0 0",
                   padding: "12px 4px 14px", cursor: "pointer",
@@ -2403,6 +2519,16 @@ export default function WorkoutPlan() {
         <NotificationSettings color={day.color} onClose={() => setShowNotifSettings(false)} />
       )}
       <NotificationPrompt color={day.color} />
+      <BottomNav
+        active={showNotifSettings ? "settings" : view}
+        color={day.color}
+        onSelect={(id) => {
+          if (id === "settings") { setShowNotifSettings(true); return; }
+          setShowNotifSettings(false);
+          setView(id);
+          window.scrollTo({ top: 0, behavior: "smooth" });
+        }}
+      />
     </div>
   );
 }

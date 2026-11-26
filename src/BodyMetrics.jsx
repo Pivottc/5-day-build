@@ -431,7 +431,7 @@ export default function BodyMetrics() {
       )}
 
       <button onClick={() => setShowLog(true)} style={{
-        position: "fixed", bottom: 24, right: 24, zIndex: 100,
+        position: "fixed", bottom: "calc(var(--nav-h, 64px) + env(safe-area-inset-bottom) + 16px)", right: 20, zIndex: 100,
         background: `linear-gradient(135deg, ${ACCENT}, rgba(${ACCENT_RGB},0.8))`,
         border: "none", borderRadius: 16, padding: "14px 22px",
         color: "#FFFDF8", fontFamily: "'Inter', sans-serif", fontSize: 14, fontWeight: 700,
